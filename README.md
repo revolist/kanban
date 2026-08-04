@@ -88,6 +88,15 @@ captures the captioned walkthrough, poster, and four workflow screenshots from
 the canonical TypeScript build. `pnpm media:inspect` produces a temporary review
 contact sheet; `pnpm media:record` updates committed assets intentionally.
 
+## Workflow screenshots
+
+| Overview | Primary workflow |
+| --- | --- |
+| ![Kanban overview](./assets/screenshots/overview.webp) | ![Kanban workflow](./assets/screenshots/workflow.webp) |
+| ![Kanban details](./assets/screenshots/details.webp) | ![Kanban result](./assets/screenshots/result.webp) |
+
+[Download the walkthrough poster](./assets/kanban-walkthrough-poster.webp).
+
 ## License
 
 The examples, recipes, tests, documentation, and media tooling are MIT licensed.
