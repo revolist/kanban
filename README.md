@@ -4,20 +4,18 @@
 
 **Grid-backed workflow boards with one canonical, application-owned data source.**
 
-[![CI](https://github.com/revolist/kanban/actions/workflows/ci.yml/badge.svg)](https://github.com/revolist/kanban/actions/workflows/ci.yml)
+[![Pages](https://github.com/revolist/kanban/actions/workflows/pages.yml/badge.svg)](https://kanban.rv-grid.com/)
 [![Frameworks](https://img.shields.io/badge/TypeScript%20%7C%20React%20%7C%20Vue%20%7C%20Angular-4f46e5)](#framework-examples)
 [![License: MIT](https://img.shields.io/badge/Example%20license-MIT-16a34a.svg)](./LICENSE)
 
-[View live demo](https://example.rv-grid.com/kanban/demo/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
+[View live demo](https://kanban.rv-grid.com/demo/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
 
 [![RevoGrid Kanban walkthrough](./assets/kanban-walkthrough.gif)](./assets/kanban-walkthrough.mp4)
 
-_Open the animation for the full-quality MP4 walkthrough._
-
 </div>
 
-This production-style showcase projects one canonical RevoGrid source into an
-Enterprise Kanban board. Equivalent entry points are provided for Vanilla
+This production-style showcase projects one canonical RevoGrid source into a
+Pro Kanban board. Equivalent entry points are provided for Vanilla
 TypeScript, React, Vue, and Angular.
 
 ## What it features
@@ -30,7 +28,7 @@ TypeScript, React, Vue, and Angular.
 - Column and swimlane collapse for dense operational boards
 - Context-menu and card-editor integration points
 
-## Enterprise feature inventory
+## Pro features
 
 | API | How the showcase uses it |
 | --- | --- |
@@ -78,7 +76,7 @@ changes.
 Trial users must authenticate with the registry described in the [official
 trial installation guide](https://pro.rv-grid.com/guides/installation-npm-trial/).
 No registry token belongs in this repository. Licensed users can replace the two
-trial aliases in `package.json` with the matching full Pro/Enterprise packages;
+trial aliases in `package.json` with the matching licensed RevoGrid packages;
 source imports remain unchanged.
 
 ## Media
@@ -88,17 +86,7 @@ captures the captioned walkthrough, poster, and four workflow screenshots from
 the canonical TypeScript build. `pnpm media:inspect` produces a temporary review
 contact sheet; `pnpm media:record` updates committed assets intentionally.
 
-## Workflow screenshots
-
-| Overview | Primary workflow |
-| --- | --- |
-| ![Kanban overview](./assets/screenshots/overview.webp) | ![Kanban workflow](./assets/screenshots/workflow.webp) |
-| ![Kanban details](./assets/screenshots/details.webp) | ![Kanban result](./assets/screenshots/result.webp) |
-
-[Download the walkthrough poster](./assets/kanban-walkthrough-poster.webp).
-
 ## License
 
 The examples, recipes, tests, documentation, and media tooling are MIT licensed.
-RevoGrid Pro and Enterprise packages are separate commercial dependencies and
-are not covered by this repository's MIT license.
+Commercial RevoGrid packages are not covered by this repository's MIT license.

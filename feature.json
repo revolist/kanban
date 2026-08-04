@@ -8,7 +8,7 @@
   "productUrl": "https://pro.rv-grid.com/guides/",
   "trialUrl": "https://pro.rv-grid.com/guides/installation-npm-trial/",
   "pricingUrl": "https://rv-grid.com/pricing/",
-  "liveDemoUrl": "https://example.rv-grid.com/kanban/demo/",
+  "liveDemoUrl": "https://kanban.rv-grid.com/demo/",
   "frameworks": ["ts", "react", "vue", "angular"],
   "recipes": [
     { "id": "workflow-wip", "title": "Workflow and WIP rules", "summary": "Define ordered workflow columns and enforce capacity where work accumulates.", "path": "recipes/workflow-wip.ts" },
@@ -23,4 +23,3 @@
   },
   "demoOutput": "dist"
 }
-
