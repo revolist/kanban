@@ -1,6 +1,6 @@
 import { defineCustomElements } from '@revolist/revogrid/loader';
 import { KanbanPlugin } from '@revolist/revogrid-enterprise';
-import { currentTheme } from '../../composables/useRandomData';
+import { currentTheme } from './shared/theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
 import './kanban.scss';
 

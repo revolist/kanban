@@ -1,0 +1,26 @@
+{
+  "$schema": "./feature.schema.json",
+  "slug": "kanban",
+  "title": "RevoGrid Kanban",
+  "summary": "Grid-backed workflow boards with configurable columns, swimlanes, WIP limits, card rules, editing, and synchronized drag-and-drop.",
+  "edition": "Pro Advanced",
+  "repositoryUrl": "https://github.com/revolist/kanban",
+  "productUrl": "https://pro.rv-grid.com/guides/",
+  "trialUrl": "https://pro.rv-grid.com/guides/installation-npm-trial/",
+  "pricingUrl": "https://rv-grid.com/pricing/",
+  "liveDemoUrl": "https://example.rv-grid.com/kanban/demo/",
+  "frameworks": ["ts", "react", "vue", "angular"],
+  "recipes": [
+    { "id": "workflow-wip", "title": "Workflow and WIP rules", "summary": "Define ordered workflow columns and enforce capacity where work accumulates.", "path": "recipes/workflow-wip.ts" },
+    { "id": "swimlanes-collapse", "title": "Swimlanes and collapse", "summary": "Group work by team and keep large boards navigable with lane and column collapse.", "path": "recipes/swimlanes-collapse.ts" },
+    { "id": "card-movement", "title": "Card editing and movement", "summary": "Apply a source-backed card move and normalize ordering for application persistence.", "path": "recipes/card-movement.ts" }
+  ],
+  "media": {
+    "poster": "assets/kanban-walkthrough-poster.webp",
+    "walkthroughGif": "assets/kanban-walkthrough.gif",
+    "walkthroughMp4": "assets/kanban-walkthrough.mp4",
+    "screenshots": ["assets/screenshots/overview.webp", "assets/screenshots/workflow.webp", "assets/screenshots/details.webp", "assets/screenshots/result.webp"]
+  },
+  "demoOutput": "dist"
+}
+

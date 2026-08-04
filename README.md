@@ -1,20 +1,95 @@
-# Enterprise Kanban
+<div align="center">
 
-This showcase projects one canonical RevoGrid source into an Enterprise Kanban board. It demonstrates workflow columns, team swimlanes, WIP limits, card rules, custom card content, column and lane collapse, and drag-and-drop card movement. Realistic delivery cards include workstream labels, due dates, progress, compact assignee avatar stacks, comments, attachments, story points, and priority cues.
+# RevoGrid Kanban
 
-Equivalent entry points are provided for TypeScript, React, Vue, and Angular. Shared data and configuration live in `src/kanban.shared.ts`.
+**Grid-backed workflow boards with one canonical, application-owned data source.**
 
-## Demo preview
+[![CI](https://github.com/revolist/kanban/actions/workflows/ci.yml/badge.svg)](https://github.com/revolist/kanban/actions/workflows/ci.yml)
+[![Frameworks](https://img.shields.io/badge/TypeScript%20%7C%20React%20%7C%20Vue%20%7C%20Angular-4f46e5)](#framework-examples)
+[![License: MIT](https://img.shields.io/badge/Example%20license-MIT-16a34a.svg)](./LICENSE)
 
-[![Enterprise Kanban walkthrough](./assets/pro-advanced-kanban-walkthrough.gif)](./assets/pro-advanced-kanban-walkthrough.mp4)
+[View live demo](https://example.rv-grid.com/kanban/demo/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
 
-_Click the animated preview to open the full-quality MP4._
+[![RevoGrid Kanban walkthrough](./assets/kanban-walkthrough.gif)](./assets/kanban-walkthrough.mp4)
 
-Run a framework variant from the `revogrid-demos` root:
+_Open the animation for the full-quality MP4 walkthrough._
+
+</div>
+
+This production-style showcase projects one canonical RevoGrid source into an
+Enterprise Kanban board. Equivalent entry points are provided for Vanilla
+TypeScript, React, Vue, and Angular.
+
+## What it features
+
+- Ordered workflow columns with per-column WIP limits
+- Team swimlanes with lane-specific limits and collapse controls
+- Source-backed drag-and-drop across columns and teams
+- Card rules, priority cues, progress, assignees, due dates, and activity
+- Custom card, column-header, and swimlane-header presentation
+- Column and swimlane collapse for dense operational boards
+- Context-menu and card-editor integration points
+
+## Enterprise feature inventory
+
+| API | How the showcase uses it |
+| --- | --- |
+| `KanbanPlugin` | Projects source rows into virtualized workflow columns while keeping identity, status, and ordering in application data. |
+| `KanbanConfig` | Defines columns, WIP limits, swimlanes, card fields, rules, collapse behavior, and customization hooks. |
+| `KanbanCardEditorDialogPlugin` | Supplies the production card-editing surface used by the Kanban dependency stack. |
+
+The board maps `id`, `status`, and `order` explicitly. Applications can persist
+plugin events back to the same row model without maintaining a second board-only
+state tree.
+
+## Recipes
+
+| Recipe | What it demonstrates |
+| --- | --- |
+| [`workflow-wip.ts`](./recipes/workflow-wip.ts) | Ordered workflow columns and focused WIP limits. |
+| [`swimlanes-collapse.ts`](./recipes/swimlanes-collapse.ts) | Team swimlanes and compact collapse behavior. |
+| [`card-movement.ts`](./recipes/card-movement.ts) | Source-backed status and order updates after a card move. |
+
+## Framework examples
+
+| Framework | Entry point | Command |
+| --- | --- | --- |
+| Vanilla TypeScript | [`src/kanban.ts`](./src/kanban.ts) | `pnpm dev` |
+| React | [`src/kanban.react.tsx`](./src/kanban.react.tsx) | `pnpm dev:react` |
+| Vue 3 | [`src/kanban.vue`](./src/kanban.vue) | `pnpm dev:vue` |
+| Angular | [`src/kanban.angular.ts`](./src/kanban.angular.ts) | `pnpm dev:angular` |
+
+Shared rows, grid columns, board configuration, and presentation hooks live in
+[`src/kanban.shared.ts`](./src/kanban.shared.ts).
+
+## Run it
 
 ```bash
-pnpm dev:kanban
-pnpm dev:kanban:react
-pnpm dev:kanban:vue
-pnpm dev:kanban:angular
+pnpm install
+pnpm dev
+pnpm dev:react
+pnpm dev:vue
+pnpm dev:angular
 ```
+
+Run `pnpm test`, `pnpm build:frameworks`, and `pnpm test:e2e` before submitting
+changes.
+
+Trial users must authenticate with the registry described in the [official
+trial installation guide](https://pro.rv-grid.com/guides/installation-npm-trial/).
+No registry token belongs in this repository. Licensed users can replace the two
+trial aliases in `package.json` with the matching full Pro/Enterprise packages;
+source imports remain unchanged.
+
+## Media
+
+The deterministic recorder in [`scripts/record-media.mjs`](./scripts/record-media.mjs)
+captures the captioned walkthrough, poster, and four workflow screenshots from
+the canonical TypeScript build. `pnpm media:inspect` produces a temporary review
+contact sheet; `pnpm media:record` updates committed assets intentionally.
+
+## License
+
+The examples, recipes, tests, documentation, and media tooling are MIT licensed.
+RevoGrid Pro and Enterprise packages are separate commercial dependencies and
+are not covered by this repository's MIT license.

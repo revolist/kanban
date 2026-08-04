@@ -19,7 +19,7 @@
 import { computed, ref } from 'vue';
 import RevoGrid, { type GridPlugin } from '@revolist/vue3-datagrid';
 import { KanbanPlugin } from '@revolist/revogrid-enterprise';
-import { currentThemeVue } from '../../composables/useRandomData';
+import { currentThemeVue } from './shared/theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
 import './kanban.scss';
 
