@@ -333,8 +333,8 @@ html[data-theme='dark'] .kanban-showcase-priority--calm,
 .kanban-showcase__grid[theme^='dark'] .kanban-showcase-priority--calm { color: #a9b5c8; background: #263146; }
 
 @media (prefers-color-scheme: dark) {
-  .kanban-showcase { background: var(--rv-ui-surface-sunken, #111111); }
-  .kanban-showcase__grid {
+  html:not([data-theme]):not(.light) .kanban-showcase { background: var(--rv-ui-surface-sunken, #111111); }
+  html:not([data-theme]):not(.light) .kanban-showcase__grid {
     --kanban-board-background: var(--rv-ui-surface-sunken, #111111);
     --kanban-surface: var(--rv-ui-surface, #1f1f1f);
     --kanban-card-background: var(--rv-ui-surface-elevated, #262626);
@@ -344,15 +344,15 @@ html[data-theme='dark'] .kanban-showcase-priority--calm,
     --kanban-accent: #202e50;
     --kanban-accent-strong: #8fa5ff;
   }
-  .kanban-showcase-lane-title,
-  .kanban-showcase-card-title { color: #edf2fb; }
-  .kanban-showcase-card-content p,
-  .kanban-showcase-card-meta { color: #99a5b8; }
-  .kanban-showcase-card-id,
-  .kanban-showcase-lane-kicker { color: #7f8ba0; }
-  .kanban-showcase-priority--critical { color: #ff8b9c; background: #3b202c; }
-  .kanban-showcase-priority--attention { color: #ffc669; background: #382b17; }
-  .kanban-showcase-priority--calm { color: #a9b5c8; background: #263146; }
+  html:not([data-theme]):not(.light) .kanban-showcase-lane-title,
+  html:not([data-theme]):not(.light) .kanban-showcase-card-title { color: #edf2fb; }
+  html:not([data-theme]):not(.light) .kanban-showcase-card-content p,
+  html:not([data-theme]):not(.light) .kanban-showcase-card-meta { color: #99a5b8; }
+  html:not([data-theme]):not(.light) .kanban-showcase-card-id,
+  html:not([data-theme]):not(.light) .kanban-showcase-lane-kicker { color: #7f8ba0; }
+  html:not([data-theme]):not(.light) .kanban-showcase-priority--critical { color: #ff8b9c; background: #3b202c; }
+  html:not([data-theme]):not(.light) .kanban-showcase-priority--attention { color: #ffc669; background: #382b17; }
+  html:not([data-theme]):not(.light) .kanban-showcase-priority--calm { color: #a9b5c8; background: #263146; }
 }
 
 @media (max-width: 720px) {

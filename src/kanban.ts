@@ -1,6 +1,6 @@
 import { defineCustomElements } from '@revolist/revogrid/loader';
 import { KanbanPlugin } from '@revolist/revogrid-enterprise';
-import { currentTheme } from './shared/theme';
+import { currentTheme, observeCurrentTheme } from './shared/theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
 import './kanban.scss';
 
@@ -25,8 +25,12 @@ export function load(parentSelector: string, rows?: KanbanShowcaseCard[]) {
   wrapper.append(grid);
   parent.append(wrapper);
   grid.source = resolveKanbanRows(rows);
+  const disconnectTheme = observeCurrentTheme((isDark) => {
+    grid.theme = isDark ? 'darkCompact' : 'compact';
+  });
 
   return () => {
+    disconnectTheme();
     grid.remove();
     wrapper.remove();
   };
