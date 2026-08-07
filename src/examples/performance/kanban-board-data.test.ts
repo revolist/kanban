@@ -5,8 +5,8 @@ import {
   KANBAN_BOARD_ITEM_COUNT,
 } from './kanban-board-data';
 
-describe('30K cards board fixture', () => {
-  it('creates 30,000 unique cards evenly across the workflow and swimlanes', () => {
+describe('50K cards board fixture', () => {
+  it('creates 50,000 unique cards evenly across the workflow and swimlanes', () => {
     const rows = createKanbanBoardRows();
     const statusCounts = new Map<string, number>();
     const teamCounts = new Map<string, number>();
@@ -18,8 +18,8 @@ describe('30K cards board fixture', () => {
 
     expect(rows).toHaveLength(KANBAN_BOARD_ITEM_COUNT);
     expect(new Set(rows.map(({ id }) => id)).size).toBe(KANBAN_BOARD_ITEM_COUNT);
-    expect([...statusCounts.values()]).toEqual(Array(10).fill(3_000));
-    expect(teamCounts).toEqual(new Map([['Product', 15_000], ['Platform', 15_000]]));
+    expect([...statusCounts.values()]).toEqual(Array(10).fill(5_000));
+    expect(teamCounts).toEqual(new Map([['Product', 25_000], ['Platform', 25_000]]));
   });
 
   it('registers 10 workflow columns against the source-backed status field', () => {

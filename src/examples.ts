@@ -1,4 +1,4 @@
-export const KANBAN_EXAMPLE_IDS = ['showcase', 'board-30k'] as const;
+export const KANBAN_EXAMPLE_IDS = ['showcase', 'performance'] as const;
 
 export type KanbanExampleId = typeof KANBAN_EXAMPLE_IDS[number];
 export type KanbanExampleFramework = 'ts' | 'react' | 'vue' | 'angular';
@@ -23,13 +23,13 @@ export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefi
     loadVue: async () => (await import('./examples/showcase/kanban.vue')).default,
     loadAngular: async () => (await import('./examples/showcase/kanban.angular')).KanbanShowcaseGridComponent,
   },
-  'board-30k': {
-    id: 'board-30k',
+  performance: {
+    id: 'performance',
     angularSelector: 'kanban-board-grid',
-    loadTs: async () => (await import('./examples/board-30k/kanban-board')).load,
-    loadReact: async () => (await import('./examples/board-30k/kanban-board.react')).default,
-    loadVue: async () => (await import('./examples/board-30k/kanban-board.vue')).default,
-    loadAngular: async () => (await import('./examples/board-30k/kanban-board.angular')).KanbanBoardGridComponent,
+    loadTs: async () => (await import('./examples/performance/kanban-board')).load,
+    loadReact: async () => (await import('./examples/performance/kanban-board.react')).default,
+    loadVue: async () => (await import('./examples/performance/kanban-board.vue')).default,
+    loadAngular: async () => (await import('./examples/performance/kanban-board.angular')).KanbanBoardGridComponent,
   },
 };
 

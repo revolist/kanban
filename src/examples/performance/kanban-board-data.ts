@@ -47,14 +47,14 @@ const CARD_TEMPLATES = [
   ['Provider cleanup audit', 'Verify view teardown preserves host-owned plugins.'],
   ['Resolve release blocker', 'Remove the final dependency blocking the release.'],
   ['Prepare release notes', 'Document keyboard movement and WIP behavior.'],
-  ['30k-card benchmark', 'Track bounded DOM and virtual-stack performance.'],
+  ['50k-card benchmark', 'Track bounded DOM and virtual-stack performance.'],
 ] as const;
 
 const OWNERS = ['Maya', 'Jon', 'Ari', 'Nora', 'Theo', 'Iris'] as const;
 const PRIORITIES = ['High', 'Medium', 'Low'] as const;
 const STORY_POINTS = [5, 3, 8, 2, 5, 8, 3, 5, 3, 5] as const;
 
-export const KANBAN_BOARD_ITEM_COUNT = 30_000;
+export const KANBAN_BOARD_ITEM_COUNT = 50_000;
 
 export function createKanbanBoardRows(count = KANBAN_BOARD_ITEM_COUNT): KanbanBoardCard[] {
   return Array.from({ length: count }, (_, index) => {

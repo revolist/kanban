@@ -22,7 +22,7 @@ the framework is selected by the existing Vite mode.
 | Example | URL | Purpose |
 | --- | --- | --- |
 | Classic Kanban Showcase | `/?example=showcase` | Rich cards, workflow rules, team swimlanes, activity, progress, and drag-and-drop. |
-| 30K Cards Board | `/?example=board-30k` | Virtualize 30,000 cards across 10 workflow columns and two team swimlanes. |
+| 50K Cards Board | `/?example=performance` | Virtualize 50,000 cards across 10 workflow columns and two team swimlanes. |
 
 Missing or unknown example ids fall back to the Classic Kanban Showcase.
 

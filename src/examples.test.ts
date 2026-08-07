@@ -23,12 +23,12 @@ describe('Kanban example registry', () => {
     expect(typeof example.loadAngular).toBe('function');
   });
 
-  it('registers every framework loader for the 30K cards board', () => {
-    const example = resolveKanbanExample('?example=board-30k');
+  it('registers every framework loader for the performance board', () => {
+    const example = resolveKanbanExample('?example=performance');
 
-    expect(example).toBe(KANBAN_EXAMPLES['board-30k']);
+    expect(example).toBe(KANBAN_EXAMPLES.performance);
     expect(example.angularSelector).toBe('kanban-board-grid');
-    expect(KANBAN_EXAMPLE_IDS).toEqual(['showcase', 'board-30k']);
+    expect(KANBAN_EXAMPLE_IDS).toEqual(['showcase', 'performance']);
     expect(typeof example.loadTs).toBe('function');
     expect(typeof example.loadReact).toBe('function');
     expect(typeof example.loadVue).toBe('function');
