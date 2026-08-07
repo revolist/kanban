@@ -105,7 +105,7 @@ export function createKanbanShowcaseConfig(): KanbanConfig<KanbanShowcaseCard> {
       ]),
       cardContent: (h, { card }) => h('div', { class: 'kanban-showcase-card-content' }, [
         h('div', { class: 'kanban-showcase-card-topline' }, [
-          h('span', { class: 'kanban-showcase-card-id' }, card.id),
+          card.id,
           h('span', { class: `kanban-showcase-priority kanban-showcase-priority--${PRIORITY_TONE[card.priority]}` }, [
             h('span', { class: 'kanban-showcase-priority__dot' }),
             card.priority,

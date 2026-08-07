@@ -115,15 +115,14 @@
   min-width: 0;
   min-height: 0;
   height: 100%;
-  grid-template-rows: 20px 20px auto minmax(0, 1fr) 30px 24px;
-  gap: 7px;
+  grid-template-rows: 20px 20px auto auto 30px minmax(26px, 1fr);
+  gap: 5px;
   overflow: hidden;
 }
 .kanban-showcase-card-content > * {
   min-height: 0;
   height: auto !important;
 }
-.kanban-showcase-card-id,
 .kanban-showcase-card-context,
 .kanban-showcase-due,
 .kanban-showcase-label,
@@ -138,19 +137,23 @@
   justify-content: space-between;
   gap: 8px;
 }
-.kanban-showcase-card-context {
-  min-width: 0;
-  justify-content: space-between;
-  gap: 8px;
-}
-.kanban-showcase-card-id {
+.kanban-showcase-card-topline {
+  display: flex !important;
+  grid-row: 1;
+  align-items: center;
   color: #8a94a6;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.055em;
 }
+.kanban-showcase-card-context {
+  min-width: 0;
+  justify-content: space-between;
+  gap: 8px;
+}
 .kanban-showcase-priority {
   box-sizing: border-box;
+  margin-inline-start: auto;
   min-height: 20px;
   max-width: 96px;
   flex: 0 0 auto;
@@ -246,13 +249,14 @@
 }
 .kanban-showcase-card-meta {
   align-self: end;
+  padding-block-end: 2px;
   justify-content: flex-start;
   color: #697386;
   font-size: 11px;
 }
 .kanban-showcase-avatar-stack {
   min-width: 0;
-  height: 18px !important;
+  height: 20px !important;
   overflow: visible;
 }
 .kanban-showcase-avatar-stack > * + * {
