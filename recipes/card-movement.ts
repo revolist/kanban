@@ -1,4 +1,4 @@
-import type { KanbanShowcaseCard } from '../src/kanban.shared';
+import type { KanbanShowcaseCard } from '../src/examples/showcase/kanban.shared';
 
 export function moveCard(
   rows: readonly KanbanShowcaseCard[],
@@ -10,4 +10,3 @@ export function moveCard(
     ? { ...row, status, order: destination.length }
     : row);
 }
-

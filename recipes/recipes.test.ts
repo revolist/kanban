@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { KANBAN_SHOWCASE_ROWS } from '../src/kanban.shared';
+import { KANBAN_SHOWCASE_ROWS } from '../src/examples/showcase/kanban.shared';
 import { createWorkflowAndWipRecipe } from './workflow-wip';
 import { createSwimlanesAndCollapseRecipe } from './swimlanes-collapse';
 import { moveCard } from './card-movement';
@@ -22,4 +22,3 @@ describe('Kanban recipes', () => {
     expect(moved.find((row) => row.id === card.id)?.status).toBe('done');
   });
 });
-

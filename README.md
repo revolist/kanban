@@ -13,9 +13,18 @@
 
 </div>
 
-This production-style showcase projects one canonical RevoGrid source into a
-Pro Kanban board. Equivalent entry points are provided for Vanilla
-TypeScript, React, Vue, and Angular.
+This repository hosts multiple Kanban examples implemented in Vanilla TypeScript,
+React, Vue, and Angular. The example is selected with the `example` URL query;
+the framework is selected by the existing Vite mode.
+
+## Examples
+
+| Example | URL | Purpose |
+| --- | --- | --- |
+| Classic Kanban Showcase | `/?example=showcase` | Rich cards, workflow rules, team swimlanes, activity, progress, and drag-and-drop. |
+| 30K Cards Board | `/?example=board-30k` | Virtualize 30,000 cards across 10 workflow columns and two team swimlanes. |
+
+Missing or unknown example ids fall back to the Classic Kanban Showcase.
 
 ## What it features
 
@@ -51,13 +60,15 @@ state tree.
 
 | Framework | Entry point | Command |
 | --- | --- | --- |
-| Vanilla TypeScript | [`src/kanban.ts`](./src/kanban.ts) | `pnpm dev` |
-| React | [`src/kanban.react.tsx`](./src/kanban.react.tsx) | `pnpm dev:react` |
-| Vue 3 | [`src/kanban.vue`](./src/kanban.vue) | `pnpm dev:vue` |
-| Angular | [`src/kanban.angular.ts`](./src/kanban.angular.ts) | `pnpm dev:angular` |
+| Vanilla TypeScript | [`src/examples/showcase/kanban.ts`](./src/examples/showcase/kanban.ts) | `pnpm dev` |
+| React | [`src/examples/showcase/kanban.react.tsx`](./src/examples/showcase/kanban.react.tsx) | `pnpm dev:react` |
+| Vue 3 | [`src/examples/showcase/kanban.vue`](./src/examples/showcase/kanban.vue) | `pnpm dev:vue` |
+| Angular | [`src/examples/showcase/kanban.angular.ts`](./src/examples/showcase/kanban.angular.ts) | `pnpm dev:angular` |
 
-Shared rows, grid columns, board configuration, and presentation hooks live in
-[`src/kanban.shared.ts`](./src/kanban.shared.ts).
+Each command can open any registered example. New examples live in an isolated
+`src/examples/<example-id>/` directory and are registered in
+[`src/examples.ts`](./src/examples.ts). Shared theme observation lives in
+[`src/theme.ts`](./src/theme.ts).
 
 ## Run it
 

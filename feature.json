@@ -10,6 +10,21 @@
   "pricingUrl": "https://rv-grid.com/pricing/",
   "liveDemoUrl": "https://kanban.rv-grid.com/demo/",
   "frameworks": ["ts", "react", "vue", "angular"],
+  "examples": [
+    {
+      "id": "showcase",
+      "title": "Classic Kanban Showcase",
+      "summary": "The original production-style board with rich cards, WIP rules, and team swimlanes.",
+      "query": "example=showcase",
+      "default": true
+    },
+    {
+      "id": "board-30k",
+      "title": "30K Cards Board",
+      "summary": "A virtualized 30,000-card workflow across 10 columns and two team swimlanes.",
+      "query": "example=board-30k"
+    }
+  ],
   "recipes": [
     { "id": "workflow-wip", "title": "Workflow and WIP rules", "summary": "Define ordered workflow columns and enforce capacity where work accumulates.", "path": "recipes/workflow-wip.ts" },
     { "id": "swimlanes-collapse", "title": "Swimlanes and collapse", "summary": "Group work by team and keep large boards navigable with lane and column collapse.", "path": "recipes/swimlanes-collapse.ts" },

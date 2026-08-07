@@ -60,6 +60,22 @@ for (const key of requiredStrings) {
 if (!Array.isArray(feature.frameworks) || feature.frameworks.join(',') !== 'ts,react,vue,angular') {
   failures.push('feature.json: frameworks must be ts, react, vue, angular');
 }
+if (!Array.isArray(feature.examples) || feature.examples.length < 2) {
+  failures.push('feature.json: at least two examples are required');
+} else {
+  const exampleIds = new Set(feature.examples.map((example) => example.id));
+  if (exampleIds.size !== feature.examples.length) {
+    failures.push('feature.json: example ids must be unique');
+  }
+  if (feature.examples.filter((example) => example.default).length !== 1) {
+    failures.push('feature.json: exactly one example must be marked as default');
+  }
+  for (const example of feature.examples) {
+    if (example.query !== `example=${example.id}`) {
+      failures.push(`feature.json: ${example.id} query must be example=${example.id}`);
+    }
+  }
+}
 if (!Array.isArray(feature.recipes) || feature.recipes.length < 2) failures.push('feature.json: at least two recipes are required');
 
 const verifyMedia = process.argv.includes('--media');
@@ -126,8 +142,15 @@ async function walk(directory) {
     const path = join(directory, entry.name);
     if (entry.isDirectory()) await walk(path);
     else if (['.ts', '.tsx', '.vue', '.json', '.md', '.yml', '.yaml'].includes(extname(entry.name)) || entry.name === 'package.json') {
+      const relativePath = path.slice(root.length + 1);
+      if (relativePath.startsWith('src/shared/')) {
+        failures.push(`${relativePath}: cross-example helpers belong directly in src`);
+      }
+      if (/^src\/examples\/[^/]+$/.test(relativePath)) {
+        failures.push(`${relativePath}: runtime infrastructure belongs directly in src; each example must use its own subdirectory`);
+      }
       const source = await readFile(path, 'utf8');
-      for (const value of forbidden) if (source.includes(value)) failures.push(`${path.slice(root.length + 1)}: contains forbidden coupling ${value}`);
+      for (const value of forbidden) if (source.includes(value)) failures.push(`${relativePath}: contains forbidden coupling ${value}`);
     }
   }
 }

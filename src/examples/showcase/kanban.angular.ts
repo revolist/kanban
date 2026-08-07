@@ -2,7 +2,7 @@ import { Component, Input, NO_ERRORS_SCHEMA, ViewEncapsulation } from '@angular/
 import type { OnDestroy } from '@angular/core';
 import { RevoGrid } from '@revolist/angular-datagrid';
 import { KanbanPlugin } from '@revolist/revogrid-enterprise';
-import { currentTheme, observeCurrentTheme } from './shared/theme';
+import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
 
 @Component({

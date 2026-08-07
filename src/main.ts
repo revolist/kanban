@@ -1,41 +1,47 @@
 import '../demo-host.css';
 import '@revolist/revogrid-pro/dist/revogrid-pro.css';
 import '@revolist/revogrid-enterprise/dist/revogrid-enterprise.css';
+import { resolveKanbanExample, type KanbanExampleFramework } from './examples';
 
-const framework = import.meta.env.MODE === 'development' ? 'ts' : import.meta.env.MODE;
+const framework: KanbanExampleFramework = import.meta.env.MODE === 'development'
+  ? 'ts'
+  : import.meta.env.MODE as KanbanExampleFramework;
+const example = resolveKanbanExample(window.location.search);
 
 async function bootstrap() {
   switch (framework) {
     case 'react': {
-      const [{ createElement }, { createRoot }, { default: Demo }] = await Promise.all([
+      const [{ createElement }, { createRoot }, Demo] = await Promise.all([
         import('react'),
         import('react-dom/client'),
-        import('./kanban.react'),
+        example.loadReact(),
       ]);
-      createRoot(document.querySelector('#app')!).render(createElement(Demo));
+      createRoot(document.querySelector('#app')!).render(
+        createElement(Demo as Parameters<typeof createElement>[0]),
+      );
       break;
     }
     case 'vue': {
-      const [{ createApp }, { default: Demo }] = await Promise.all([
+      const [{ createApp }, Demo] = await Promise.all([
         import('vue'),
-        import('./kanban.vue'),
+        example.loadVue(),
       ]);
-      createApp(Demo).mount('#app');
+      createApp(Demo as Parameters<typeof createApp>[0]).mount('#app');
       break;
     }
     case 'angular': {
       await import('zone.js');
       await import('@angular/compiler');
-      document.querySelector('#app')!.innerHTML = '<kanban-showcase-grid></kanban-showcase-grid>';
-      const [{ bootstrapApplication }, { KanbanShowcaseGridComponent }] = await Promise.all([
+      document.querySelector('#app')!.innerHTML = `<${example.angularSelector}></${example.angularSelector}>`;
+      const [{ bootstrapApplication }, Demo] = await Promise.all([
         import('@angular/platform-browser'),
-        import('./kanban.angular'),
+        example.loadAngular(),
       ]);
-      await bootstrapApplication(KanbanShowcaseGridComponent);
+      await bootstrapApplication(Demo as Parameters<typeof bootstrapApplication>[0]);
       break;
     }
     default: {
-      const { load } = await import('./kanban');
+      const load = await example.loadTs();
       load('#app');
     }
   }

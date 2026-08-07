@@ -1,4 +1,4 @@
-import { createKanbanShowcaseConfig } from '../src/kanban.shared';
+import { createKanbanShowcaseConfig } from '../src/examples/showcase/kanban.shared';
 
 export function createWorkflowAndWipRecipe() {
   const config = createKanbanShowcaseConfig();
@@ -9,4 +9,3 @@ export function createWorkflowAndWipRecipe() {
       : column),
   };
 }
-

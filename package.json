@@ -25,7 +25,7 @@
     "build:pages": "pnpm build && node scripts/build-pages.mjs",
     "preview": "vite preview",
     "test": "pnpm test:unit && pnpm test:repository",
-    "test:unit": "vitest run && node --test src/kanban-config.test.mjs",
+    "test:unit": "vitest run",
     "test:repository": "node scripts/verify-repository.mjs",
     "test:e2e": "playwright test",
     "media:verify": "node scripts/verify-repository.mjs --media",
