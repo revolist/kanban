@@ -113,7 +113,7 @@ export function createKanbanShowcaseConfig(): KanbanConfig<KanbanShowcaseCard> {
         ]),
         h('div', { class: 'kanban-showcase-card-context' }, [
           h('span', { class: 'kanban-showcase-label' }, card.label),
-          h('span', { class: 'kanban-showcase-due', title: `Due ${card.dueDate}` }, ['◷', card.dueDate]),
+          h('span', { class: 'kanban-showcase-due', title: `Due ${card.dueDate}` }, `Due ${card.dueDate}`),
         ]),
         h('strong', { class: 'kanban-showcase-card-title' }, card.title),
         h('p', {}, card.description),
@@ -135,11 +135,6 @@ export function createKanbanShowcaseConfig(): KanbanConfig<KanbanShowcaseCard> {
             size: 18,
             value: assignee,
           }))),
-          h('span', { class: 'kanban-showcase-activity' }, [
-            h('span', { title: `${card.comments} comments` }, ['◌', String(card.comments)]),
-            h('span', { title: `${card.attachments} attachments` }, ['⌁', String(card.attachments)]),
-            h('span', { class: 'kanban-showcase-points', title: 'Story points' }, `${card.points} pts`),
-          ]),
         ]),
       ]),
     },

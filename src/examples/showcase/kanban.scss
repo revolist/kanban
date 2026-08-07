@@ -127,10 +127,7 @@
 .kanban-showcase-card-context,
 .kanban-showcase-due,
 .kanban-showcase-label,
-.kanban-showcase-progress__copy,
-.kanban-showcase-activity,
-.kanban-showcase-activity > span,
-.kanban-showcase-points {
+.kanban-showcase-progress__copy {
   height: auto !important;
   max-height: 24px;
 }
@@ -194,7 +191,7 @@
   white-space: nowrap;
 }
 .kanban-showcase-card-title {
-  display: -webkit-box;
+  display: block;
   min-width: 0;
   overflow: hidden;
   color: #1c2638;
@@ -202,18 +199,18 @@
   font-weight: 500;
   letter-spacing: -0.008em;
   line-height: 1.35;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .kanban-showcase-card-content p {
-  display: -webkit-box;
+  display: block;
   margin: 0;
   overflow: hidden;
   color: #697386;
   font-size: 11.5px;
   line-height: 1.5;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .kanban-showcase-progress {
   display: grid;
@@ -249,6 +246,7 @@
 }
 .kanban-showcase-card-meta {
   align-self: end;
+  justify-content: flex-start;
   color: #697386;
   font-size: 11px;
 }
@@ -264,36 +262,11 @@
   flex: 0 0 auto;
   box-shadow: 0 0 0 1.5px var(--kanban-card-background), 0 1px 3px rgba(15, 23, 42, 0.12);
 }
-.kanban-showcase-activity {
-  flex: 0 0 auto;
-  gap: 8px;
-}
-.kanban-showcase-activity > span {
-  gap: 3px;
-  color: #7c8799;
-  font-size: 10px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-.kanban-showcase-points {
-  flex: 0 0 auto;
-  gap: 4px;
-  color: #7c8799;
-  font-size: 10px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
 .kanban-showcase-card--high { border-inline-start-width: 3px; }
 
 .kanban-drag-preview .kanban-showcase-card-content {
   gap: 5px;
 }
-.kanban-drag-preview .kanban-showcase-card-title,
-.kanban-drag-preview .kanban-showcase-card-content p {
-  -webkit-line-clamp: 1;
-}
-
 // Follow the demos app theme and the grid theme itself. The media query below
 // remains a standalone fallback when the example is opened outside the catalog.
 html[data-theme='dark'] .kanban-showcase,
