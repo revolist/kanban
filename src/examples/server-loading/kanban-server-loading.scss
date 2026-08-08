@@ -1,0 +1,29 @@
+.kanban-server-loading {
+  display: grid;
+  min-height: 0;
+  gap: 12px;
+}
+
+.kanban-server-loading__notice {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--rg-theme-cell-border, #d9dee8);
+  border-radius: 8px;
+  background: var(--rg-theme-header-bg, #f6f7fa);
+  color: var(--rg-theme-text, #202938);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.kanban-server-loading--dark .kanban-server-loading__notice {
+  border-color: #3d4657;
+  background: #202735;
+  color: #edf1f7;
+}
+
+.kanban-server-loading__grid {
+  display: block;
+  width: 100%;
+  height: 420px;
+  min-height: 320px;
+}

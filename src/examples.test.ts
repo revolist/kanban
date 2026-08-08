@@ -29,7 +29,18 @@ describe('Kanban example registry', () => {
 
     expect(example).toBe(KANBAN_EXAMPLES.performance);
     expect(example.angularSelector).toBe('kanban-board-grid');
-    expect(KANBAN_EXAMPLE_IDS).toEqual(['showcase', 'performance']);
+    expect(KANBAN_EXAMPLE_IDS).toEqual(['showcase', 'performance', 'server-loading']);
+    expect(typeof example.loadTs).toBe('function');
+    expect(typeof example.loadReact).toBe('function');
+    expect(typeof example.loadVue).toBe('function');
+    expect(typeof example.loadAngular).toBe('function');
+  });
+
+  it('registers every framework loader for server loading', () => {
+    const example = resolveKanbanExample('?example=server-loading');
+
+    expect(example).toBe(KANBAN_EXAMPLES['server-loading']);
+    expect(example.angularSelector).toBe('kanban-server-loading-grid');
     expect(typeof example.loadTs).toBe('function');
     expect(typeof example.loadReact).toBe('function');
     expect(typeof example.loadVue).toBe('function');

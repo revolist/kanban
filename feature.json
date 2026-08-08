@@ -23,6 +23,12 @@
       "title": "50K Cards Board",
       "summary": "A virtualized 50,000-card workflow across 10 columns and two team swimlanes.",
       "query": "example=performance"
+    },
+    {
+      "id": "server-loading",
+      "title": "100K Server-loaded Cards",
+      "summary": "A minimal remote Kanban board paging through 100,000 cards and reporting each loaded range.",
+      "query": "example=server-loading"
     }
   ],
   "recipes": [
