@@ -41,3 +41,32 @@ test('mounts the performance board from the multi-example host', async ({ page }
   expect(firstCardBox?.height).toBeLessThan(200);
   expect(errors).toEqual([]);
 });
+
+const useCaseIds = [
+  'product-delivery',
+  'support-operations',
+  'sales-onboarding',
+  'content-approvals',
+  'quality-manufacturing',
+  'internal-workflows',
+] as const;
+
+for (const useCaseId of useCaseIds) {
+  test(`mounts the ${useCaseId} production-shaped board`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    page.on('pageerror', (error) => errors.push(error.message));
+
+    await page.goto(`/?example=${useCaseId}`);
+    await expect(page.locator('.kanban-use-case-header')).toBeVisible({ timeout: 15_000 });
+
+    const grid = page.locator('revo-grid').first();
+    await expect(grid).toBeVisible({ timeout: 15_000 });
+    await expect(grid.locator('[data-kanban-card-id]').first()).toBeVisible({ timeout: 15_000 });
+    expect(await grid.locator('.kanban-column-header__title').count()).toBeGreaterThanOrEqual(5);
+    expect(await grid.locator('.kanban-swimlane-header__title').count()).toBeGreaterThanOrEqual(2);
+    expect(errors).toEqual([]);
+  });
+}

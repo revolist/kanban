@@ -30,7 +30,8 @@
     "test:e2e": "playwright test",
     "media:verify": "node scripts/verify-repository.mjs --media",
     "media:inspect": "pnpm build && node scripts/record-media.mjs --inspect",
-    "media:record": "pnpm build && node scripts/record-media.mjs"
+    "media:record": "pnpm build && node scripts/record-media.mjs",
+    "media:use-cases": "node scripts/record-use-case-media.mjs"
   },
   "dependencies": {
     "@angular/common": "20.3.26",

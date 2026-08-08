@@ -1,0 +1,279 @@
+/*
+ * Support operations is intentionally a dense, dark incident-command board.
+ * These rules stay local to the showcase and layer over the shared Kanban shell.
+ */
+.kanban-use-case-shell--support-operations {
+  --use-case-accent: #39bdf8;
+  --use-case-border: #1d344e;
+  --use-case-muted: #8ca6c2;
+  --use-case-text: #f7fbff;
+  color: #f7fbff;
+  background: #030d1c;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-header {
+  border-color: #1d344e;
+  background: #061529;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-status {
+  border-color: #243d58;
+  color: #b9c9da;
+  background: #09192d;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-status strong { color: #f5f9ff; }
+
+.kanban-use-case-shell--support-operations .kanban-use-case-grid {
+  --kanban-board-background: #030d1c;
+  --kanban-surface: #07182d;
+  --kanban-card-background: #fff;
+  --kanban-border: #1e3a57;
+  --kanban-text: #f5f9ff;
+  --kanban-muted: #8ca6c2;
+  --kanban-accent: #0c263e;
+  --kanban-accent-strong: #29bdf4;
+  --kanban-radius: 7px;
+  --kanban-gap: 9px;
+  background: #030d1c;
+}
+
+/* Column chrome: outlined command modules rather than light spreadsheet headers. */
+.kanban-use-case-shell--support-operations .kanban-header,
+.kanban-use-case-shell--support-operations .kanban-column-header,
+.kanban-use-case-shell--support-operations .kanban-swimlane-group-row {
+  color: #f5f9ff;
+  background: #061529;
+}
+
+.kanban-use-case-shell--support-operations .kanban-column,
+.kanban-use-case-shell--support-operations .kanban-stack {
+  border-color: #1d3955;
+  background: #07192f;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-column-heading {
+  gap: 10px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-column-dot {
+  width: 4px;
+  height: 20px;
+  border-radius: 3px;
+  color: #20c7f7;
+  box-shadow: 0 0 12px rgba(32, 199, 247, .34);
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-column-title {
+  color: #f8fbff;
+  font-size: 13px;
+  font-weight: 760;
+  letter-spacing: -.01em;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-column-heading:has(.kanban-use-case-column-dot--investigating) .kanban-use-case-column-dot {
+  color: #ff3c47;
+  box-shadow: 0 0 14px rgba(255, 60, 71, .48);
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-column-heading:has(.kanban-use-case-column-dot--waiting-on-customer) .kanban-use-case-column-dot {
+  color: #f59e0b;
+  box-shadow: 0 0 12px rgba(245, 158, 11, .32);
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-column-heading:has(.kanban-use-case-column-dot--resolved) .kanban-use-case-column-dot {
+  color: #10c878;
+  box-shadow: 0 0 12px rgba(16, 200, 120, .34);
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-lane-heading {
+  gap: 2px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-lane-kicker {
+  color: #5ebdf1;
+  font-size: 9px;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-lane-title {
+  color: #f6f9fd;
+  font-size: 13px;
+  font-weight: 760;
+}
+
+/* White service tickets float above the navy workflow wells. */
+.kanban-use-case-shell--support-operations .kanban-card {
+  border: 1px solid #d7e0ea;
+  border-left: 6px solid #25bce9;
+  border-radius: 7px !important;
+  color: #0a1830;
+  background: #fff !important;
+  box-shadow: 0 5px 14px rgba(0, 6, 17, .32);
+}
+
+.kanban-use-case-shell--support-operations .kanban-card:has(.kanban-use-case-card-content--stage-investigating) {
+  border-color: #ff4a53;
+  border-left-width: 6px;
+  box-shadow: 0 0 0 1px rgba(255, 63, 73, .28), 0 5px 18px rgba(0, 6, 17, .38);
+}
+
+.kanban-use-case-shell--support-operations .kanban-card:has(.kanban-use-case-card-content--stage-waiting-on-customer) {
+  border-left-color: #f59e0b;
+}
+
+.kanban-use-case-shell--support-operations .kanban-card:has(.kanban-use-case-card-content--stage-resolved) {
+  border-left-color: #11bd72;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-card-content--support-ticket {
+  grid-template-rows: 36px minmax(38px, auto) 34px 38px;
+  align-content: start;
+  gap: 9px;
+  padding: 1px 2px 2px;
+  color: #0a1830;
+  background: #fff;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-identity {
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-monogram {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  color: #0b4f88;
+  background: #d9f3ff;
+  font-size: 11px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-account strong {
+  color: #09162b;
+  font-size: 11.5px;
+  line-height: 15px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-account small {
+  color: #52637a;
+  font-size: 9.5px;
+  line-height: 13px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-severity {
+  padding: 3px 7px;
+  border: 1px solid #d6e6ef;
+  border-radius: 5px;
+  color: #0b4d85;
+  background: #edf8fd;
+  font-size: 10px;
+  line-height: 14px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-card-content--stage-investigating .kanban-use-case-support-severity {
+  border-color: #ffd3d5;
+  color: #d61f2c;
+  background: #fff0f0;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-card-title {
+  color: #09152a;
+  font-size: 13px;
+  font-weight: 780;
+  line-height: 18px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-sla {
+  padding: 7px 9px;
+  border: 1px solid #d8e0e8;
+  border-radius: 5px;
+  color: #42536a;
+  background: #f8fafc;
+  font-size: 9.5px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-clock {
+  color: #0d4f8a;
+  font-size: 12px;
+  font-weight: 820;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-clock--urgent { color: #d61f2c; }
+
+.kanban-use-case-shell--support-operations .kanban-use-case-card-content--stage-waiting-on-customer .kanban-use-case-support-sla {
+  border-color: #efdcb9;
+  background: #fff9ed;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-card-content--stage-waiting-on-customer .kanban-use-case-support-clock { color: #a45b00; }
+
+.kanban-use-case-shell--support-operations .kanban-use-case-card-content--stage-resolved .kanban-use-case-support-sla {
+  border-color: #cde9db;
+  background: #effaf4;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-card-content--stage-resolved .kanban-use-case-support-clock { color: #087343; }
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-next {
+  gap: 1px;
+  padding-left: 9px;
+  border-left: 0;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-next span {
+  color: #52637a;
+  font-size: 9px;
+  line-height: 12px;
+}
+
+.kanban-use-case-shell--support-operations .kanban-use-case-support-next strong {
+  color: #0e1a30;
+  font-size: 10px;
+  line-height: 14px;
+  -webkit-line-clamp: 1;
+}
+
+/* The target ticket intentionally ends at the next-owner row. */
+.kanban-use-case-shell--support-operations .kanban-use-case-support-footer { display: none; }
+
+@media (max-width: 900px) {
+  .kanban-use-case-shell--support-operations .kanban-use-case-card-content--support-ticket {
+    grid-template-rows: 34px minmax(36px, auto) 32px 36px;
+    gap: 7px;
+  }
+}
+
+/* Reference-sized incident board: full-width stage modules and readable SLA cards. */
+.kanban-use-case-shell--support-operations .kanban-column-header {
+  min-height: 62px;
+  padding: 13px 17px;
+}
+.kanban-use-case-shell--support-operations .kanban-use-case-column-title { font-size: 16px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-column-dot { width: 5px; height: 27px; }
+.kanban-use-case-shell--support-operations .kanban-column-header__count,
+.kanban-use-case-shell--support-operations .kanban-column-header__wip {
+  min-height: 28px;
+  padding-inline: 10px;
+  font-size: 12px;
+}
+.kanban-use-case-shell--support-operations .kanban-swimlane-group-row--top { min-height: 60px; padding: 11px 18px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-lane-kicker { font-size: 10px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-lane-title { font-size: 17px; }
+.kanban-use-case-shell--support-operations .kanban-stack { padding: 8px 11px; }
+.kanban-use-case-shell--support-operations .kanban-card { padding: 15px 13px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-card-content--support-ticket {
+  grid-template-rows: 43px minmax(48px, auto) 42px 43px;
+  gap: 10px;
+}
+.kanban-use-case-shell--support-operations .kanban-use-case-support-identity { grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-support-monogram { width: 38px; height: 38px; font-size: 14px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-support-account strong { font-size: 13px; line-height: 17px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-support-account small { font-size: 10.5px; line-height: 15px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-support-severity { padding: 4px 8px; font-size: 11.5px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-card-title { font-size: 15px; line-height: 20px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-support-sla { padding: 9px 10px; font-size: 10.5px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-support-clock { font-size: 14px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-support-next span { font-size: 10px; }
+.kanban-use-case-shell--support-operations .kanban-use-case-support-next strong { font-size: 11.5px; line-height: 15px; }

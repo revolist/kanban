@@ -29,6 +29,42 @@
       "title": "100K Server-loaded Cards",
       "summary": "A minimal remote Kanban board paging through 100,000 cards and reporting each loaded range.",
       "query": "example=server-loading"
+    },
+    {
+      "id": "product-delivery",
+      "title": "Product Delivery",
+      "summary": "A production release board connecting discovery, design, delivery, platform readiness, review, and release decisions.",
+      "query": "example=product-delivery"
+    },
+    {
+      "id": "support-operations",
+      "title": "Support Operations",
+      "summary": "A customer support board connecting intake, triage, investigation, customer responses, escalations, SLAs, and resolution.",
+      "query": "example=support-operations"
+    },
+    {
+      "id": "sales-onboarding",
+      "title": "Sales and Onboarding",
+      "summary": "An account journey connecting qualification, solution design, contracting, implementation, customer promises, and go-live.",
+      "query": "example=sales-onboarding"
+    },
+    {
+      "id": "content-approvals",
+      "title": "Content and Approvals",
+      "summary": "A content operations board connecting campaign briefs, creation, editorial review, legal approval, localization, and publishing commitments.",
+      "query": "example=content-approvals"
+    },
+    {
+      "id": "quality-manufacturing",
+      "title": "Quality and Manufacturing",
+      "summary": "A plant quality board connecting defects to work orders, production lines, material lots, containment, corrective action, and verified closure.",
+      "query": "example=quality-manufacturing"
+    },
+    {
+      "id": "internal-workflows",
+      "title": "Internal Workflows",
+      "summary": "A cross-functional request board connecting finance, compliance, procurement, hiring, IT, approvals, ownership, and fulfillment.",
+      "query": "example=internal-workflows"
     }
   ],
   "recipes": [

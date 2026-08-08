@@ -1,0 +1,358 @@
+/*
+ * Executive revenue room.
+ *
+ * The stage palette is intentionally scoped to this scenario: each column reads
+ * as a distinct part of the customer journey while the shared renderer remains
+ * the accessible, interactive source of card markup.
+ */
+.kanban-use-case-shell--sales-onboarding {
+  --use-case-accent: #5b31c9;
+  --use-case-border: #e3e1e8;
+  --use-case-muted: #666579;
+  --use-case-text: #11121a;
+  background: #fbfaf8;
+  font-family: Inter, "Avenir Next", ui-sans-serif, system-ui, sans-serif;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-grid {
+  --kanban-board-background: #fbfaf8;
+  --kanban-surface: #f5f3f1;
+  --kanban-card-background: #fff;
+  --kanban-border: #e3e0dd;
+  --kanban-text: #14151c;
+  --kanban-muted: #656577;
+  --kanban-accent: #eeeaf8;
+  --kanban-accent-strong: #5b31c9;
+  --kanban-radius: 10px;
+  --kanban-column-gutter: 8px;
+  --kanban-gap: 14px;
+}
+
+html[data-capture="board"] .kanban-use-case-shell--sales-onboarding revogr-data[type="rgRow"] {
+  transform: translateY(32px);
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-stack {
+  padding-inline: 18px !important;
+}
+
+html[data-capture="board"] .kanban-use-case-shell--sales-onboarding {
+  padding: 14px 4px 0;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-header {
+  border-color: #e5e2df;
+  background: #fffefa;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-title {
+  color: #11121a;
+  font-weight: 760;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-metric__value {
+  color: #15161f;
+  font-variant-numeric: tabular-nums;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-status {
+  border-color: #eadfd0;
+  color: #6d5d4f;
+  background: #fff9ef;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-status strong {
+  color: #3e2e23;
+}
+
+/* Stage headers */
+.kanban-use-case-shell--sales-onboarding .kanban-column-header {
+  --sales-stage: #5b31c9;
+  --sales-stage-soft: #f5f0ff;
+  --sales-stage-line: #6437cf;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-column-header:has(.kanban-use-case-column-dot--solution) {
+  --sales-stage: #0962c7;
+  --sales-stage-soft: #eff7ff;
+  --sales-stage-line: #0962c7;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-column-header:has(.kanban-use-case-column-dot--contract) {
+  --sales-stage: #cf8300;
+  --sales-stage-soft: #fff8e8;
+  --sales-stage-line: #d88b00;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-column-header:has(.kanban-use-case-column-dot--implementation) {
+  --sales-stage: #087f78;
+  --sales-stage-soft: #edf9f7;
+  --sales-stage-line: #0a8c83;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-column-header:has(.kanban-use-case-column-dot--live) {
+  --sales-stage: #078238;
+  --sales-stage-soft: #eff9f1;
+  --sales-stage-line: #078d3d;
+}
+
+/* Stable stage fallbacks for renderers that do not project :has() across the grid boundary. */
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="qualified"] .kanban-column-header { background: #5d31c8; }
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="solution"] .kanban-column-header { background: #075ec8; }
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="contract"] .kanban-column-header { background: #d68b00; }
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="implementation"] .kanban-column-header { background: #07847b; }
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="live"] .kanban-column-header { background: #078b39; }
+
+.kanban-use-case-shell--sales-onboarding .kanban-column-header-cell::before {
+  inset-inline: 7px;
+  border-radius: 10px 10px 0 0;
+  background: #f8f6f3 !important;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-column-header {
+  position: relative;
+  z-index: 1;
+  min-height: 58px;
+  padding-inline: 20px;
+  border-radius: 10px 10px 0 0;
+  color: #fff;
+  background: var(--sales-stage);
+  box-shadow: 0 5px 12px color-mix(in srgb, var(--sales-stage) 18%, transparent);
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-column-heading {
+  gap: 8px;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-column-dot {
+  width: 7px;
+  height: 7px;
+  border: 2px solid rgba(255, 255, 255, .58);
+  border-radius: 50%;
+  color: #fff;
+  background: transparent;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-column-title,
+.kanban-use-case-shell--sales-onboarding .kanban-column-header__title,
+.kanban-use-case-shell--sales-onboarding .kanban-column-header__count,
+.kanban-use-case-shell--sales-onboarding .kanban-column-header__wip,
+.kanban-use-case-shell--sales-onboarding .kanban-column-header__toggle {
+  color: #fff;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-column-title {
+  font-size: 20px;
+  font-weight: 770;
+}
+
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="solution"] .kanban-use-case-column-dot,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="solution"] .kanban-column-header__count,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="solution"] .kanban-column-header__wip,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="contract"] .kanban-use-case-column-dot,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="contract"] .kanban-column-header__count,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="contract"] .kanban-column-header__wip,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="implementation"] .kanban-use-case-column-dot,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="implementation"] .kanban-column-header__count,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="implementation"] .kanban-column-header__wip,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="live"] .kanban-use-case-column-dot,
+.kanban-use-case-shell--sales-onboarding [data-kanban-column-prop="live"] .kanban-column-header__count {
+  color: #fff;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-column-header__count,
+.kanban-use-case-shell--sales-onboarding .kanban-column-header__wip {
+  border-color: rgba(255, 255, 255, .28);
+  background: rgba(15, 20, 30, .16);
+  font-variant-numeric: tabular-nums;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-board-cell {
+  --sales-stage-soft: #f5f0ff;
+  --sales-stage-line: #6437cf;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-board-cell:has(.kanban-use-case-card-content--stage-solution) {
+  --sales-stage-soft: #eff7ff;
+  --sales-stage-line: #0962c7;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-board-cell:has(.kanban-use-case-card-content--stage-contract) {
+  --sales-stage-soft: #fff8e8;
+  --sales-stage-line: #d88b00;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-board-cell:has(.kanban-use-case-card-content--stage-implementation) {
+  --sales-stage-soft: #edf9f7;
+  --sales-stage-line: #0a8c83;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-board-cell:has(.kanban-use-case-card-content--stage-live) {
+  --sales-stage-soft: #eff9f1;
+  --sales-stage-line: #078d3d;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-board-cell::before {
+  background: var(--sales-stage-soft) !important;
+}
+
+/* Deal cards */
+.kanban-use-case-shell--sales-onboarding .kanban-card {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--sales-stage-line, #6437cf) 16%, #ddd9d4) !important;
+  border-top: 3px solid var(--sales-stage-line, #6437cf) !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 3px 10px rgba(31, 27, 45, .08), 0 1px 2px rgba(31, 27, 45, .06);
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-card:has(.kanban-use-case-card-content--stage-solution) {
+  --sales-stage-line: #0962c7;
+  --sales-stage-soft: #eff7ff;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-card:has(.kanban-use-case-card-content--stage-contract) {
+  --sales-stage-line: #d88b00;
+  --sales-stage-soft: #fff8e8;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-card:has(.kanban-use-case-card-content--stage-implementation) {
+  --sales-stage-line: #0a8c83;
+  --sales-stage-soft: #edf9f7;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-card:has(.kanban-use-case-card-content--stage-live) {
+  --sales-stage-line: #078d3d;
+  --sales-stage-soft: #eff9f1;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-card:hover {
+  box-shadow: 0 7px 18px rgba(31, 27, 45, .12), 0 2px 4px rgba(31, 27, 45, .06);
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-card-content--revenue-opportunity {
+  grid-template-rows: 36px minmax(24px, auto) 19px 62px 28px auto;
+  align-content: start;
+  gap: 8px;
+  padding: 4px 5px 2px;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-account {
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-monogram {
+  width: 36px;
+  height: 36px;
+  border-radius: 7px;
+  color: var(--sales-stage-line, #6437cf);
+  background: color-mix(in srgb, var(--sales-stage-line, #6437cf) 12%, #fff);
+  font-size: 15px;
+  font-weight: 820;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-name {
+  display: block;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-name strong {
+  display: none;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-name small {
+  color: #343441;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 18px;
+  text-transform: capitalize;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-value {
+  color: #11121a;
+  font-size: 25px;
+  font-weight: 820;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.035em;
+  line-height: 30px;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-card-title {
+  color: #11121a;
+  font-size: 20px;
+  font-weight: 760;
+  line-height: 24px;
+  -webkit-line-clamp: 1;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-solution {
+  color: #484856;
+  font-size: 14px;
+  font-weight: 540;
+  line-height: 19px;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-next {
+  gap: 2px;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--sales-stage-line, #6437cf) 18%, #fff);
+  border-radius: 7px;
+  background: var(--sales-stage-soft, #f5f0ff);
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-next span {
+  color: var(--sales-stage-line, #6437cf);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .065em;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-next strong {
+  color: #20212b;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  -webkit-line-clamp: 1;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-card-meta {
+  gap: 6px;
+  align-self: end;
+  overflow: visible;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-avatar-stack {
+  height: 28px !important;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-owner__avatar {
+  width: 28px !important;
+  height: 28px !important;
+  box-shadow: 0 0 0 1.5px #fff;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-owner,
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-date {
+  color: #42424e;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-date {
+  font-variant-numeric: tabular-nums;
+}
+
+.kanban-use-case-shell--sales-onboarding .kanban-use-case-revenue-risk {
+  padding: 4px 7px;
+  border: 1px solid #f4c7c2;
+  border-radius: 5px;
+  color: #b42318;
+  background: #fff2f0;
+  font-size: 9px;
+}
+
+@media (max-width: 900px) {
+  .kanban-use-case-shell--sales-onboarding .kanban-use-case-metrics {
+    display: none;
+  }
+}

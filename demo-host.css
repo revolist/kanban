@@ -26,6 +26,18 @@ body {
   padding: 12px;
 }
 
+html[data-capture='board'],
+html[data-capture='board'] body,
+html[data-capture='board'] #app {
+  overflow: hidden;
+  background: transparent;
+}
+
+html[data-capture='board'] #app { padding: 0; }
+html[data-capture='board'] .kanban-use-case-shell { min-height: 0; }
+html[data-capture='board'] .kanban-use-case-header { display: none; }
+html[data-capture='board'] .kanban-use-case-grid { width: 100vw; height: 100vh; flex: 1 1 100%; }
+
 .flex {
   display: flex;
 }

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_KANBAN_EXAMPLE_ID,
@@ -29,7 +29,17 @@ describe('Kanban example registry', () => {
 
     expect(example).toBe(KANBAN_EXAMPLES.performance);
     expect(example.angularSelector).toBe('kanban-board-grid');
-    expect(KANBAN_EXAMPLE_IDS).toEqual(['showcase', 'performance', 'server-loading']);
+    expect(KANBAN_EXAMPLE_IDS).toEqual([
+      'showcase',
+      'performance',
+      'server-loading',
+      'product-delivery',
+      'support-operations',
+      'sales-onboarding',
+      'content-approvals',
+      'quality-manufacturing',
+      'internal-workflows',
+    ]);
     expect(typeof example.loadTs).toBe('function');
     expect(typeof example.loadReact).toBe('function');
     expect(typeof example.loadVue).toBe('function');
@@ -46,6 +56,44 @@ describe('Kanban example registry', () => {
     expect(typeof example.loadVue).toBe('function');
     expect(typeof example.loadAngular).toBe('function');
   });
+
+  it('registers all production-shaped use cases for every framework', () => {
+    expect(KANBAN_EXAMPLE_IDS).toEqual([
+      'showcase',
+      'performance',
+      'server-loading',
+      'product-delivery',
+      'support-operations',
+      'sales-onboarding',
+      'content-approvals',
+      'quality-manufacturing',
+      'internal-workflows',
+    ]);
+
+    for (const id of KANBAN_EXAMPLE_IDS.slice(3)) {
+      const example = resolveKanbanExample(`?example=${id}`);
+      expect(example).toBe(KANBAN_EXAMPLES[id]);
+      expect(example.angularSelector).toBe(`kanban-${id}-use-case`);
+      expect(typeof example.loadTs).toBe('function');
+      expect(typeof example.loadReact).toBe('function');
+      expect(typeof example.loadVue).toBe('function');
+      expect(typeof example.loadAngular).toBe('function');
+    }
+  });
+
+  it('keeps customer use cases separate from reusable examples', () => {
+    const registry = readFileSync(new URL('./examples.ts', import.meta.url), 'utf8');
+
+    for (const id of KANBAN_EXAMPLE_IDS.slice(3)) {
+      expect(existsSync(new URL(`./use-cases/${id}/`, import.meta.url))).toBe(true);
+      expect(existsSync(new URL(`./examples/${id}/`, import.meta.url))).toBe(false);
+      expect(registry).toContain(`./use-cases/${id}/${id}`);
+      expect(registry).not.toContain(`./examples/${id}/${id}`);
+    }
+
+    expect(existsSync(new URL('./use-cases/kanban-use-case-demo.ts', import.meta.url))).toBe(true);
+    expect(existsSync(new URL('./kanban-use-case-demo.ts', import.meta.url))).toBe(false);
+  });
 });
 
 describe('Kanban showcase card layout', () => {
@@ -58,7 +106,8 @@ describe('Kanban showcase card layout', () => {
     expect(styles).toMatch(/\.kanban-showcase-card-content\s*\{[^}]*grid-template-rows:\s*20px 20px auto auto 30px minmax\(26px, 1fr\);[^}]*gap:\s*5px;/s);
     expect(styles).toMatch(/\.kanban-showcase-card-topline\s*\{[^}]*display:\s*flex\s*!important;[^}]*grid-row:\s*1;[^}]*color:\s*#8a94a6;/s);
     expect(styles).toMatch(/\.kanban-showcase-priority\s*\{[^}]*margin-inline-start:\s*auto;/s);
-    expect(styles).toMatch(/\.kanban-showcase-card-meta\s*\{[^}]*padding-block-end:\s*2px;/s);
+    expect(styles).toMatch(/\.kanban-showcase-card-title\s*\{[^}]*margin-block-start:\s*3px;/s);
+    expect(styles).toMatch(/\.kanban-showcase-card-meta\s*\{[^}]*align-self:\s*start;[^}]*margin-block-start:\s*5px;[^}]*padding-block-end:\s*2px;/s);
     expect(styles).toMatch(/\.kanban-showcase-avatar-stack\s*\{[^}]*height:\s*20px\s*!important;/s);
   });
 });

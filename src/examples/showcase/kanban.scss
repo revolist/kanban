@@ -196,6 +196,7 @@
 .kanban-showcase-card-title {
   display: block;
   min-width: 0;
+  margin-block-start: 3px;
   overflow: hidden;
   color: #1c2638;
   font-size: 13px;
@@ -248,7 +249,8 @@
   background: linear-gradient(90deg, #5b73e8, #7c5ce7);
 }
 .kanban-showcase-card-meta {
-  align-self: end;
+  align-self: start;
+  margin-block-start: 5px;
   padding-block-end: 2px;
   justify-content: flex-start;
   color: #697386;

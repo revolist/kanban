@@ -7,6 +7,8 @@ const framework: KanbanExampleFramework = import.meta.env.MODE === 'development'
   ? 'ts'
   : import.meta.env.MODE as KanbanExampleFramework;
 const example = resolveKanbanExample(window.location.search);
+const captureMode = new URLSearchParams(window.location.search).get('capture');
+if (captureMode === 'board') document.documentElement.dataset.capture = captureMode;
 
 async function bootstrap() {
   switch (framework) {
