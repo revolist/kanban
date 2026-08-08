@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
 import { INTERNAL_WORKFLOWS_SCENARIO } from './internal-workflows.data';
 
@@ -99,7 +100,14 @@ describe('Internal workflows Kanban use case', () => {
   });
 
   it('uses the numbered process-blueprint presentation in every framework', () => {
-    const styles = readFileSync(new URL('./internal-workflows.scss', import.meta.url), 'utf8');
+    const fixturePath = (...parts: string[]) => resolve(
+      process.cwd(),
+      'src',
+      'use-cases',
+      'internal-workflows',
+      ...parts,
+    );
+    const styles = readFileSync(fixturePath('internal-workflows.scss'), 'utf8');
 
     expect(styles).toContain('counter-reset: internal-stage');
     expect(styles).toContain('counter(internal-stage, decimal-leading-zero)');
@@ -113,7 +121,7 @@ describe('Internal workflows Kanban use case', () => {
       'internal-workflows.react.tsx',
       'internal-workflows.angular.ts',
     ]) {
-      const source = readFileSync(new URL(`./${entry}`, import.meta.url), 'utf8');
+      const source = readFileSync(fixturePath(entry), 'utf8');
       expect(source).toContain("import './internal-workflows.scss';");
     }
   });

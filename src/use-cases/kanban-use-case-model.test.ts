@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   createKanbanUseCaseConfig,
@@ -63,7 +64,10 @@ function scenario(overrides: Partial<KanbanUseCaseScenario> = {}): KanbanUseCase
 
 describe('Kanban use-case scenarios', () => {
   it('keeps product-delivery content compact and reserves complete badge space', () => {
-    const styles = readFileSync(new URL('./kanban-use-case-demo.scss', import.meta.url), 'utf8');
+    const styles = readFileSync(
+      resolve(process.cwd(), 'src', 'use-cases', 'kanban-use-case-demo.scss'),
+      'utf8',
+    );
 
     expect(styles).toMatch(/\.kanban-use-case-card-content--delivery\s*\{[^}]*align-content:\s*start;/s);
     expect(styles).toMatch(/\.kanban-use-case-card-content--delivery \.kanban-use-case-card-topline\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) auto auto;/s);

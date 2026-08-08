@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_KANBAN_EXAMPLE_ID,
@@ -6,6 +7,8 @@ import {
   KANBAN_EXAMPLE_IDS,
   resolveKanbanExample,
 } from './examples';
+
+const repoPath = (...parts: string[]) => resolve(process.cwd(), ...parts);
 
 describe('Kanban example registry', () => {
   it('keeps the classic showcase as the default for missing and unknown example ids', () => {
@@ -82,24 +85,24 @@ describe('Kanban example registry', () => {
   });
 
   it('keeps customer use cases separate from reusable examples', () => {
-    const registry = readFileSync(new URL('./examples.ts', import.meta.url), 'utf8');
+    const registry = readFileSync(repoPath('src', 'examples.ts'), 'utf8');
 
     for (const id of KANBAN_EXAMPLE_IDS.slice(3)) {
-      expect(existsSync(new URL(`./use-cases/${id}/`, import.meta.url))).toBe(true);
-      expect(existsSync(new URL(`./examples/${id}/`, import.meta.url))).toBe(false);
+      expect(existsSync(repoPath('src', 'use-cases', id))).toBe(true);
+      expect(existsSync(repoPath('src', 'examples', id))).toBe(false);
       expect(registry).toContain(`./use-cases/${id}/${id}`);
       expect(registry).not.toContain(`./examples/${id}/${id}`);
     }
 
-    expect(existsSync(new URL('./use-cases/kanban-use-case-demo.ts', import.meta.url))).toBe(true);
-    expect(existsSync(new URL('./kanban-use-case-demo.ts', import.meta.url))).toBe(false);
+    expect(existsSync(repoPath('src', 'use-cases', 'kanban-use-case-demo.ts'))).toBe(true);
+    expect(existsSync(repoPath('src', 'kanban-use-case-demo.ts'))).toBe(false);
   });
 });
 
 describe('Kanban showcase card layout', () => {
   it('pins the ticket ID to the first row opposite the priority badge', () => {
-    const template = readFileSync(new URL('./examples/showcase/kanban.shared.ts', import.meta.url), 'utf8');
-    const styles = readFileSync(new URL('./examples/showcase/kanban.scss', import.meta.url), 'utf8');
+    const template = readFileSync(repoPath('src', 'examples', 'showcase', 'kanban.shared.ts'), 'utf8');
+    const styles = readFileSync(repoPath('src', 'examples', 'showcase', 'kanban.scss'), 'utf8');
 
     expect(template).toMatch(/class: 'kanban-showcase-card-topline' \}, \[\s*card\.id,\s*h\('span', \{ class: `kanban-showcase-priority/s);
     expect(template).not.toContain("class: 'kanban-showcase-card-id'");
