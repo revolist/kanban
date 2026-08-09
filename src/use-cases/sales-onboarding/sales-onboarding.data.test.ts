@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
 import { SALES_ONBOARDING_SCENARIO } from './sales-onboarding.data';
 
@@ -78,5 +80,53 @@ describe('Sales and onboarding Kanban use case', () => {
     expect(liveCards.every(({ progress, handoff }) => (
       progress === 100 && handoff === 'Onboarding → Customer success'
     ))).toBe(true);
+  });
+
+  it('uses illustrated stage headers in every framework', () => {
+    expect(SALES_ONBOARDING_SCENARIO.headerIcons).toEqual({
+      qualified: 'gem',
+      solution: 'lightbulb',
+      contract: 'pen-nib',
+      implementation: 'rocket',
+      live: 'chart-line-up',
+    });
+
+    const fixturePath = (...parts: string[]) => resolve(
+      process.cwd(),
+      'src',
+      'use-cases',
+      'sales-onboarding',
+      ...parts,
+    );
+
+    for (const entry of [
+      'sales-onboarding.ts',
+      'sales-onboarding.vue',
+      'sales-onboarding.react.tsx',
+      'sales-onboarding.angular.ts',
+    ]) {
+      expect(readFileSync(fixturePath(entry), 'utf8')).not.toContain('@phosphor-icons');
+    }
+  });
+
+  it('keeps custom stage titles and icons at 18px', () => {
+    const styles = readFileSync(
+      resolve(process.cwd(), 'src', 'use-cases', 'sales-onboarding', 'sales-onboarding.scss'),
+      'utf8',
+    );
+
+    expect(styles).toMatch(/\.kanban-use-case-column-icon\s*\{[^}]*width:\s*18px !important;[^}]*height:\s*18px;[^}]*flex:\s*0 0 18px !important;/s);
+    expect(styles).toMatch(/\.kanban-use-case-column-title,[^{]*\{[^}]*font-size:\s*18px;/s);
+    expect(styles).not.toMatch(/\[data-kanban-column-prop="implementation"\][^{]*\{[^}]*font-size:/s);
+  });
+
+  it('reserves a complete final row for blocked-deal messaging', () => {
+    const styles = readFileSync(
+      resolve(process.cwd(), 'src', 'use-cases', 'sales-onboarding', 'sales-onboarding.scss'),
+      'utf8',
+    );
+
+    expect(styles).toMatch(/\.kanban-use-case-card-content--revenue-opportunity:has\(\.kanban-use-case-revenue-risk\)\s*\{[^}]*grid-template-rows:\s*36px minmax\(24px, auto\) 19px 50px 28px minmax\(38px, auto\);[^}]*gap:\s*4px;/s);
+    expect(styles).toMatch(/\.kanban-use-case-revenue-risk\s*\{[^}]*white-space:\s*normal;[^}]*-webkit-line-clamp:\s*2;/s);
   });
 });

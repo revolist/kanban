@@ -7,16 +7,10 @@ const productSwimlaneTemplate: KanbanSwimlaneTemplate = (h, context) => h('div',
 }, [
   h('span', { class: 'product-delivery-workstream__mark', 'aria-hidden': 'true' }, ''),
   h('span', { class: 'product-delivery-workstream__copy' }, [
-    h('small', {}, context.swimlane.id === 'product' ? 'CUSTOMER VALUE' : 'PLATFORM READINESS'),
+    h('small', {}, 'WORKSTREAM'),
     h('strong', {}, context.swimlane.title),
   ]),
-  h('span', { class: 'product-delivery-workstream__count' }, `${context.visibleCount} items`),
-  h('button', {
-    type: 'button',
-    class: 'product-delivery-workstream__toggle',
-    onClick: context.toggleCollapsed,
-    'aria-label': `Toggle ${context.swimlane.title}`,
-  }, context.swimlaneColumnCollapsed ? '+' : '−'),
+  h('span', { class: 'product-delivery-workstream__count' }, String(context.visibleCount)),
 ]);
 
 const columns: ColumnRegular[] = [
@@ -33,10 +27,17 @@ const columns: ColumnRegular[] = [
 export const PRODUCT_DELIVERY_SCENARIO = {
   id: 'product-delivery',
   cardPresentation: 'delivery',
+  headerIcons: {
+    discovery: 'compass',
+    design: 'pen-to-square',
+    build: 'screwdriver-wrench',
+    review: 'shield-halved',
+    released: 'rocket',
+  },
   useSwimlanes: true,
   swimlaneLayout: 'top',
   colorScheme: 'light',
-  layout: { cardRowHeight: 250, swimlaneWidth: 168, collapsedSwimlaneWidth: 44 },
+  layout: { cardRowHeight: 264, swimlaneWidth: 168, collapsedSwimlaneWidth: 44 },
   eyebrow: 'Product delivery · Release R26.9',
   title: 'From customer signal to a confident release',
   description: 'Keep discovery, product design, delivery, and platform readiness in one view, so every handoff has an owner and customers get the release the team promised.',
@@ -51,11 +52,11 @@ export const PRODUCT_DELIVERY_SCENARIO = {
     { label: 'Target release', value: 'Sep 18', tone: 'neutral' },
   ],
   workflowColumns: [
-    { prop: 'discovery', name: 'Discovery', size: 288 },
-    { prop: 'design', name: 'Design', size: 288 },
-    { prop: 'build', name: 'Build', size: 288, wipLimit: 4 },
-    { prop: 'review', name: 'Review', size: 288, wipLimit: 4 },
-    { prop: 'released', name: 'Released', size: 288 },
+    { prop: 'discovery', name: 'Discovery', size: 334 },
+    { prop: 'design', name: 'Design', size: 334 },
+    { prop: 'build', name: 'Build', size: 334, wipLimit: 4 },
+    { prop: 'review', name: 'Review', size: 334, wipLimit: 4 },
+    { prop: 'released', name: 'Released', size: 334 },
   ],
   swimlanes: [
     { id: 'product', title: 'Product experience', collapsible: true, swimlaneTemplate: productSwimlaneTemplate },

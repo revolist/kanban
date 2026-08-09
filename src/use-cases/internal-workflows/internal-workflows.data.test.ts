@@ -123,6 +123,76 @@ describe('Internal workflows Kanban use case', () => {
     ]) {
       const source = readFileSync(fixturePath(entry), 'utf8');
       expect(source).toContain("import './internal-workflows.scss';");
+      expect(source).not.toContain('@phosphor-icons');
     }
+
+    expect(styles).toContain('@fortawesome/fontawesome-free/svgs/solid/download.svg');
+  });
+
+  it('locks the polished tapered rail and compact card geometry', () => {
+    expect(INTERNAL_WORKFLOWS_SCENARIO.useSwimlanes).toBe(false);
+    expect(INTERNAL_WORKFLOWS_SCENARIO.allowColumnMove).toBe(false);
+    expect(INTERNAL_WORKFLOWS_SCENARIO.workflowColumns.map(({ size }) => size)).toEqual([
+      351,
+      341,
+      343,
+      315,
+      322,
+    ]);
+    expect(INTERNAL_WORKFLOWS_SCENARIO.layout.cardRowHeight).toBe(252);
+
+    const styles = readFileSync(resolve(
+      process.cwd(),
+      'src',
+      'use-cases',
+      'internal-workflows',
+      'internal-workflows.scss',
+    ), 'utf8');
+
+    expect(styles).toContain('--internal-header-height: 60px');
+    expect(styles).toContain('--internal-step-size: 35px');
+    expect(styles).toContain('--internal-connector-size: 12px');
+    expect(styles).toContain('--internal-card-gap: 8px');
+    expect(styles).toMatch(/\.kanban-use-case-shell--internal-workflows\s*\{[^}]*overflow:\s*hidden;/s);
+    expect(styles).toMatch(/\.kanban-use-case-grid\s*\{[^}]*width:\s*100%;[^}]*min-width:\s*0;[^}]*flex:\s*1 1 auto;/s);
+    expect(styles).not.toContain('width: 1672px');
+    expect(styles).toContain('height: 100%');
+    expect(styles).not.toContain('zoom:');
+    expect(styles).toContain('clip-path: polygon(');
+    expect(styles).toMatch(/\.kanban-column-header-cell:nth-of-type\(n \+ 2\)\s*\{[^}]*padding-left:\s*0\s*!important;/s);
+    expect(styles).toMatch(/\.kanban-column-header-cell:nth-of-type\(1\)\s*\{[^}]*z-index:\s*5;/s);
+    expect(styles).toMatch(/\.kanban-column-header-cell:nth-of-type\(5\)\s*\{[^}]*z-index:\s*1;/s);
+    expect(styles).toMatch(/\.kanban-column-header-cell:not\(:nth-of-type\(5\)\)::before\s*\{[^}]*right:\s*-14px;[^}]*width:\s*14px;[^}]*height:\s*var\(--internal-header-height\);[^}]*clip-path:\s*polygon\(0 0, 100% 50%, 0 100%\);[^}]*background:\s*var\(--internal-stage\)\s*!important;/s);
+    expect(styles).toContain('--internal-separator-color: #f7fafc');
+    expect(styles).toMatch(/data-kanban-column-prop="assigned"\],[\s\S]*?data-kanban-column-prop="fulfillment"\]\s*\{[^}]*width:\s*calc\(100% \+ 6px\);[^}]*margin-left:\s*8px;/s);
+    expect(styles).toMatch(/data-kanban-column-prop="complete"\]\s*\{[^}]*width:\s*calc\(100% - 26px\);[^}]*margin-left:\s*8px;/s);
+    expect(styles).not.toMatch(/\.kanban-column-header-cell:not\(:nth-of-type\(5\)\)::before\s*\{[^}]*filter:/s);
+    expect(styles).toMatch(/\.kanban-column-header-cell:not\(:nth-of-type\(5\)\)::after\s*\{[^}]*display:\s*block;[^}]*width:\s*var\(--internal-connector-size\);[^}]*height:\s*var\(--internal-connector-size\);/s);
+    expect(styles).toMatch(/data-kanban-column-prop="assigned"\][^{]*::before,[\s\S]*?data-kanban-column-prop="complete"\][^{]*::before\s*\{[^}]*left:\s*24px;/s);
+    expect(styles).not.toContain('.kanban-column-header[data-kanban-column-prop]::after {\n  display: none !important;');
+    expect(styles).toContain('grid-template-rows: 18px 40px 20px 40px 50px 22px');
+    expect(styles).toMatch(/data-kanban-column-prop\]::before\s*\{[^}]*width:\s*var\(--internal-step-size\);[^}]*height:\s*var\(--internal-step-size\);/s);
+    expect(styles).toMatch(/\.kanban-column-header__count,[\s\S]*?\.kanban-column-header__wip\s*\{[^}]*display:\s*inline-flex;[^}]*height:\s*26px;[^}]*align-items:\s*center;/s);
+    expect(styles).toMatch(/\.kanban-card\s*\{[^}]*border-top:\s*3px solid var\(--internal-stage\) !important;/s);
+
+    const weights = [...styles.matchAll(/font-weight:\s*(\d+)/g)]
+      .map(([, weight]) => Number(weight));
+    expect(Math.max(...weights)).toBeLessThanOrEqual(500);
+  });
+
+  it('keeps every compact request card and drop target inside its stage well', () => {
+    const styles = readFileSync(resolve(
+      process.cwd(),
+      'src',
+      'use-cases',
+      'internal-workflows',
+      'internal-workflows.scss',
+    ), 'utf8');
+
+    expect(styles).toContain('--internal-card-height: 246px');
+    expect(styles).toMatch(/\.kanban-stack\s*\{[^}]*padding:\s*10px\s*!important;/s);
+    expect(styles).not.toContain('padding: 10px 0 10px 30px');
+    expect(styles).toMatch(/\.kanban-card\s*\{[^}]*overflow:\s*hidden;/s);
+    expect(styles).toContain('text-overflow: ellipsis');
   });
 });

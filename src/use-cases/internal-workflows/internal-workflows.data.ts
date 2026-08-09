@@ -20,7 +20,7 @@ export const INTERNAL_WORKFLOWS_SCENARIO = {
   useSwimlanes: false,
   showDropTargets: true,
   colorScheme: 'light',
-  layout: { cardRowHeight: 266, swimlaneWidth: 176, collapsedSwimlaneWidth: 44 },
+  layout: { cardRowHeight: 252, swimlaneWidth: 176, collapsedSwimlaneWidth: 44 },
   eyebrow: 'Internal operations · This week',
   title: 'Make every internal request easy to own—and easier to finish',
   description: 'Bring finance, compliance, procurement, hiring, and IT requests into one accountable flow, so requesters know who is helping and approvers know what needs a decision.',
@@ -35,11 +35,11 @@ export const INTERNAL_WORKFLOWS_SCENARIO = {
     { label: 'Completed this week', value: '2', tone: 'good' },
   ],
   workflowColumns: [
-    { prop: 'intake', name: 'Intake', size: 334, wipLimit: 4 },
-    { prop: 'assigned', name: 'Assigned', size: 334, wipLimit: 4 },
-    { prop: 'approval', name: 'Approval', size: 334, wipLimit: 4 },
-    { prop: 'fulfillment', name: 'Fulfillment', size: 334, wipLimit: 4 },
-    { prop: 'complete', name: 'Complete', size: 336 },
+    { prop: 'intake', name: 'Intake', size: 351, wipLimit: 4 },
+    { prop: 'assigned', name: 'Assigned', size: 341, wipLimit: 4 },
+    { prop: 'approval', name: 'Approval', size: 343, wipLimit: 4 },
+    { prop: 'fulfillment', name: 'Fulfillment', size: 315, wipLimit: 4 },
+    { prop: 'complete', name: 'Complete', size: 322 },
   ],
   swimlanes: [
     {

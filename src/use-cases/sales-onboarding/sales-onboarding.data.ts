@@ -17,6 +17,13 @@ const columns: ColumnRegular[] = [
 export const SALES_ONBOARDING_SCENARIO = {
   id: 'sales-onboarding',
   cardPresentation: 'revenue-opportunity',
+  headerIcons: {
+    qualified: 'gem',
+    solution: 'lightbulb',
+    contract: 'pen-nib',
+    implementation: 'rocket',
+    live: 'chart-line-up',
+  },
   useSwimlanes: false,
   colorScheme: 'light',
   layout: { cardRowHeight: 268, swimlaneWidth: 176, collapsedSwimlaneWidth: 44 },

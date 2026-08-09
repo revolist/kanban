@@ -5,16 +5,24 @@
  * of layout and interaction; the use case only supplies its stage vocabulary.
  */
 .kanban-use-case-shell--internal-workflows {
+  --internal-header-height: 60px;
+  --internal-step-size: 35px;
+  --internal-connector-size: 12px;
+  --internal-separator-color: #f7fafc;
+  --internal-card-gap: 8px;
+  --internal-card-height: 246px;
   --use-case-accent: #1769d8;
   --use-case-border: #dfe6ee;
   --use-case-muted: #66758a;
   --use-case-text: #101c33;
   background: #f7fafc;
+  overflow: hidden;
   font-family: Inter, "Avenir Next", ui-sans-serif, system-ui, sans-serif;
+  font-synthesis: none;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-grid {
-  --revo-grid-header-height: 70px;
+  --revo-grid-header-height: 80px;
   --kanban-board-background: #f7fafc;
   --kanban-surface: #f4f8fb;
   --kanban-card-background: #fff;
@@ -26,10 +34,15 @@
   --kanban-radius: 9px;
   --kanban-column-gutter: 6px;
   --kanban-gap: 9px;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  flex: 1 1 auto;
   counter-reset: internal-stage;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-header {
+  display: none;
   border-color: #dfe6ee;
   background: #fff;
 }
@@ -42,21 +55,68 @@
 
 /* Connected numbered process headers. */
 .kanban-use-case-shell--internal-workflows .kanban-column-header-cell {
+  --internal-stage: #00a7c7;
   counter-increment: internal-stage;
+  padding: 10px 0 10px 18px !important;
+  overflow: visible;
 }
 
-.kanban-use-case-shell--internal-workflows .kanban-column-header-cell::before {
-  inset: 5px 3px 4px;
-  border-radius: 10px;
-  background: transparent !important;
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(n + 2) {
+  padding-left: 0 !important;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(1) { z-index: 5; }
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(2) { z-index: 4; }
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(3) { z-index: 3; }
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(4) { z-index: 2; }
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(5) { z-index: 1; }
+
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:not(:nth-of-type(5))::after {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: calc(100% + 14px - (var(--internal-connector-size) / 2));
+  display: block;
+  box-sizing: border-box;
+  width: var(--internal-connector-size);
+  height: var(--internal-connector-size);
+  border: 3px solid var(--internal-separator-color);
+  border-radius: 50%;
+  background: var(--internal-stage);
+  content: "";
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:not(:nth-of-type(5))::before {
+  position: absolute;
+  z-index: 3;
+  top: 10px;
+  right: -14px;
+  bottom: auto;
+  left: auto;
+  display: block;
+  width: 14px;
+  height: var(--internal-header-height);
+  border-radius: 0;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  background: var(--internal-stage) !important;
+  content: "";
+  pointer-events: none;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(5)::before {
+  display: none;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-column-header {
-  --internal-stage: #16a7c7;
+  --internal-stage: #00a7c7;
   position: relative;
   z-index: 1;
-  min-height: 61px;
-  padding: 9px 18px 9px 14px;
+  min-height: var(--internal-header-height) !important;
+  height: var(--internal-header-height);
+  gap: 8px;
+  padding: 8px 18px 8px 14px !important;
   border-radius: 9px;
   color: #fff;
   background: var(--internal-stage);
@@ -64,35 +124,67 @@
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop] {
-  padding-left: 68px;
+  width: calc(100% + 14px);
+  padding-left: 56px !important;
   border-radius: 11px;
-  background: #16a7c7 !important;
+  background: #00a7c7 !important;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
 }
-.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="assigned"] { background: #1968dc !important; }
-.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="approval"] { background: #8251c6 !important; }
-.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="fulfillment"] { background: #e19000 !important; }
-.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="complete"] { background: #158259 !important; }
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="assigned"] { background: #096cdf !important; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%); }
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="approval"] { background: #8750cb !important; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%); }
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="fulfillment"] { background: #ed9700 !important; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%); }
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="assigned"],
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="approval"],
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="fulfillment"] {
+  width: calc(100% + 6px);
+  margin-left: 8px;
+}
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="complete"] {
+  width: calc(100% - 26px);
+  margin-left: 8px;
+  background: #0d8959 !important;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 14px 50%);
+}
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="assigned"],
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="approval"],
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="fulfillment"],
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="complete"] {
+  padding-left: 64px !important;
+}
 .kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop]::before {
   position: absolute;
-  top: 9px;
+  top: calc((var(--internal-header-height) - var(--internal-step-size)) / 2);
   left: 12px;
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: var(--internal-step-size);
+  height: var(--internal-step-size);
   place-items: center;
   border: 1px solid rgba(255, 255, 255, .8);
   border-radius: 50%;
   color: #078aa9;
   background: #fff;
   content: "01";
-  font-size: 18px;
-  font-weight: 820;
+  font-size: 15px;
+  font-weight: 500;
+}
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="assigned"]::before,
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="approval"]::before,
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="fulfillment"]::before,
+.kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="complete"]::before {
+  left: 24px;
 }
 .kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="assigned"]::before { color: #1968dc; content: "02"; }
 .kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="approval"]::before { color: #8251c6; content: "03"; }
 .kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="fulfillment"]::before { color: #d48100; content: "04"; }
 .kanban-use-case-shell--internal-workflows .kanban-column-header[data-kanban-column-prop="complete"]::before { color: #158259; content: "05"; }
-.kanban-use-case-shell--internal-workflows .kanban-column-header__title { color: #fff; font-size: 18px; font-weight: 780; }
+.kanban-use-case-shell--internal-workflows .kanban-column-header__title {
+  min-width: 0;
+  flex: 1 1 auto;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1;
+}
 
 .kanban-use-case-shell--internal-workflows .kanban-column-header:has(.kanban-use-case-column-dot--assigned) { --internal-stage: #1968dc; }
 .kanban-use-case-shell--internal-workflows .kanban-column-header:has(.kanban-use-case-column-dot--approval) { --internal-stage: #8251c6; }
@@ -103,20 +195,6 @@
 .kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(3) { --internal-stage: #8251c6; }
 .kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(4) { --internal-stage: #e19000; }
 .kanban-use-case-shell--internal-workflows .kanban-column-header-cell:nth-of-type(5) { --internal-stage: #158259; }
-
-.kanban-use-case-shell--internal-workflows .kanban-column-header:not(:has(.kanban-use-case-column-dot--complete))::after {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  right: -8px;
-  width: 16px;
-  height: 16px;
-  border-top: 5px solid #f7fafc;
-  border-right: 5px solid #f7fafc;
-  background: var(--internal-stage);
-  content: "";
-  transform: translateY(-50%) rotate(45deg);
-}
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-column-heading {
   gap: 9px;
@@ -132,14 +210,14 @@
   border-radius: 50%;
   color: var(--internal-stage);
   background: #fff;
-  font-size: 0;
+  font-size: 0 !important;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-column-dot::before {
   color: var(--internal-stage);
   content: counter(internal-stage, decimal-leading-zero);
   font-size: 18px;
-  font-weight: 820;
+  font-weight: 500;
   line-height: 1;
 }
 
@@ -153,19 +231,45 @@
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-column-title {
   font-size: 18px;
-  font-weight: 780;
+  font-weight: 500;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-column-header__count,
 .kanban-use-case-shell--internal-workflows .kanban-column-header__wip {
-  border-color: rgba(255, 255, 255, .28);
-  background: rgba(15, 28, 51, .14);
+  display: inline-flex;
+  min-width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, .55) !important;
+  color: #fff !important;
+  background: rgba(15, 28, 51, .16) !important;
+  font-size: 11px;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
+.kanban-use-case-shell--internal-workflows .kanban-column-header__wip {
+  min-width: auto;
+  padding-inline: 8px;
+  border-color: rgba(255, 255, 255, .22) !important;
+  color: #14233b !important;
+  background: rgba(255, 255, 255, .66) !important;
+  font-size: 0 !important;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-column-header__wip::after {
+  content: "of 4 WIP";
+  font-size: 11px;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-column-header__toggle {
+  display: none !important;
+}
+
 .kanban-use-case-shell--internal-workflows .kanban-column-header--over-wip .kanban-column-header__wip {
-  color: #7d1525;
-  background: #ffd0d7;
+  color: #8d1730 !important;
+  background: #ffbecb !important;
 }
 
 /* Stage-owned board surfaces. */
@@ -206,10 +310,18 @@
 /* Structured request records. */
 .kanban-use-case-shell--internal-workflows .kanban-card {
   overflow: hidden;
+  height: var(--internal-card-height) !important;
+  padding: 12px !important;
   border: 1px solid var(--internal-stage-line, #dbe4ed) !important;
-  border-radius: 9px !important;
+  border-top: 3px solid var(--internal-stage) !important;
+  border-radius: 8px !important;
   background: #fff !important;
-  box-shadow: 0 2px 7px rgba(25, 42, 70, .08), 0 1px 2px rgba(25, 42, 70, .05);
+  box-shadow: 0 4px 14px rgba(25, 42, 70, .08), 0 1px 2px rgba(25, 42, 70, .05);
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-stack {
+  gap: var(--internal-card-gap) !important;
+  padding: 10px !important;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-card:has(.kanban-use-case-card-content--stage-intake) { --internal-stage: #078aa9; --internal-stage-soft: #edf9fc; --internal-stage-line: #9cd9e5; }
@@ -224,10 +336,10 @@
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-card-content--internal-request {
-  grid-template-rows: 20px minmax(40px, auto) 22px 38px 50px 22px;
+  grid-template-rows: 18px 40px 20px 40px 50px 22px;
   align-content: start;
-  gap: 7px;
-  padding: 1px;
+  gap: 5px;
+  padding: 0;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-head {
@@ -237,86 +349,173 @@
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-head span:first-child {
+  overflow: hidden;
   max-width: calc(100% - 55px);
   padding: 0;
   border-radius: 0;
   color: var(--internal-stage, #1765d1);
   background: transparent;
-  font-weight: 820;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-card-title {
   color: #111d33;
-  font-size: 16px;
-  font-weight: 760;
-  line-height: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 19px;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-route {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   color: #526177;
   font-size: 12px;
   line-height: 15px;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-route strong {
+  overflow: hidden;
+  min-width: 0;
   color: #233149;
-  font-weight: 700;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-value {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
   padding: 6px 8px;
   border: 1px solid #e1e8ef;
-  border-radius: 4px;
+  border-radius: 6px;
   color: #526177;
   background: #f4f7fa;
   font-size: 11px;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-value strong {
+  overflow: hidden;
+  min-width: 0;
   color: #18243a;
   font-size: 14px;
-  font-weight: 760;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-approval {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: center;
   gap: 2px;
   padding: 7px 9px;
   border: 0;
-  border-left: 4px solid var(--internal-stage, #1765d1);
+  border-left: 3px solid var(--internal-stage, #1765d1);
+  border-radius: 6px;
   background: var(--internal-stage-soft, #eff5ff);
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-request-approval-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-icon {
+  display: inline-grid;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #758297;
+  font-size: 14px;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-icon--route {
+  color: #526177;
+  font-size: 12px;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-icon--department {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  color: var(--internal-stage, #1765d1);
+  background: #fff;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-icon--stage {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  color: var(--internal-stage, #1765d1);
+  background: color-mix(in srgb, var(--internal-stage) 10%, #fff);
+  font-size: 17px;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-card-content--stage-intake .kanban-use-case-icon--stage {
+  display: none;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-card-content--stage-intake .kanban-use-case-request-approval {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-approval span {
   color: var(--internal-stage, #1765d1);
   font-size: 10px;
-  font-weight: 820;
+  font-weight: 500;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-request-approval strong {
+  overflow: hidden;
+  min-width: 0;
   color: #233149;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-card-meta {
-  justify-content: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 5px;
+  border-top: 1px solid #e3e9f0;
   color: #526177;
   font-size: 11px;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-card-meta::after {
-  order: -1;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: currentColor;
-  content: "";
+  display: none;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-priority {
+  margin-left: 0 !important;
   color: #33435a;
   background: transparent;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-priority--low { color: #087346; }
+.kanban-use-case-shell--internal-workflows .kanban-use-case-priority--medium { color: #e58a00; }
+.kanban-use-case-shell--internal-workflows .kanban-use-case-priority--high,
+.kanban-use-case-shell--internal-workflows .kanban-use-case-priority--critical { color: #db1725; }
+
+.kanban-use-case-shell--internal-workflows .kanban-use-case-due {
+  padding-left: 12px;
+  border-left: 1px solid #cfd8e3;
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-use-case-priority__dot {
@@ -324,13 +523,44 @@
 }
 
 .kanban-use-case-shell--internal-workflows .kanban-stack__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   min-height: 58px;
   border: 1px dashed var(--internal-stage, #8bbaca);
   border-radius: 7px;
-  color: var(--internal-stage, #1765d1);
+  color: var(--internal-stage, #1765d1) !important;
   background: color-mix(in srgb, var(--internal-stage-soft, #eff5ff) 54%, #fff);
   font-size: 12px;
-  font-weight: 680;
+  font-weight: 500;
+}
+
+.kanban-use-case-shell--internal-workflows .kanban-stack__empty::before {
+  display: block;
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+  background: currentColor;
+  content: "";
+  mask: url("@fortawesome/fontawesome-free/svgs/solid/download.svg") center / contain no-repeat;
+}
+
+/* Shared Kanban typography contains stronger defaults; this visual caps emphasis at 500. */
+.kanban-use-case-shell--internal-workflows :is(
+  strong,
+  b,
+  .kanban-column-header__title,
+  .kanban-use-case-column-title,
+  .kanban-column-header__count,
+  .kanban-column-header__wip,
+  .kanban-use-case-card-title,
+  .kanban-use-case-card-id,
+  .kanban-use-case-priority,
+  .kanban-use-case-due,
+  .kanban-stack__empty
+) {
+  font-weight: 500 !important;
 }
 
 @media (max-width: 900px) {

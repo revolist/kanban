@@ -18,10 +18,17 @@ const columns: ColumnRegular[] = [
 export const SUPPORT_OPERATIONS_SCENARIO = {
   id: 'support-operations',
   cardPresentation: 'support-ticket',
-  useSwimlanes: true,
+  headerIcons: {
+    new: 'file-circle-plus',
+    triage: 'wave-square',
+    investigating: 'magnifying-glass',
+    'waiting-on-customer': 'message',
+    resolved: 'check-circle',
+  },
+  useSwimlanes: false,
   swimlaneLayout: 'top',
   colorScheme: 'dark',
-  layout: { cardRowHeight: 250, swimlaneWidth: 170, collapsedSwimlaneWidth: 44 },
+  layout: { cardRowHeight: 266, swimlaneWidth: 170, collapsedSwimlaneWidth: 44 },
   eyebrow: 'Support operations · Friday coverage',
   title: 'Every customer knows what happens next',
   description: 'Bring urgent incidents, customer replies, specialist handoffs, and resolved cases into one service view so support leaders can protect SLAs without losing the human story behind each ticket.',
@@ -36,11 +43,11 @@ export const SUPPORT_OPERATIONS_SCENARIO = {
     { label: 'Median first response', value: '8 min', tone: 'good' },
   ],
   workflowColumns: [
-    { prop: 'new', name: 'New', size: 288 },
-    { prop: 'triage', name: 'Triage', size: 288, wipLimit: 3 },
-    { prop: 'investigating', name: 'Investigating', size: 288, wipLimit: 4 },
-    { prop: 'waiting-on-customer', name: 'Customer reply', size: 288, wipLimit: 4 },
-    { prop: 'resolved', name: 'Resolved', size: 288 },
+    { prop: 'new', name: 'New', size: 334 },
+    { prop: 'triage', name: 'Triage', size: 334, wipLimit: 3 },
+    { prop: 'investigating', name: 'Investigating', size: 334, wipLimit: 4 },
+    { prop: 'waiting-on-customer', name: 'Customer reply', size: 334, wipLimit: 4 },
+    { prop: 'resolved', name: 'Resolved', size: 334 },
   ],
   swimlanes: [
     {

@@ -1,8 +1,15 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
 import { CONTENT_APPROVALS_SCENARIO } from './content-approvals.data';
 
 describe('Content and approvals Kanban use case', () => {
+  const styles = readFileSync(
+    resolve(process.cwd(), 'src/use-cases/content-approvals/content-approvals.scss'),
+    'utf8',
+  );
+
   it('is a complete, internally consistent scenario', () => {
     expect(validateKanbanUseCaseScenario(CONTENT_APPROVALS_SCENARIO)).toEqual([]);
   });
@@ -55,5 +62,28 @@ describe('Content and approvals Kanban use case', () => {
     expect(live).toHaveLength(2);
     expect(live.every(({ progress }) => progress === 100)).toBe(true);
     expect(CONTENT_APPROVALS_SCENARIO.columns.length).toBeGreaterThanOrEqual(5);
+  });
+
+  it('keeps every editorial headline, workflow state, and footer inside the card', () => {
+    expect(CONTENT_APPROVALS_SCENARIO.layout.cardRowHeight).toBe(286);
+    expect(CONTENT_APPROVALS_SCENARIO.useSwimlanes).toBe(false);
+    expect('showDropTargets' in CONTENT_APPROVALS_SCENARIO).toBe(false);
+    expect(styles).toMatch(/grid-template-rows:\s*24px 50px 24px 52px 24px 22px/);
+    expect(styles).toMatch(/\.kanban-column-header__title[\s\S]*?font-size:\s*18px/);
+    expect(styles).toMatch(/\.kanban-card\s*\{[\s\S]*?overflow:\s*hidden/);
+    expect(styles).toMatch(/card-content--editorial-approval \.kanban-use-case-card-title[\s\S]*?-webkit-line-clamp:\s*2/);
+    expect(styles).toMatch(/card-content--editorial-approval \.kanban-use-case-card-title[\s\S]*?white-space:\s*normal/);
+    expect(styles).toMatch(/\.kanban-use-case-editorial-proof\s*\{/);
+    expect(styles).toMatch(/\.kanban-use-case-editorial-footer\s*\{/);
+    expect(styles).toMatch(/\.kanban-use-case-card--risk[\s\S]*?border-inline-start:\s*4px solid/);
+    expect(styles).toMatch(/\.kanban-column-header__toggle svg[\s\S]*?width:\s*14px[\s\S]*?height:\s*14px/);
+    expect(styles).toContain('--revo-grid-header-height: 66px');
+    expect(styles).toMatch(/\.kanban-column-header\s*\{[^}]*min-height:\s*66px;/s);
+    expect(styles).toMatch(/\.kanban-column-header__count\s*\{[^}]*display:\s*inline-flex !important;[^}]*align-items:\s*center;/s);
+    expect(styles).toMatch(/\.kanban-column-header__toggle\s*\{[^}]*width:\s*32px;[^}]*height:\s*32px;[^}]*place-items:\s*center;/s);
+
+    const fontWeights = [...styles.matchAll(/font-weight:\s*(\d+)/g)]
+      .map(([, weight]) => Number(weight));
+    expect(fontWeights.every((weight) => weight <= 500)).toBe(true);
   });
 });

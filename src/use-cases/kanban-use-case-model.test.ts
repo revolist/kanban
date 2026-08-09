@@ -68,10 +68,35 @@ describe('Kanban use-case scenarios', () => {
       resolve(process.cwd(), 'src', 'use-cases', 'kanban-use-case-demo.scss'),
       'utf8',
     );
+    const productStyles = readFileSync(
+      resolve(process.cwd(), 'src', 'use-cases', 'product-delivery', 'product-delivery.scss'),
+      'utf8',
+    );
 
     expect(styles).toMatch(/\.kanban-use-case-card-content--delivery\s*\{[^}]*align-content:\s*start;/s);
     expect(styles).toMatch(/\.kanban-use-case-card-content--delivery \.kanban-use-case-card-topline\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) auto auto;/s);
     expect(styles).toMatch(/\.kanban-use-case-card-content--delivery \.kanban-use-case-priority\s*\{[^}]*flex:\s*0 0 auto;/s);
+    expect(productStyles).toMatch(/\.kanban-use-case-column-icon\s*\{[^}]*width:\s*18px !important;[^}]*height:\s*18px;[^}]*flex:\s*0 0 18px !important;/s);
+    expect(productStyles).toMatch(/\.kanban-use-case-card-content--delivery\.kanban-use-case-card-content--stage-build\s*\{[^}]*grid-template-rows:\s*18px 36px 30px 38px 23px 20px;/s);
+  });
+
+  it('caps every use-case font weight at 500', () => {
+    const styles = [
+      'kanban-use-case-demo.scss',
+      'product-delivery/product-delivery.scss',
+      'support-operations/support-operations.scss',
+      'sales-onboarding/sales-onboarding.scss',
+      'content-approvals/content-approvals.scss',
+      'quality-manufacturing/quality-manufacturing.scss',
+      'internal-workflows/internal-workflows.scss',
+    ].map((file) => readFileSync(resolve(process.cwd(), 'src', 'use-cases', file), 'utf8'));
+
+    const weights = styles.flatMap((source) => (
+      [...source.matchAll(/font-weight:\s*(\d+)/g)].map((match) => Number(match[1]))
+    ));
+
+    expect(weights.length).toBeGreaterThan(0);
+    expect(Math.max(...weights)).toBeLessThanOrEqual(500);
   });
 
   it('gives every showcase a distinct card presentation and limits progress to delivery work', () => {
@@ -95,7 +120,7 @@ describe('Kanban use-case scenarios', () => {
     expect(new Set(showcases.map(({ cardPresentation }) => cardPresentation))).toHaveLength(6);
     expect(showcases.map(({ useSwimlanes }) => useSwimlanes)).toEqual([
       true,
-      true,
+      false,
       false,
       false,
       true,
@@ -190,6 +215,54 @@ describe('Kanban use-case scenarios', () => {
     expect(kanbanUseCaseCardUsesProgress('delivery', 'discovery')).toBe(false);
     expect(kanbanUseCaseCardUsesProgress('delivery', 'build')).toBe(true);
     expect(kanbanUseCaseCardUsesProgress('support-ticket', 'build')).toBe(false);
+  });
+
+  it('renders Font Awesome SVGs for internal request metadata instead of icon-font glyphs', () => {
+    type TestNode = { props?: { class?: string }; children?: unknown };
+    const h = (_tag: string, props?: TestNode['props'], children?: unknown): TestNode => ({ props, children });
+    const internal = scenario({ cardPresentation: 'internal-request' });
+    const rendered = createKanbanUseCaseConfig(internal).customization?.cardContent?.(
+      h as never,
+      { card: { ...internal.cards[0]!, status: 'approval' } } as never,
+    );
+    const serialized = JSON.stringify(rendered);
+
+    expect(serialized).toContain('<svg');
+    expect(serialized).toContain('kanban-use-case-icon--requester');
+    expect(serialized).toContain('kanban-use-case-icon--route');
+    expect(serialized).toContain('kanban-use-case-icon--department');
+    expect(serialized).toContain('kanban-use-case-icon--stage');
+    expect(serialized).not.toContain('ph-');
+    expect(serialized).not.toContain('→');
+  });
+
+  it('renders scenario-provided stage header icons', () => {
+    type TestNode = { props?: { class?: string }; children?: unknown };
+    const h = (_tag: string, props?: TestNode['props'], children?: unknown): TestNode => ({ props, children });
+    const base = scenario();
+    const workflowColumns = [...base.workflowColumns];
+    workflowColumns[0] = { ...workflowColumns[0]!, collapsible: true };
+    const withHeaderIcons = scenario({ headerIcons: { queue: 'gem' }, workflowColumns });
+    const config = createKanbanUseCaseConfig(withHeaderIcons);
+    const column = config.columns?.[0];
+    const rendered = column?.columnTemplate?.(
+      h as never,
+      {
+        kanban: {
+          column,
+          visibleCount: 1,
+          totalCount: 1,
+          overWipLimit: false,
+          toggleCollapsed: () => undefined,
+        },
+      } as never,
+    );
+
+    expect(JSON.stringify(rendered)).toContain('<svg');
+    expect(JSON.stringify(rendered)).toContain('kanban-use-case-column-icon');
+    expect(JSON.stringify(rendered)).toContain('kanban-column-header__toggle-icon');
+    expect(JSON.stringify(rendered)).not.toContain('"children":"Toggle"');
+    expect(JSON.stringify(rendered)).not.toContain('ph-');
   });
 
   it('exposes semantic severity classes and revenue decision language to showcase styles', () => {

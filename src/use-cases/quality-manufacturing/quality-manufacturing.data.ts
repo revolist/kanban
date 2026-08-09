@@ -19,6 +19,13 @@ const columns: ColumnRegular[] = [
 export const QUALITY_MANUFACTURING_SCENARIO = {
   id: 'quality-manufacturing',
   cardPresentation: 'quality-inspection',
+  headerIcons: {
+    detected: 'triangle-exclamation',
+    containment: 'shield-halved',
+    capa: 'gears',
+    verification: 'check-circle',
+    closed: 'lock',
+  },
   useSwimlanes: true,
   swimlaneLayout: 'column',
   colorScheme: 'dark',

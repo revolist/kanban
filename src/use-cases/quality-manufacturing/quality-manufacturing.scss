@@ -6,15 +6,18 @@
   --quality-blue: #189ee9;
   --quality-green: #58bd64;
   --quality-red: #ef4444;
+  --quality-header-icon-size: 18px;
   --use-case-border: #293239;
   --use-case-muted: #abb2b7;
   --use-case-text: #f7f8f8;
   color: #f7f8f8;
   background: #0d1215;
   font-family: "Arial Narrow", "Roboto Condensed", Inter, ui-sans-serif, system-ui, sans-serif;
+  font-synthesis: none;
 }
 
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-header {
+  display: none !important;
   border-color: #2c353b;
   background: #11171b;
 }
@@ -54,7 +57,7 @@
 }
 
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header-cell {
-  padding: 9px 7px;
+  padding: 9px 7px !important;
   border-color: #333c42;
 }
 
@@ -92,9 +95,9 @@
 
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header {
   z-index: 2;
-  gap: 7px;
+  gap: 4px;
   min-height: 68px;
-  padding: 14px 18px;
+  padding: 10px !important;
 }
 
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header[data-kanban-column-prop="detected"] { border: 1px solid #f4bd18; background: #211d0e; box-shadow: inset 0 0 0 1px rgba(244, 189, 24, .18), 0 0 10px rgba(244, 189, 24, .12); }
@@ -102,7 +105,7 @@
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header[data-kanban-column-prop="capa"] { border: 1px solid #19c9ef; background: #071c21; box-shadow: inset 0 0 0 1px rgba(25, 201, 239, .18), 0 0 10px rgba(25, 201, 239, .12); }
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header[data-kanban-column-prop="verification"] { border: 1px solid #189ee9; background: #081923; box-shadow: inset 0 0 0 1px rgba(24, 158, 233, .18), 0 0 10px rgba(24, 158, 233, .12); }
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header[data-kanban-column-prop="closed"] { border: 1px solid #58bd64; background: #0b2010; box-shadow: inset 0 0 0 1px rgba(88, 189, 100, .18), 0 0 10px rgba(88, 189, 100, .12); }
-.kanban-use-case-shell--quality-manufacturing .kanban-column-header__title { color: #fff; font-size: 18px; font-weight: 800; }
+.kanban-use-case-shell--quality-manufacturing .kanban-column-header__title { color: #fff; font-size: 16px; font-weight: 500; }
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header[data-kanban-column-prop="detected"] .kanban-column-header__count { color: #f4bd18; }
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header[data-kanban-column-prop="containment"] .kanban-column-header__count,
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header[data-kanban-column-prop="containment"] .kanban-column-header__wip { color: #ff6b21; }
@@ -113,16 +116,35 @@
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header[data-kanban-column-prop="closed"] .kanban-column-header__count { color: #58bd64; }
 
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-column-heading { gap: 8px; }
+.kanban-use-case-shell--quality-manufacturing .kanban-use-case-column-icon {
+  display: inline-grid;
+  width: var(--quality-header-icon-size) !important;
+  height: var(--quality-header-icon-size);
+  flex: 0 0 var(--quality-header-icon-size) !important;
+  place-items: center;
+  color: currentColor;
+}
+.kanban-use-case-shell--quality-manufacturing .kanban-use-case-column-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.kanban-use-case-shell--quality-manufacturing .kanban-column-header:has(.kanban-column-header__wip) .kanban-column-header__count {
+  display: none;
+}
+.kanban-use-case-shell--quality-manufacturing .kanban-column-header__toggle-icon { width: 11px; height: 11px; }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-column-title {
   color: #fff;
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 500;
   letter-spacing: -.015em;
 }
 
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-column-dot {
-  width: 21px;
-  height: 21px;
+  width: var(--quality-header-icon-size);
+  height: var(--quality-header-icon-size);
+  flex: 0 0 var(--quality-header-icon-size);
   border: 3px solid currentColor;
   border-radius: 3px;
   color: var(--quality-amber);
@@ -140,7 +162,7 @@
   color: var(--quality-amber);
   background: rgba(0, 0, 0, .3);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-weight: 760;
+  font-weight: 500;
 }
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header-cell:has(.kanban-use-case-column-dot--containment) .kanban-column-header__wip { color: #ff5858; }
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header-cell:has(.kanban-use-case-column-dot--capa) .kanban-column-header__count,
@@ -148,7 +170,10 @@
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header-cell:has(.kanban-use-case-column-dot--verification) .kanban-column-header__count,
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header-cell:has(.kanban-use-case-column-dot--verification) .kanban-column-header__wip { color: var(--quality-blue); }
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header-cell:has(.kanban-use-case-column-dot--closed) .kanban-column-header__count { color: var(--quality-green); }
-.kanban-use-case-shell--quality-manufacturing .kanban-column-header__toggle { color: #bbc3c8; }
+.kanban-use-case-shell--quality-manufacturing .kanban-column-header__toggle {
+  display: none !important;
+  color: #bbc3c8;
+}
 
 /* The left rail is a separate workstream control surface, not another card column. */
 .kanban-use-case-shell--quality-manufacturing .kanban-swimlane-column-header-cell,
@@ -174,9 +199,30 @@
 .kanban-use-case-shell--quality-manufacturing .kanban-swimlane-cell:nth-of-type(2n) {
   box-shadow: inset 3px 0 0 var(--quality-red), inset 0 0 0 1px #1f272b;
 }
-.kanban-use-case-shell--quality-manufacturing .kanban-use-case-lane-heading { gap: 8px; padding: 17px 14px 10px; }
+.kanban-use-case-shell--quality-manufacturing .kanban-swimlane-header {
+  padding: 16px !important;
+}
+.kanban-use-case-shell--quality-manufacturing .kanban-swimlane-header__count { display: none; }
+.kanban-use-case-shell--quality-manufacturing .kanban-use-case-lane-heading {
+  gap: 4px;
+  padding: 0;
+  margin-bottom: 16px;
+}
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-lane-kicker { color: #afb7bc; font-size: 13px; letter-spacing: .09em; }
-.kanban-use-case-shell--quality-manufacturing .kanban-use-case-lane-title { color: #fff; font-size: 18px; font-weight: 790; }
+.kanban-use-case-shell--quality-manufacturing .kanban-use-case-lane-title {
+  overflow: hidden;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 21px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kanban-use-case-shell--quality-manufacturing .kanban-swimlane-header__wip {
+  margin-bottom: 7px;
+  font-size: 11px;
+  line-height: 15px;
+}
 
 /* Column wells retain a subtle machined texture through layered solid surfaces. */
 .kanban-use-case-shell--quality-manufacturing .kanban-column,
@@ -185,11 +231,11 @@
   border-color: #30393f;
   background: #181e22;
 }
-.kanban-use-case-shell--quality-manufacturing .kanban-stack { padding: 11px 10px; }
+.kanban-use-case-shell--quality-manufacturing .kanban-stack { padding: 10px !important; }
 
 /* Bright paper-like inspection records create maximum contrast against the wells. */
 .kanban-use-case-shell--quality-manufacturing .kanban-card {
-  padding: 13px 12px 10px;
+  padding: 10px !important;
   border: 1px solid #bfc5c8;
   border-radius: 3px !important;
   background: #f7f7f5;
@@ -202,9 +248,9 @@
 }
 
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-card-content--quality-inspection {
-  grid-template-rows: 32px minmax(40px, auto) 58px 58px 20px;
+  grid-template-rows: 24px minmax(30px, auto) 48px 46px 18px;
   align-content: start;
-  gap: 9px;
+  gap: 6px;
   padding: 0;
   color: #111619;
 }
@@ -216,7 +262,7 @@
   color: #1a1e20;
   background: #fff9e7;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 13px;
 }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-quality-strip::before {
@@ -238,9 +284,9 @@
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-card-content--quality-inspection:has(.kanban-use-case-quality-strip strong:last-child) .kanban-use-case-quality-strip { min-width: 0; }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-card-content--quality-inspection .kanban-use-case-card-title {
   color: #111619;
-  font-size: 16px;
-  font-weight: 820;
-  line-height: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
   -webkit-line-clamp: 2;
 }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-quality-identifiers {
@@ -255,7 +301,7 @@
   border-left: 0;
 }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-quality-identifiers .kanban-use-case-fact + .kanban-use-case-fact { border-left: 1px solid #d2d6d8; }
-.kanban-use-case-shell--quality-manufacturing .kanban-use-case-fact span { color: #454c50; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.kanban-use-case-shell--quality-manufacturing .kanban-use-case-fact span { color: #454c50; font-size: 9px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-fact strong {
   overflow: hidden;
   color: #111619;
@@ -272,7 +318,7 @@
   border-radius: 2px;
   background: #f2fbf4;
 }
-.kanban-use-case-shell--quality-manufacturing .kanban-use-case-quality-result span { color: #315f3b; font-size: 10px; font-weight: 820; line-height: 13px; }
+.kanban-use-case-shell--quality-manufacturing .kanban-use-case-quality-result span { color: #315f3b; font-size: 9px; font-weight: 500; line-height: 12px; }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-quality-result strong { color: #161c19; font-size: 11.5px; line-height: 15px; }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-card-content--stage-containment .kanban-use-case-quality-result { border-color: #efb084; background: #fff5ee; }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-card-content--stage-containment .kanban-use-case-quality-result span { color: #9e4215; }
@@ -290,6 +336,21 @@
 }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-card-content--quality-inspection .kanban-use-case-card-id { color: #171d20; font-size: 10px; }
 .kanban-use-case-shell--quality-manufacturing .kanban-use-case-card-content--quality-inspection .kanban-use-case-card-meta strong { margin-left: auto; color: #111619; font-size: 10px; }
+
+/* Keep the industrial hierarchy crisp without synthetic heavy type. */
+.kanban-use-case-shell--quality-manufacturing :is(
+  strong,
+  b,
+  .kanban-column-header__title,
+  .kanban-use-case-column-title,
+  .kanban-column-header__count,
+  .kanban-column-header__wip,
+  .kanban-use-case-lane-title,
+  .kanban-use-case-card-title,
+  .kanban-use-case-card-id
+) {
+  font-weight: 500 !important;
+}
 
 @media (max-width: 760px) {
   .kanban-use-case-shell--quality-manufacturing .kanban-use-case-column-dot { display: none; }

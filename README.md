@@ -7,7 +7,7 @@
 [![Frameworks](https://img.shields.io/badge/TypeScript%20%7C%20React%20%7C%20Vue%20%7C%20Angular-4f46e5)](#framework-examples)
 [![License: MIT](https://img.shields.io/badge/Example%20license-MIT-16a34a.svg)](./LICENSE)
 
-[View live demo](https://kanban.rv-grid.com/demo/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
+[View live demo](https://kanban.rv-grid.com/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
 
 [![RevoGrid Kanban walkthrough](./assets/kanban-walkthrough.gif)](./assets/kanban-walkthrough.mp4)
 

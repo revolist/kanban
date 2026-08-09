@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
 import { SUPPORT_OPERATIONS_SCENARIO } from './support-operations.data';
 
@@ -36,6 +38,34 @@ describe('Support operations Kanban use case', () => {
       && card.context.includes(card.account)
     ))).toBe(true);
     expect(SUPPORT_OPERATIONS_SCENARIO.columns.length).toBeGreaterThanOrEqual(5);
+  });
+
+  it('keeps incident-command headers separate from full-height ticket rows', () => {
+    expect(SUPPORT_OPERATIONS_SCENARIO.headerIcons).toEqual({
+      new: 'file-circle-plus',
+      triage: 'wave-square',
+      investigating: 'magnifying-glass',
+      'waiting-on-customer': 'message',
+      resolved: 'check-circle',
+    });
+    expect(SUPPORT_OPERATIONS_SCENARIO.workflowColumns.every(({ prop }) => (
+      SUPPORT_OPERATIONS_SCENARIO.headerIcons?.[String(prop)]
+    ))).toBe(true);
+    expect(SUPPORT_OPERATIONS_SCENARIO.useSwimlanes).toBe(false);
+    expect(SUPPORT_OPERATIONS_SCENARIO.layout.cardRowHeight).toBe(266);
+    expect(SUPPORT_OPERATIONS_SCENARIO.swimlanes.every(({ height }) => height === undefined)).toBe(true);
+    expect(SUPPORT_OPERATIONS_SCENARIO.showDropTargets).not.toBe(true);
+
+    const styles = readFileSync(resolve(
+      process.cwd(),
+      'src',
+      'use-cases',
+      'support-operations',
+      'support-operations.scss',
+    ), 'utf8');
+    expect(styles).not.toContain("content: 'WORKSTREAM\\A Enterprise support'");
+    expect(styles).toMatch(/\.kanban-column-header-cell\s*\{[^}]*translate:\s*none;/s);
+    expect(styles).toMatch(/\.kanban-board-cell:not\(\.kanban-board-cell--lane-header-row\)\s*\{[^}]*translate:\s*none;/s);
   });
 
   it('makes the investigation bottleneck and urgent P1 risk explicit', () => {

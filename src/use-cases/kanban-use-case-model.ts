@@ -1,6 +1,31 @@
 import type { ColumnRegular, DataType } from '@revolist/revogrid';
 import type { KanbanConfig } from '@revolist/revogrid-enterprise';
 import { avatarTemplate } from '@revolist/revogrid-pro';
+import arrowRightIcon from '@fortawesome/fontawesome-free/svgs/solid/arrow-right.svg?raw';
+import arrowsLeftRightIcon from '@fortawesome/fontawesome-free/svgs/solid/arrows-left-right.svg?raw';
+import buildingIcon from '@fortawesome/fontawesome-free/svgs/regular/building.svg?raw';
+import calendarIcon from '@fortawesome/fontawesome-free/svgs/regular/calendar.svg?raw';
+import chartLineIcon from '@fortawesome/fontawesome-free/svgs/solid/chart-line.svg?raw';
+import chevronDownIcon from '@fortawesome/fontawesome-free/svgs/solid/chevron-down.svg?raw';
+import checkCircleIcon from '@fortawesome/fontawesome-free/svgs/regular/circle-check.svg?raw';
+import clipboardListIcon from '@fortawesome/fontawesome-free/svgs/solid/clipboard-list.svg?raw';
+import compassIcon from '@fortawesome/fontawesome-free/svgs/regular/compass.svg?raw';
+import fileCirclePlusIcon from '@fortawesome/fontawesome-free/svgs/solid/file-circle-plus.svg?raw';
+import gearsIcon from '@fortawesome/fontawesome-free/svgs/solid/gears.svg?raw';
+import gemIcon from '@fortawesome/fontawesome-free/svgs/regular/gem.svg?raw';
+import lightbulbIcon from '@fortawesome/fontawesome-free/svgs/regular/lightbulb.svg?raw';
+import lockIcon from '@fortawesome/fontawesome-free/svgs/solid/lock.svg?raw';
+import magnifyingGlassIcon from '@fortawesome/fontawesome-free/svgs/solid/magnifying-glass.svg?raw';
+import messageIcon from '@fortawesome/fontawesome-free/svgs/regular/message.svg?raw';
+import penNibIcon from '@fortawesome/fontawesome-free/svgs/solid/pen-nib.svg?raw';
+import penToSquareIcon from '@fortawesome/fontawesome-free/svgs/regular/pen-to-square.svg?raw';
+import rocketIcon from '@fortawesome/fontawesome-free/svgs/solid/rocket.svg?raw';
+import scaleBalancedIcon from '@fortawesome/fontawesome-free/svgs/solid/scale-balanced.svg?raw';
+import screwdriverWrenchIcon from '@fortawesome/fontawesome-free/svgs/solid/screwdriver-wrench.svg?raw';
+import shieldHalvedIcon from '@fortawesome/fontawesome-free/svgs/solid/shield-halved.svg?raw';
+import triangleExclamationIcon from '@fortawesome/fontawesome-free/svgs/solid/triangle-exclamation.svg?raw';
+import userIcon from '@fortawesome/fontawesome-free/svgs/regular/user.svg?raw';
+import waveSquareIcon from '@fortawesome/fontawesome-free/svgs/solid/wave-square.svg?raw';
 
 export type KanbanUseCaseTone = 'neutral' | 'good' | 'attention' | 'risk';
 export type KanbanUseCasePriority = 'Critical' | 'High' | 'Medium' | 'Low';
@@ -11,6 +36,36 @@ export type KanbanUseCaseCardPresentation =
   | 'editorial-approval'
   | 'quality-inspection'
   | 'internal-request';
+
+const FONT_AWESOME_ICONS = {
+  'arrow-right': arrowRightIcon,
+  'arrows-left-right': arrowsLeftRightIcon,
+  building: buildingIcon,
+  calendar: calendarIcon,
+  'chart-line-up': chartLineIcon,
+  'chevron-down': chevronDownIcon,
+  'check-circle': checkCircleIcon,
+  'clipboard-list': clipboardListIcon,
+  compass: compassIcon,
+  'file-circle-plus': fileCirclePlusIcon,
+  gears: gearsIcon,
+  gem: gemIcon,
+  lightbulb: lightbulbIcon,
+  lock: lockIcon,
+  'magnifying-glass': magnifyingGlassIcon,
+  message: messageIcon,
+  'pen-nib': penNibIcon,
+  'pen-to-square': penToSquareIcon,
+  rocket: rocketIcon,
+  'scale-balanced': scaleBalancedIcon,
+  'screwdriver-wrench': screwdriverWrenchIcon,
+  'shield-halved': shieldHalvedIcon,
+  'triangle-exclamation': triangleExclamationIcon,
+  user: userIcon,
+  'wave-square': waveSquareIcon,
+} as const;
+
+export type KanbanUseCaseIconName = keyof typeof FONT_AWESOME_ICONS;
 
 export type KanbanUseCaseCard = DataType & {
   id: string;
@@ -50,6 +105,7 @@ export interface KanbanUseCaseLayout {
 export interface KanbanUseCaseScenario {
   readonly id: string;
   readonly cardPresentation: KanbanUseCaseCardPresentation;
+  readonly headerIcons?: Readonly<Record<string, KanbanUseCaseIconName>>;
   readonly useSwimlanes: boolean;
   readonly swimlaneLayout?: 'column' | 'top';
   readonly showDropTargets?: boolean;
@@ -296,7 +352,10 @@ function renderRevenueCard(h: HyperScript, card: KanbanUseCaseCard) {
     h('div', { class: 'kanban-use-case-card-meta' }, [
       avatarStack(h, card),
       h('span', { class: 'kanban-use-case-revenue-owner' }, card.owner),
-      h('span', { class: 'kanban-use-case-revenue-date' }, targetDate),
+      h('span', { class: 'kanban-use-case-revenue-date' }, [
+        fontAwesomeIcon(h, 'calendar', 'date'),
+        h('span', {}, targetDate),
+      ]),
     ]),
     card.risk ? h('div', { class: 'kanban-use-case-revenue-risk', title: card.risk }, `Blocked · ${card.risk}`) : null,
   ]);
@@ -377,6 +436,18 @@ function renderQualityCard(h: HyperScript, card: KanbanUseCaseCard) {
   ]);
 }
 
+function rawSvgIcon(h: HyperScript, name: KanbanUseCaseIconName, className: string) {
+  return h('span', {
+    class: className,
+    'aria-hidden': 'true',
+    innerHTML: FONT_AWESOME_ICONS[name],
+  });
+}
+
+function fontAwesomeIcon(h: HyperScript, name: KanbanUseCaseIconName, modifier: string) {
+  return rawSvgIcon(h, name, `kanban-use-case-icon kanban-use-case-icon--${modifier}`);
+}
+
 function renderInternalRequestCard(h: HyperScript, card: KanbanUseCaseCard) {
   const stageLabels: Record<string, string> = {
     intake: 'Request scope',
@@ -392,6 +463,13 @@ function renderInternalRequestCard(h: HyperScript, card: KanbanUseCaseCard) {
       : card.status === 'complete'
         ? cardValue(card, 'context', 'Completed with evidence')
         : card.status === 'assigned' ? card.owner : cardValue(card, 'requestValue');
+  const stageIcons: Record<string, KanbanUseCaseIconName> = {
+    intake: 'clipboard-list',
+    assigned: 'user',
+    approval: 'scale-balanced',
+    fulfillment: 'arrows-left-right',
+    complete: 'check-circle',
+  };
 
   return h('article', { class: cardRootClass('internal-request', card) }, [
     h('div', { class: 'kanban-use-case-request-head' }, [
@@ -400,17 +478,22 @@ function renderInternalRequestCard(h: HyperScript, card: KanbanUseCaseCard) {
     ]),
     h('strong', { class: 'kanban-use-case-card-title', title: card.title }, card.title),
     h('div', { class: 'kanban-use-case-request-route' }, [
+      fontAwesomeIcon(h, 'user', 'requester'),
       h('span', {}, cardValue(card, 'requester')),
-      h('span', {}, '→'),
+      fontAwesomeIcon(h, 'arrow-right', 'route'),
       h('strong', {}, card.owner),
     ]),
     h('div', { class: 'kanban-use-case-request-value' }, [
+      fontAwesomeIcon(h, 'building', 'department'),
       h('span', {}, cardValue(card, 'department')),
       h('strong', {}, cardValue(card, 'requestValue')),
     ]),
     h('div', { class: 'kanban-use-case-request-approval' }, [
-      h('span', {}, stageLabels[card.status] ?? 'Decision state'),
-      h('strong', { title: stageValue }, stageValue),
+      fontAwesomeIcon(h, stageIcons[card.status] ?? 'check-circle', 'stage'),
+      h('div', { class: 'kanban-use-case-request-approval-copy' }, [
+        h('span', {}, stageLabels[card.status] ?? 'Decision state'),
+        h('strong', { title: stageValue }, stageValue),
+      ]),
     ]),
     h('div', { class: 'kanban-use-case-card-meta' }, [
       priorityBadge(h, card),
@@ -441,11 +524,47 @@ function avatarIndex(name: string): number {
 export function createKanbanUseCaseConfig(
   scenario: KanbanUseCaseScenario,
 ): KanbanConfig<KanbanUseCaseCard> {
+  const workflowColumns = scenario.workflowColumns.map((column) => {
+    const icon = scenario.headerIcons?.[String(column.prop)];
+    if (!icon) return column;
+
+    return {
+      ...column,
+      columnTemplate: (h, props) => {
+        const { visibleCount, totalCount, overWipLimit, toggleCollapsed } = props.kanban;
+        const title = column.name ?? String(column.prop);
+        return h('div', {
+          class: [
+            'kanban-column-header',
+            overWipLimit ? 'kanban-column-header--over-wip' : '',
+          ].filter(Boolean).join(' '),
+          'data-kanban-column-prop': String(column.prop),
+          'data-kanban-column-prop-type': typeof column.prop,
+        }, [
+          rawSvgIcon(h, icon, `kanban-use-case-column-icon kanban-use-case-column-icon--${column.prop}`),
+          h('span', { class: 'kanban-column-header__title' }, title),
+          h('span', { class: 'kanban-column-header__count' }, String(visibleCount)),
+          column.wipLimit === undefined
+            ? null
+            : h('span', { class: 'kanban-column-header__wip' }, `${totalCount} of ${column.wipLimit} WIP`),
+          props.kanban.column.collapsible
+            ? h('button', {
+              type: 'button',
+              class: 'kanban-column-header__toggle',
+              'aria-label': `Toggle column: ${title}`,
+              onClick: toggleCollapsed,
+            }, rawSvgIcon(h, 'chevron-down', 'kanban-column-header__toggle-icon'))
+            : null,
+        ]);
+      },
+    };
+  });
+
   return {
     idField: 'id',
     columnField: 'status',
     orderField: 'order',
-    columns: scenario.workflowColumns,
+    columns: workflowColumns,
     ...(scenario.useSwimlanes ? {
       swimlaneField: 'lane',
       swimlanes: scenario.swimlanes,
@@ -468,10 +587,6 @@ export function createKanbanUseCaseConfig(
       result: { className: 'kanban-use-case-card--risk' },
     }],
     customization: {
-      columnHeader: (h, { column }) => h('div', { class: 'kanban-use-case-column-heading' }, [
-        h('span', { class: `kanban-use-case-column-dot kanban-use-case-column-dot--${column.prop}` }),
-        h('span', { class: 'kanban-use-case-column-title' }, column.name),
-      ]),
       swimlaneHeader: (h, { swimlane }) => h('div', { class: 'kanban-use-case-lane-heading' }, [
         h('span', { class: 'kanban-use-case-lane-kicker' }, 'WORKSTREAM'),
         h('strong', { class: 'kanban-use-case-lane-title' }, swimlane.title),

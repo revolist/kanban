@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
 import { PRODUCT_DELIVERY_SCENARIO } from './product-delivery.data';
 
@@ -26,6 +28,32 @@ describe('Product delivery Kanban use case', () => {
     expect(PRODUCT_DELIVERY_SCENARIO.cards.every((card) => card.assignees.includes(card.owner))).toBe(true);
     expect(PRODUCT_DELIVERY_SCENARIO.cards.every((card) => card.context.includes(`${card.storyPoints} pts`))).toBe(true);
     expect(PRODUCT_DELIVERY_SCENARIO.cards.every((card) => card.handoff.includes('→'))).toBe(true);
+  });
+
+  it('keeps illustrated stage headers separate from full-height card rows', () => {
+    expect(PRODUCT_DELIVERY_SCENARIO.headerIcons).toEqual({
+      discovery: 'compass',
+      design: 'pen-to-square',
+      build: 'screwdriver-wrench',
+      review: 'shield-halved',
+      released: 'rocket',
+    });
+    expect(PRODUCT_DELIVERY_SCENARIO.workflowColumns.every(({ prop }) => (
+      PRODUCT_DELIVERY_SCENARIO.headerIcons?.[String(prop)]
+    ))).toBe(true);
+    expect(PRODUCT_DELIVERY_SCENARIO.swimlaneLayout).toBe('top');
+    expect(PRODUCT_DELIVERY_SCENARIO.layout.cardRowHeight).toBe(264);
+    expect(PRODUCT_DELIVERY_SCENARIO.swimlanes.every(({ height }) => height === undefined)).toBe(true);
+    expect(PRODUCT_DELIVERY_SCENARIO.showDropTargets).not.toBe(true);
+
+    const styles = readFileSync(resolve(
+      process.cwd(),
+      'src/use-cases/product-delivery/product-delivery.scss',
+    ), 'utf8');
+    expect(styles).toMatch(/\.kanban-column-header-cell\s*\{[^}]*padding:\s*0 !important;[^}]*border:\s*0 !important;/s);
+    expect(styles).toMatch(/\.kanban-column-header-cell::before\s*\{[^}]*display:\s*none !important;/s);
+    expect(styles).toMatch(/\.kanban-column-header-cell::after\s*\{[^}]*right:\s*0;[^}]*bottom:\s*0;[^}]*left:\s*0;/s);
+    expect(styles).toMatch(/\.kanban-column-header\s*\{[^}]*border:\s*0 !important;[^}]*border-radius:\s*0;/s);
   });
 
   it('makes the constrained build queue and customer-facing release risk explicit', () => {

@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
 import { QUALITY_MANUFACTURING_SCENARIO } from './quality-manufacturing.data';
 
@@ -72,5 +74,43 @@ describe('Quality and manufacturing Kanban use case', () => {
     expect(verification.every(({ progress, inspection }) => progress >= 80 && inspection.length > 0)).toBe(true);
     expect(closed).toHaveLength(4);
     expect(closed.every(({ progress, unitsHeld }) => progress === 100 && unitsHeld === 0)).toBe(true);
+  });
+
+  it('fits the industrial rail and inspection records in the 1672px capture', () => {
+    expect(QUALITY_MANUFACTURING_SCENARIO.headerIcons).toEqual({
+      detected: 'triangle-exclamation',
+      containment: 'shield-halved',
+      capa: 'gears',
+      verification: 'check-circle',
+      closed: 'lock',
+    });
+    expect(QUALITY_MANUFACTURING_SCENARIO.showDropTargets).not.toBe(true);
+    const workflowWidth = QUALITY_MANUFACTURING_SCENARIO.workflowColumns
+      .reduce((total, { size = 0 }) => total + size, 0);
+    expect(workflowWidth + QUALITY_MANUFACTURING_SCENARIO.layout.swimlaneWidth).toBe(1671);
+
+    const styles = readFileSync(resolve(
+      process.cwd(),
+      'src',
+      'use-cases',
+      'quality-manufacturing',
+      'quality-manufacturing.scss',
+    ), 'utf8');
+
+    expect(styles).toContain('--quality-header-icon-size: 18px');
+    expect(styles).toMatch(/\.kanban-use-case-column-dot\s*\{[^}]*width:\s*var\(--quality-header-icon-size\);[^}]*height:\s*var\(--quality-header-icon-size\);/s);
+    expect(styles).toMatch(/\.kanban-use-case-column-icon\s*\{[^}]*width:\s*var\(--quality-header-icon-size\)\s*!important;[^}]*height:\s*var\(--quality-header-icon-size\);/s);
+    expect(styles).toMatch(/\.kanban-column-header__toggle\s*\{[^}]*display:\s*none !important;/s);
+    expect(styles).toMatch(/\.kanban-column-header\s*\{[^}]*gap:\s*4px;[^}]*padding:\s*10px !important;/s);
+    expect(styles).toMatch(/\.kanban-column-header__title\s*\{[^}]*font-size:\s*16px;/s);
+    expect(styles).toMatch(/\.kanban-swimlane-header__count\s*\{[^}]*display:\s*none;/s);
+    expect(styles).toMatch(/\.kanban-swimlane-header\s*\{[^}]*padding:\s*16px !important;/s);
+    expect(styles).toMatch(/\.kanban-use-case-lane-heading\s*\{[^}]*padding:\s*0;[^}]*margin-bottom:\s*16px;/s);
+    expect(styles).toContain('grid-template-rows: 24px minmax(30px, auto) 48px 46px 18px');
+    expect(styles).toMatch(/\.kanban-use-case-fact strong\s*\{[^}]*text-overflow:\s*ellipsis;/s);
+
+    const weights = [...styles.matchAll(/font-weight:\s*(\d+)/g)]
+      .map(([, weight]) => Number(weight));
+    expect(Math.max(...weights)).toBeLessThanOrEqual(500);
   });
 });

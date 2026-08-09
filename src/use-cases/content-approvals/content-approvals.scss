@@ -13,7 +13,16 @@
   background: #fbfaf7;
 }
 
+.kanban-use-case-shell--content-approvals .kanban-use-case-eyebrow,
+.kanban-use-case-shell--content-approvals .kanban-use-case-title,
+.kanban-use-case-shell--content-approvals .kanban-use-case-metric__value,
+.kanban-use-case-shell--content-approvals .kanban-use-case-metric__label,
+.kanban-use-case-shell--content-approvals .kanban-use-case-status strong {
+  font-weight: 500;
+}
+
 .kanban-use-case-shell--content-approvals .kanban-use-case-grid {
+  --revo-grid-header-height: 66px;
   --kanban-board-background: #f6f3ee;
   --kanban-surface: #f8f5f0;
   --kanban-card-background: #fffefb;
@@ -46,8 +55,8 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
 }
 
 .kanban-use-case-shell--content-approvals .kanban-column-header {
-  min-height: 57px;
-  padding: 0 20px !important;
+  min-height: 66px;
+  padding: 0 18px !important;
   border: 0 !important;
   border-radius: 4px 4px 0 0;
   color: #fff;
@@ -66,39 +75,57 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
 .kanban-use-case-shell--content-approvals .kanban-use-case-column-title,
 .kanban-use-case-shell--content-approvals .kanban-column-header__title {
   color: #fff;
-  font-size: 19px;
-  font-weight: 740;
+  font-size: 18px;
+  font-weight: 500;
   letter-spacing: -.025em;
-  line-height: 19px;
+  line-height: 22px;
 }
 
 .kanban-use-case-shell--content-approvals .kanban-column-header__count {
-  min-width: 24px;
-  height: 24px;
+  display: inline-flex !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #656565;
   border-radius: 999px;
-  color: #fff;
-  background: transparent;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 22px;
+  color: #fff !important;
+  background: transparent !important;
+  font-size: 16px !important;
+  font-weight: 500;
+  line-height: 1 !important;
   text-align: center;
 }
 
 .kanban-use-case-shell--content-approvals .kanban-column-header__wip {
-  padding: 4px 10px;
+  display: inline-flex !important;
+  height: 30px !important;
+  padding: 0 11px !important;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #ff7676;
   border-radius: 999px;
-  color: #fff;
-  background: #d73333;
-  font-size: 10px;
-  font-weight: 760;
-  line-height: 14px;
+  color: #fff !important;
+  background: #d73333 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  line-height: 1 !important;
 }
 
 .kanban-use-case-shell--content-approvals .kanban-column-header__toggle {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  align-self: center;
+  place-items: center;
   color: #fff;
   opacity: .92;
+}
+
+.kanban-use-case-shell--content-approvals .kanban-column-header__toggle svg {
+  width: 14px;
+  height: 14px;
 }
 
 /* Stage-specific page stock. */
@@ -109,10 +136,11 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
 .kanban-use-case-shell--content-approvals [data-kanban-column-prop="publish"].kanban-stack { background: #eef8f4; }
 
 .kanban-use-case-shell--content-approvals .kanban-stack {
-  padding-inline: 16px !important;
+  padding-inline: 16px 10px !important;
 }
 
 .kanban-use-case-shell--content-approvals .kanban-card {
+  overflow: hidden;
   border: 1px solid #d8d0c9 !important;
   border-radius: 4px !important;
   background: #fffefb !important;
@@ -136,7 +164,7 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
 }
 
 .kanban-use-case-shell--content-approvals .kanban-use-case-card-content--editorial-approval {
-  grid-template-rows: 24px minmax(42px, auto) minmax(34px, auto) 52px 24px 22px;
+  grid-template-rows: 24px 50px 24px 52px 24px 22px;
   align-content: start;
   gap: 8px;
   padding: 4px 6px 2px;
@@ -148,27 +176,35 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
   border-bottom: 2px solid #9f1717;
   color: #8f1212;
   font-size: 11px;
-  font-weight: 820;
+  font-weight: 500;
   letter-spacing: .075em;
   line-height: 13px;
   text-transform: uppercase;
 }
 
-.kanban-use-case-shell--content-approvals .kanban-use-case-card-title {
+.kanban-use-case-shell--content-approvals .kanban-use-case-card-content--editorial-approval .kanban-use-case-card-title {
+  display: -webkit-box;
+  overflow: hidden;
   color: #171515;
   font-family: Georgia, "Times New Roman", ui-serif, serif;
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -.025em;
-  line-height: 26px;
+  line-height: 25px;
+  overflow-wrap: normal;
+  white-space: normal;
+  -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
 .kanban-use-case-shell--content-approvals .kanban-use-case-card-content--editorial-approval p {
+  overflow: hidden;
   color: #373231;
-  font-size: 13px;
-  line-height: 18px;
-  -webkit-line-clamp: 2;
+  font-size: 14px;
+  line-height: 19px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-line-clamp: 1;
 }
 
 .kanban-use-case-shell--content-approvals .kanban-use-case-editorial-proof {
@@ -184,7 +220,7 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
 .kanban-use-case-shell--content-approvals .kanban-use-case-editorial-proof span {
   color: #981b1b;
   font-size: 10px;
-  font-weight: 820;
+  font-weight: 500;
   letter-spacing: .075em;
   line-height: 12px;
   text-transform: uppercase;
@@ -194,7 +230,7 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
   overflow: hidden;
   color: #251f1d;
   font-size: 12px;
-  font-weight: 720;
+  font-weight: 500;
   line-height: 15px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -229,19 +265,20 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
 }
 
 .kanban-use-case-shell--content-approvals .kanban-use-case-editorial-tags {
-  gap: 6px;
+  gap: 4px;
   overflow: hidden;
 }
 
 .kanban-use-case-shell--content-approvals .kanban-use-case-editorial-tags span {
-  padding: 2px 6px;
+  flex: 0 0 auto;
+  padding: 2px 5px;
   overflow: hidden;
   border: 1px solid #d8d0c9;
   border-radius: 2px;
   color: #332e2b;
   background: #fffefb;
-  font-size: 10px;
-  font-weight: 740;
+  font-size: 9px;
+  font-weight: 500;
   letter-spacing: .025em;
   line-height: 14px;
   text-overflow: ellipsis;
@@ -261,12 +298,13 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
 .kanban-use-case-shell--content-approvals .kanban-use-case-editorial-footer strong {
   overflow: hidden;
   color: #272220;
-  font-weight: 700;
+  font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .kanban-use-case-shell--content-approvals .kanban-use-case-card--risk {
   border-color: #e88989 !important;
+  border-inline-start: 4px solid #cc3535 !important;
   box-shadow: 0 0 0 1px rgba(194, 31, 31, .14), 0 2px 5px rgba(99, 24, 24, .09) !important;
 }
