@@ -41,15 +41,15 @@
 import './kanban-use-case-demo.scss';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import RevoGrid, { type GridPlugin } from '@revolist/vue3-datagrid';
-import { KanbanPlugin } from '@revolist/revogrid-enterprise';
 import type { KanbanUseCaseScenario } from './kanban-use-case-model';
 import { createKanbanUseCaseConfig, kanbanUseCaseShellClass, resolveKanbanUseCaseDark } from './kanban-use-case-model';
+import { createKanbanUseCasePlugins } from './kanban-use-case-plugins';
 import { currentTheme, observeCurrentTheme } from '../theme';
 
 const props = defineProps<{ scenario: KanbanUseCaseScenario }>();
 const gridRows = ref([...props.scenario.cards]);
 const columns = [...props.scenario.columns];
-const plugins: GridPlugin[] = [KanbanPlugin];
+const plugins: GridPlugin[] = createKanbanUseCasePlugins(props.scenario);
 const columnTypes = {};
 const additionalData = computed(() => ({}));
 const kanban = computed(() => createKanbanUseCaseConfig(props.scenario));

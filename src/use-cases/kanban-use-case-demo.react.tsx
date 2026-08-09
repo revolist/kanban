@@ -1,9 +1,9 @@
 import './kanban-use-case-demo.scss';
 import { useEffect, useMemo, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
-import { KanbanPlugin } from '@revolist/revogrid-enterprise';
 import type { KanbanUseCaseScenario } from './kanban-use-case-model';
 import { createKanbanUseCaseConfig, kanbanUseCaseShellClass, resolveKanbanUseCaseDark } from './kanban-use-case-model';
+import { createKanbanUseCasePlugins } from './kanban-use-case-plugins';
 import { currentTheme, observeCurrentTheme } from '../theme';
 
 export default function KanbanUseCaseDemo({ scenario }: { scenario: KanbanUseCaseScenario }) {
@@ -11,7 +11,7 @@ export default function KanbanUseCaseDemo({ scenario }: { scenario: KanbanUseCas
   const isDark = resolveKanbanUseCaseDark(scenario, hostIsDark);
   const source = useMemo(() => [...scenario.cards], [scenario]);
   const columns = useMemo(() => [...scenario.columns], [scenario]);
-  const plugins = useMemo(() => [KanbanPlugin], []);
+  const plugins = useMemo(() => createKanbanUseCasePlugins(scenario), [scenario]);
   const columnTypes = useMemo(() => ({}), []);
   const additionalData = useMemo(() => ({}), []);
   const kanban = useMemo(() => createKanbanUseCaseConfig(scenario), [scenario]);

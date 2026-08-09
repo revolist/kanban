@@ -1,9 +1,9 @@
 import { Component, Input, NO_ERRORS_SCHEMA, ViewEncapsulation } from '@angular/core';
 import type { OnDestroy } from '@angular/core';
 import { RevoGrid } from '@revolist/angular-datagrid';
-import { KanbanPlugin } from '@revolist/revogrid-enterprise';
 import type { KanbanUseCaseScenario } from './kanban-use-case-model';
 import { createKanbanUseCaseConfig, kanbanUseCaseShellClass, resolveKanbanUseCaseDark } from './kanban-use-case-model';
+import { createKanbanUseCasePlugins } from './kanban-use-case-plugins';
 import { currentTheme, observeCurrentTheme } from '../theme';
 
 @Component({
@@ -52,7 +52,6 @@ import { currentTheme, observeCurrentTheme } from '../theme';
 })
 export class KanbanUseCaseDemoComponent implements OnDestroy {
   @Input({ required: true }) scenario!: KanbanUseCaseScenario;
-  readonly plugins = [KanbanPlugin];
   readonly columnTypes = {};
   readonly additionalData = {};
   hostIsDark = currentTheme().isDark();
@@ -62,6 +61,7 @@ export class KanbanUseCaseDemoComponent implements OnDestroy {
 
   get source() { return [...this.scenario.cards]; }
   get columns() { return [...this.scenario.columns]; }
+  get plugins() { return createKanbanUseCasePlugins(this.scenario); }
   get kanban() { return createKanbanUseCaseConfig(this.scenario); }
   get theme() { return resolveKanbanUseCaseDark(this.scenario, this.hostIsDark) ? 'darkCompact' : 'compact'; }
   get shellClass() { return kanbanUseCaseShellClass(this.scenario, this.hostIsDark); }

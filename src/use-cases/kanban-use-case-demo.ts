@@ -1,8 +1,8 @@
 import './kanban-use-case-demo.scss';
 import { defineCustomElements } from '@revolist/revogrid/loader';
-import { KanbanPlugin } from '@revolist/revogrid-enterprise';
 import type { KanbanUseCaseMetric, KanbanUseCaseScenario } from './kanban-use-case-model';
 import { createKanbanUseCaseConfig, kanbanUseCaseShellClass, resolveKanbanUseCaseDark } from './kanban-use-case-model';
+import { createKanbanUseCasePlugins } from './kanban-use-case-plugins';
 import { currentTheme, observeCurrentTheme } from '../theme';
 
 defineCustomElements();
@@ -69,7 +69,7 @@ export function mountKanbanUseCase(parentSelector: string, scenario: KanbanUseCa
   grid.hideAttribution = true;
   grid.resize = true;
   grid.columns = [...scenario.columns];
-  grid.plugins = [KanbanPlugin];
+  grid.plugins = createKanbanUseCasePlugins(scenario);
   grid.theme = isDark ? 'darkCompact' : 'compact';
   grid.kanban = createKanbanUseCaseConfig(scenario) as typeof grid.kanban;
   shell.appendChild(grid);

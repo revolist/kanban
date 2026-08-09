@@ -19,6 +19,7 @@ export const INTERNAL_WORKFLOWS_SCENARIO = {
   cardPresentation: 'internal-request',
   useSwimlanes: false,
   showDropTargets: true,
+  allowColumnMove: false,
   colorScheme: 'light',
   layout: { cardRowHeight: 252, swimlaneWidth: 176, collapsedSwimlaneWidth: 44 },
   eyebrow: 'Internal operations · This week',

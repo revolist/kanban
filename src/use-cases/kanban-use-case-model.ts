@@ -109,6 +109,7 @@ export interface KanbanUseCaseScenario {
   readonly useSwimlanes: boolean;
   readonly swimlaneLayout?: 'column' | 'top';
   readonly showDropTargets?: boolean;
+  readonly allowColumnMove?: boolean;
   readonly colorScheme?: 'light' | 'dark' | 'adaptive';
   readonly layout: KanbanUseCaseLayout;
   readonly eyebrow: string;
