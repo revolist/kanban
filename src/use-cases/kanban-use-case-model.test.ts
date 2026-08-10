@@ -265,6 +265,41 @@ describe('Kanban use-case scenarios', () => {
     expect(JSON.stringify(rendered)).not.toContain('ph-');
   });
 
+  it('keeps a centered restore affordance when a custom stage header is collapsed', () => {
+    type TestNode = {
+      props?: Record<string, unknown>;
+      children?: unknown;
+    };
+    const h = (_tag: string, props?: TestNode['props'], children?: unknown): TestNode => ({ props, children });
+    const base = scenario();
+    const workflowColumns = [...base.workflowColumns];
+    workflowColumns[0] = { ...workflowColumns[0]!, collapsible: true };
+    const config = createKanbanUseCaseConfig(scenario({
+      headerIcons: { queue: 'gem' },
+      workflowColumns,
+    }));
+    const column = config.columns?.[0];
+    const rendered = column?.columnTemplate?.(
+      h as never,
+      {
+        kanban: {
+          column: { ...column, collapsed: true },
+          visibleCount: 1,
+          totalCount: 1,
+          overWipLimit: false,
+          toggleCollapsed: () => undefined,
+        },
+      } as never,
+    ) as TestNode;
+    const toggle = (rendered.children as TestNode[]).find(
+      (child) => child?.props?.class === 'kanban-column-header__toggle',
+    );
+
+    expect(rendered.props?.class).toContain('kanban-column-header--collapsed');
+    expect(toggle?.props?.['aria-expanded']).toBe('false');
+    expect(toggle?.props?.['aria-label']).toBe('Expand column: Queue');
+  });
+
   it('exposes semantic severity classes and revenue decision language to showcase styles', () => {
     type TestNode = { props?: { class?: string }; children?: unknown };
     const h = (_tag: string, props?: TestNode['props'], children?: unknown): TestNode => ({ props, children });

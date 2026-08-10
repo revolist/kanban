@@ -402,3 +402,27 @@
   .kanban-use-case-lane-title,
   .product-delivery-workstream__count
 ) { font-weight: 500 !important; }
+
+.kanban-use-case-shell--product-delivery .kanban-column-header--collapsed {
+  gap: 0;
+  padding: 0 !important;
+  justify-content: center;
+}
+.kanban-use-case-shell--product-delivery .kanban-column-header--collapsed > :not(.kanban-column-header__toggle) {
+  display: none !important;
+}
+.kanban-use-case-shell--product-delivery .kanban-column-header--collapsed .kanban-column-header__toggle {
+  display: grid !important;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  margin: 0 !important;
+  place-items: center;
+  color: #d9d5ff;
+  opacity: 1;
+}
+.kanban-use-case-shell--product-delivery .kanban-column-header--collapsed .kanban-column-header__toggle-icon {
+  width: 14px;
+  height: 14px;
+  transform: rotate(-90deg);
+}

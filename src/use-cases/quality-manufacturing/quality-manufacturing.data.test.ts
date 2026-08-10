@@ -106,6 +106,11 @@ describe('Quality and manufacturing Kanban use case', () => {
     expect(styles).toMatch(/\.kanban-swimlane-header__count\s*\{[^}]*display:\s*none;/s);
     expect(styles).toMatch(/\.kanban-swimlane-header\s*\{[^}]*padding:\s*16px !important;/s);
     expect(styles).toMatch(/\.kanban-use-case-lane-heading\s*\{[^}]*padding:\s*0;[^}]*margin-bottom:\s*16px;/s);
+    expect(styles).toMatch(/\.kanban-swimlane-column-header-cell--collapsed\s*\{[^}]*margin:\s*10px 4px;/s);
+    expect(styles).toMatch(/\.kanban-swimlane-column-header--collapsed\s*\{[^}]*padding:\s*0 !important;[^}]*place-content:\s*center;/s);
+    expect(styles).toMatch(/\.kanban-swimlane-cell--column-collapsed\s*\{[^}]*margin:\s*4px;/s);
+    expect(styles).toMatch(/\.kanban-swimlane-header--column-collapsed\s*\{[^}]*padding:\s*0 !important;[^}]*place-content:\s*center;/s);
+    expect(styles).toMatch(/\.kanban-swimlane-header--column-collapsed\s*>\s*:not\(\.kanban-swimlane-header__toggle\)\s*\{[^}]*display:\s*none !important;/s);
     expect(styles).toContain('grid-template-rows: 24px minmax(30px, auto) 48px 46px 18px');
     expect(styles).toMatch(/\.kanban-use-case-fact strong\s*\{[^}]*text-overflow:\s*ellipsis;/s);
 

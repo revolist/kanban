@@ -308,3 +308,27 @@ html[data-capture="board"] .kanban-use-case-shell--content-approvals revogr-data
   border-inline-start: 4px solid #cc3535 !important;
   box-shadow: 0 0 0 1px rgba(194, 31, 31, .14), 0 2px 5px rgba(99, 24, 24, .09) !important;
 }
+
+.kanban-use-case-shell--content-approvals .kanban-column-header--collapsed {
+  gap: 0;
+  padding: 0 !important;
+  justify-content: center;
+}
+.kanban-use-case-shell--content-approvals .kanban-column-header--collapsed > :not(.kanban-column-header__toggle) {
+  display: none !important;
+}
+.kanban-use-case-shell--content-approvals .kanban-column-header--collapsed .kanban-column-header__toggle {
+  display: grid !important;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  margin: 0 !important;
+  place-items: center;
+  color: #fff;
+  opacity: 1;
+}
+.kanban-use-case-shell--content-approvals .kanban-column-header--collapsed .kanban-column-header__toggle svg {
+  width: 14px;
+  height: 14px;
+  transform: rotate(-90deg);
+}

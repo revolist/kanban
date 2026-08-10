@@ -534,9 +534,11 @@ export function createKanbanUseCaseConfig(
       columnTemplate: (h, props) => {
         const { visibleCount, totalCount, overWipLimit, toggleCollapsed } = props.kanban;
         const title = column.name ?? String(column.prop);
+        const collapsed = props.kanban.column.collapsed === true;
         return h('div', {
           class: [
             'kanban-column-header',
+            collapsed ? 'kanban-column-header--collapsed' : '',
             overWipLimit ? 'kanban-column-header--over-wip' : '',
           ].filter(Boolean).join(' '),
           'data-kanban-column-prop': String(column.prop),
@@ -552,7 +554,10 @@ export function createKanbanUseCaseConfig(
             ? h('button', {
               type: 'button',
               class: 'kanban-column-header__toggle',
-              'aria-label': `Toggle column: ${title}`,
+              'aria-expanded': String(!collapsed),
+              'aria-label': collapsed
+                ? `Expand column: ${title}`
+                : `Collapse column: ${title}`,
               onClick: toggleCollapsed,
             }, rawSvgIcon(h, 'chevron-down', 'kanban-column-header__toggle-icon'))
             : null,
