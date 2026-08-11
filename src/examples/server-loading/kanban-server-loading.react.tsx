@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
-import { KanbanPlugin } from '@revolist/revogrid-enterprise';
+import { KanbanPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import {
   createKanbanServerConfig,

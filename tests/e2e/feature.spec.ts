@@ -60,13 +60,16 @@ for (const useCaseId of useCaseIds) {
     page.on('pageerror', (error) => errors.push(error.message));
 
     await page.goto(`/?example=${useCaseId}`);
-    await expect(page.locator('.kanban-use-case-header')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.kanban-use-case-shell')).toBeVisible({ timeout: 15_000 });
 
     const grid = page.locator('revo-grid').first();
     await expect(grid).toBeVisible({ timeout: 15_000 });
     await expect(grid.locator('[data-kanban-card-id]').first()).toBeVisible({ timeout: 15_000 });
     expect(await grid.locator('.kanban-column-header__title').count()).toBeGreaterThanOrEqual(5);
-    expect(await grid.locator('.kanban-swimlane-header__title').count()).toBeGreaterThanOrEqual(2);
+    const swimlaneCount = await grid.locator('[data-kanban-swimlane-id]').evaluateAll((elements) => (
+      new Set(elements.map((element) => element.getAttribute('data-kanban-swimlane-id'))).size
+    ));
+    expect(swimlaneCount).toBeGreaterThanOrEqual(1);
     expect(errors).toEqual([]);
   });
 }

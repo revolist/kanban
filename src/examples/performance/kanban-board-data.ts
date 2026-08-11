@@ -2,7 +2,7 @@ import type { ColumnRegular, DataType } from '@revolist/revogrid';
 import type {
   KanbanCardEditorDialogOptions,
   KanbanConfig,
-} from '@revolist/revogrid-enterprise';
+} from '@revolist/kanban';
 
 const KANBAN_BOARD_WORKFLOW = [
   { prop: 'backlog', name: 'Backlog', color: '#64748b' },

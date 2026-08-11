@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import RevoGrid, { type GridPlugin } from '@revolist/vue3-datagrid';
-import { KanbanCardEditorDialogPlugin, KanbanPlugin } from '@revolist/revogrid-enterprise';
+import { KanbanCardEditorDialogPlugin, KanbanPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanBoardConfig, createKanbanBoardEditor, KANBAN_BOARD_COLUMNS, resolveKanbanBoardRows, type KanbanBoardCard } from './kanban-board-data';
 import './kanban-board.scss';

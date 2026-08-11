@@ -1,5 +1,5 @@
 import type { ColumnRegular } from '@revolist/revogrid';
-import type { KanbanSwimlaneTemplate } from '@revolist/revogrid-pro';
+import type { KanbanSwimlaneTemplate } from '@revolist/kanban';
 import type { KanbanUseCaseScenario } from '../kanban-use-case-model';
 
 const productSwimlaneTemplate: KanbanSwimlaneTemplate = (h, context) => h('div', {

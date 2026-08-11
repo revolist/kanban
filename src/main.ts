@@ -1,6 +1,5 @@
 import '../demo-host.css';
-import '@revolist/revogrid-pro/dist/revogrid-pro.css';
-import '@revolist/revogrid-enterprise/dist/revogrid-enterprise.css';
+import '@revolist/kanban/styles.css';
 import { resolveKanbanExample, type KanbanExampleFramework } from './examples';
 
 const framework: KanbanExampleFramework = import.meta.env.MODE === 'development'

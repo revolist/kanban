@@ -1,7 +1,7 @@
 import { Component, Input, NO_ERRORS_SCHEMA, ViewEncapsulation } from '@angular/core';
 import type { OnDestroy } from '@angular/core';
 import { RevoGrid } from '@revolist/angular-datagrid';
-import { KanbanCardEditorDialogPlugin, KanbanPlugin } from '@revolist/revogrid-enterprise';
+import { KanbanCardEditorDialogPlugin, KanbanPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanBoardConfig, createKanbanBoardEditor, KANBAN_BOARD_COLUMNS, resolveKanbanBoardRows, type KanbanBoardCard } from './kanban-board-data';
 

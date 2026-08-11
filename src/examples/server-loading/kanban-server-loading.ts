@@ -1,5 +1,5 @@
 import { defineCustomElements } from '@revolist/revogrid/loader';
-import { KanbanPlugin } from '@revolist/revogrid-enterprise';
+import { KanbanPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import {
   createKanbanServerConfig,

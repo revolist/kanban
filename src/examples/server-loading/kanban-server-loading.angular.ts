@@ -1,7 +1,7 @@
 import { Component, Input, NO_ERRORS_SCHEMA, ViewEncapsulation } from '@angular/core';
 import type { OnDestroy } from '@angular/core';
 import { RevoGrid } from '@revolist/angular-datagrid';
-import { KanbanPlugin } from '@revolist/revogrid-enterprise';
+import { KanbanPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import {
   createKanbanServerConfig,

@@ -1,5 +1,5 @@
 import { defineCustomElements } from '@revolist/revogrid/loader';
-import { KanbanCardEditorDialogPlugin, KanbanPlugin } from '@revolist/revogrid-enterprise';
+import { KanbanCardEditorDialogPlugin, KanbanPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanBoardConfig, createKanbanBoardEditor, KANBAN_BOARD_COLUMNS, resolveKanbanBoardRows, type KanbanBoardCard } from './kanban-board-data';
 import './kanban-board.scss';

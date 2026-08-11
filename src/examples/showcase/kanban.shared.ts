@@ -1,5 +1,5 @@
 import type { ColumnRegular, DataType } from '@revolist/revogrid';
-import type { KanbanConfig } from '@revolist/revogrid-enterprise';
+import type { KanbanConfig } from '@revolist/kanban';
 import { avatarTemplate } from '@revolist/revogrid-pro';
 
 export type KanbanShowcaseCard = DataType & {
