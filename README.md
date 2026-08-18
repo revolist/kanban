@@ -2,102 +2,129 @@
 
 # RevoGrid Kanban
 
-**Grid-backed workflow boards with one canonical, application-owned data source.**
-
-[![Frameworks](https://img.shields.io/badge/TypeScript%20%7C%20React%20%7C%20Vue%20%7C%20Angular-4f46e5)](#framework-examples)
-[![License: MIT](https://img.shields.io/badge/Example%20license-MIT-16a34a.svg)](./LICENSE)
-
-[View live demo](https://kanban.rv-grid.com/) · [Request trial](https://pro.rv-grid.com/guides/installation-npm-trial/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
+[View live demo](https://kanban.rv-grid.com/) · [Get Pro Advanced](https://rv-grid.com/pricing/)
 
 [![RevoGrid Kanban walkthrough](./assets/kanban-walkthrough.gif)](./assets/kanban-walkthrough.mp4)
 
 </div>
 
-This repository hosts multiple Kanban examples implemented in Vanilla TypeScript,
-React, Vue, and Angular. The example is selected with the `example` URL query;
-the framework is selected by the existing Vite mode.
+RevoGrid Kanban is a JavaScript workflow-board component built on RevoGrid. It
+projects application-owned rows into fast, interactive cards and swimlanes
+without introducing a separate board data model.
 
-## Examples
+## Key capabilities
 
-| Example | URL | Purpose |
-| --- | --- | --- |
-| Classic Kanban Showcase | `/?example=showcase` | Rich cards, workflow rules, team swimlanes, activity, progress, and drag-and-drop. |
-| 50K Cards Board | `/?example=performance` | Virtualize 50,000 cards across 10 workflow columns and two team swimlanes. |
-| 100K Server-loaded Cards | `/?example=server-loading` | Page through 100,000 remote cards and report each returned range in one notification. |
+- Define ordered workflow columns with configurable WIP limits
+- Organize work into collapsible swimlanes with lane-specific policies
+- Move cards across columns and lanes with source-backed drag and drop
+- Edit cards through built-in dialogs, context menus, and application events
+- Add priority, progress, assignee, activity, status, and due-date presentation
+- Customize cards, column headers, swimlane headers, rules, labels, and selection
+- Support keyboard interaction, history, filtering, and read-only workflows
+- Virtualize 50,000 local cards or page through 100,000 remotely loaded cards
+- Persist status and order changes directly to the application's canonical rows
 
-Missing or unknown example ids fall back to the Classic Kanban Showcase.
+## Installation
 
-## What it features
+### Free trial
 
-- Ordered workflow columns with per-column WIP limits
-- Team swimlanes with lane-specific limits and collapse controls
-- Source-backed drag-and-drop across columns and teams
-- Card rules, priority cues, progress, assignees, due dates, and activity
-- Custom card, column-header, and swimlane-header presentation
-- Column and swimlane collapse for dense operational boards
-- Context-menu and card-editor integration points
+The public trial registry requires no token or login. Configure it for this
+project and install the trial packages under the production import names:
 
-## Pro features
+```bash
+pnpm config set @revolist:registry https://trial.rv-grid.com --location=project
+pnpm i @revolist/revogrid-pro@npm:@revolist/rv-pro-trial@2.7.10 @revolist/kanban@npm:@revolist/kanban-trial@2.7.10
+```
 
-| API | How the showcase uses it |
-| --- | --- |
-| `KanbanPlugin` | Projects source rows into virtualized workflow columns while keeping identity, status, and ordering in application data. |
-| `KanbanConfig` | Defines columns, WIP limits, swimlanes, card fields, rules, collapse behavior, and customization hooks. |
-| `KanbanCardEditorDialogPlugin` | Supplies the production card-editing surface used by the Kanban dependency stack. |
+### Pro
 
-The board maps `id`, `status`, and `order` explicitly. Applications can persist
-plugin events back to the same row model without maintaining a second board-only
-state tree.
+Paid users can remove the trial registry override and install the licensed
+packages. Source imports stay unchanged.
 
-## Recipes
+```bash
+pnpm config delete @revolist:registry --location=project
+pnpm i @revolist/revogrid-pro@2.7.10 @revolist/kanban@2.7.10
+```
 
-| Recipe | What it demonstrates |
-| --- | --- |
-| [`workflow-wip.ts`](./recipes/workflow-wip.ts) | Ordered workflow columns and focused WIP limits. |
-| [`swimlanes-collapse.ts`](./recipes/swimlanes-collapse.ts) | Team swimlanes and compact collapse behavior. |
-| [`card-movement.ts`](./recipes/card-movement.ts) | Source-backed status and order updates after a card move. |
+## Quick start
 
-## Framework examples
+```ts
+import { defineCustomElements } from '@revolist/revogrid/loader';
+import { KanbanPlugin } from '@revolist/kanban';
+import '@revolist/kanban/styles.css';
 
-| Framework | Entry point | Command |
+defineCustomElements();
+
+const grid = document.createElement('revo-grid');
+grid.plugins = [KanbanPlugin];
+grid.kanban = {
+  columns: [
+    { prop: 'todo', name: 'To do', wipLimit: 5 },
+    { prop: 'doing', name: 'In progress', wipLimit: 3 },
+    { prop: 'done', name: 'Done' },
+  ],
+  idField: 'id',
+  columnField: 'status',
+  orderField: 'order',
+  card: { titleField: 'title' },
+};
+document.querySelector('#app')?.appendChild(grid);
+grid.source = [
+  { id: 'task-1', title: 'Plan release', status: 'todo', order: 1000 },
+  { id: 'task-2', title: 'Build feature', status: 'doing', order: 1000 },
+];
+```
+
+## Framework integrations
+
+The component uses the same board configuration across supported frameworks.
+
+| Framework | Integration source | Start command |
 | --- | --- | --- |
 | Vanilla TypeScript | [`src/examples/showcase/kanban.ts`](./src/examples/showcase/kanban.ts) | `pnpm dev` |
 | React | [`src/examples/showcase/kanban.react.tsx`](./src/examples/showcase/kanban.react.tsx) | `pnpm dev:react` |
 | Vue 3 | [`src/examples/showcase/kanban.vue`](./src/examples/showcase/kanban.vue) | `pnpm dev:vue` |
 | Angular | [`src/examples/showcase/kanban.angular.ts`](./src/examples/showcase/kanban.angular.ts) | `pnpm dev:angular` |
 
-Each command can open any registered example. New examples live in an isolated
-`src/examples/<example-id>/` directory and are registered in
-[`src/examples.ts`](./src/examples.ts). Shared theme observation lives in
-[`src/theme.ts`](./src/theme.ts).
+Build all integrations with `pnpm build:frameworks`.
 
-## Run it
+## Run the examples
+
+Clone the component repository, follow either the **Free trial** or **Pro**
+installation above, and start the default workflow board:
 
 ```bash
-pnpm install
+git clone https://github.com/revolist/kanban.git
+cd kanban
 pnpm dev
-pnpm dev:react
-pnpm dev:vue
-pnpm dev:angular
 ```
 
-Run `pnpm test`, `pnpm build:frameworks`, and `pnpm test:e2e` before submitting
-changes.
+Open [http://localhost:5173/](http://localhost:5173/). Add an `example` query
+parameter to run another Kanban workflow:
 
-Trial users must authenticate with the registry described in the [official
-trial installation guide](https://pro.rv-grid.com/guides/installation-npm-trial/).
-No registry token belongs in this repository. Licensed users can replace the two
-trial aliases in `package.json` with the matching licensed RevoGrid packages;
-source imports remain unchanged.
+| Example | Live | Local URL | Source |
+| --- | --- | --- | --- |
+| Workflow board | [Open](https://kanban.rv-grid.com/) | [Default view](http://localhost:5173/) | [`src/examples/showcase/kanban.ts`](./src/examples/showcase/kanban.ts) |
+| 50,000 local cards | [Open](https://kanban.rv-grid.com/?example=performance) | [`?example=performance`](http://localhost:5173/?example=performance) | [`src/examples/performance/kanban-board.ts`](./src/examples/performance/kanban-board.ts) |
+| 100,000 remote cards | [Open](https://kanban.rv-grid.com/?example=server-loading) | [`?example=server-loading`](http://localhost:5173/?example=server-loading) | [`src/examples/server-loading/kanban-server-loading.ts`](./src/examples/server-loading/kanban-server-loading.ts) |
+| Product delivery | [Open](https://kanban.rv-grid.com/?example=product-delivery) | [`?example=product-delivery`](http://localhost:5173/?example=product-delivery) | [`src/use-cases/product-delivery/product-delivery.ts`](./src/use-cases/product-delivery/product-delivery.ts) |
+| Support operations | [Open](https://kanban.rv-grid.com/?example=support-operations) | [`?example=support-operations`](http://localhost:5173/?example=support-operations) | [`src/use-cases/support-operations/support-operations.ts`](./src/use-cases/support-operations/support-operations.ts) |
+| Sales onboarding | [Open](https://kanban.rv-grid.com/?example=sales-onboarding) | [`?example=sales-onboarding`](http://localhost:5173/?example=sales-onboarding) | [`src/use-cases/sales-onboarding/sales-onboarding.ts`](./src/use-cases/sales-onboarding/sales-onboarding.ts) |
+| Content approvals | [Open](https://kanban.rv-grid.com/?example=content-approvals) | [`?example=content-approvals`](http://localhost:5173/?example=content-approvals) | [`src/use-cases/content-approvals/content-approvals.ts`](./src/use-cases/content-approvals/content-approvals.ts) |
+| Quality manufacturing | [Open](https://kanban.rv-grid.com/?example=quality-manufacturing) | [`?example=quality-manufacturing`](http://localhost:5173/?example=quality-manufacturing) | [`src/use-cases/quality-manufacturing/quality-manufacturing.ts`](./src/use-cases/quality-manufacturing/quality-manufacturing.ts) |
+| Internal workflows | [Open](https://kanban.rv-grid.com/?example=internal-workflows) | [`?example=internal-workflows`](http://localhost:5173/?example=internal-workflows) | [`src/use-cases/internal-workflows/internal-workflows.ts`](./src/use-cases/internal-workflows/internal-workflows.ts) |
 
-## Media
+The same query parameter works with `pnpm dev:react`, `pnpm dev:vue`, and
+`pnpm dev:angular`.
 
-The deterministic recorder in [`scripts/record-media.mjs`](./scripts/record-media.mjs)
-captures the captioned walkthrough, poster, and four workflow screenshots from
-the canonical TypeScript build. `pnpm media:inspect` produces a temporary review
-contact sheet; `pnpm media:record` updates committed assets intentionally.
+## Resources
+
+- [Kanban documentation](https://pro.rv-grid.com/guides/kanban/)
+- [Kanban API](https://pro.rv-grid.com/api/kanban/)
+- [Trial installation guide](https://pro.rv-grid.com/guides/installation-npm-trial/)
 
 ## License
 
-The examples, recipes, tests, documentation, and media tooling are MIT licensed.
-Commercial RevoGrid packages are not covered by this repository's MIT license.
+The integration source and supporting assets in this repository are MIT
+licensed. RevoGrid Pro and RevoGrid Kanban are commercial packages distributed
+under the license supplied with your subscription.
