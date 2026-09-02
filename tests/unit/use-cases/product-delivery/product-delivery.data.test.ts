@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
-import { PRODUCT_DELIVERY_SCENARIO } from './product-delivery.data';
+import { validateKanbanUseCaseScenario } from '../../../../src/use-cases/kanban-use-case-model';
+import { PRODUCT_DELIVERY_SCENARIO } from '../../../../src/use-cases/product-delivery/product-delivery.data';
 
 describe('Product delivery Kanban use case', () => {
   it('is a complete, internally consistent scenario', () => {

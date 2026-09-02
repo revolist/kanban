@@ -1,11 +1,11 @@
 import type { PluginProviders } from '@revolist/revogrid';
 import { describe, expect, it } from 'vitest';
-import { INTERNAL_WORKFLOWS_SCENARIO } from './internal-workflows/internal-workflows.data';
-import { PRODUCT_DELIVERY_SCENARIO } from './product-delivery/product-delivery.data';
+import { INTERNAL_WORKFLOWS_SCENARIO } from '../../../src/use-cases/internal-workflows/internal-workflows.data';
+import { PRODUCT_DELIVERY_SCENARIO } from '../../../src/use-cases/product-delivery/product-delivery.data';
 import {
   createKanbanUseCasePlugins,
   DisableKanbanColumnMovePlugin,
-} from './kanban-use-case-plugins';
+} from '../../../src/use-cases/kanban-use-case-plugins';
 
 describe('Kanban use-case plugins', () => {
   it('cancels workflow-column dragging only for the opted-out scenario', () => {

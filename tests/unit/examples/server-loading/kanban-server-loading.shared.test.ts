@@ -3,7 +3,7 @@ import {
   createKanbanServerConfig,
   KANBAN_SERVER_CARD_COUNT,
   KANBAN_SERVER_PAGE_SIZE,
-} from './kanban-server-loading.shared';
+} from '../../../../src/examples/server-loading/kanban-server-loading.shared';
 
 describe('Kanban server-loading example', () => {
   it('reports the cards returned by each server page', async () => {

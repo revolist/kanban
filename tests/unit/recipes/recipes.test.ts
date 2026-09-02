@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { KANBAN_SHOWCASE_ROWS } from '../src/examples/showcase/kanban.shared';
-import { createWorkflowAndWipRecipe } from './workflow-wip';
-import { createSwimlanesAndCollapseRecipe } from './swimlanes-collapse';
-import { moveCard } from './card-movement';
+import { KANBAN_SHOWCASE_ROWS } from '../../../src/examples/showcase/kanban.shared';
+import { createWorkflowAndWipRecipe } from '../../../recipes/workflow-wip';
+import { createSwimlanesAndCollapseRecipe } from '../../../recipes/swimlanes-collapse';
+import { moveCard } from '../../../recipes/card-movement';
 
 describe('Kanban recipes', () => {
   it('applies a focused in-progress WIP limit', () => {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
-import { SUPPORT_OPERATIONS_SCENARIO } from './support-operations.data';
+import { validateKanbanUseCaseScenario } from '../../../../src/use-cases/kanban-use-case-model';
+import { SUPPORT_OPERATIONS_SCENARIO } from '../../../../src/use-cases/support-operations/support-operations.data';
 
 describe('Support operations Kanban use case', () => {
   it('is a complete, internally consistent scenario', () => {

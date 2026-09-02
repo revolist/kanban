@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
-import { QUALITY_MANUFACTURING_SCENARIO } from './quality-manufacturing.data';
+import { validateKanbanUseCaseScenario } from '../../../../src/use-cases/kanban-use-case-model';
+import { QUALITY_MANUFACTURING_SCENARIO } from '../../../../src/use-cases/quality-manufacturing/quality-manufacturing.data';
 
 describe('Quality and manufacturing Kanban use case', () => {
   it('is a complete, internally consistent scenario', () => {

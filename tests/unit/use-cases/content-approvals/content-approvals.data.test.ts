@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
-import { CONTENT_APPROVALS_SCENARIO } from './content-approvals.data';
+import { validateKanbanUseCaseScenario } from '../../../../src/use-cases/kanban-use-case-model';
+import { CONTENT_APPROVALS_SCENARIO } from '../../../../src/use-cases/content-approvals/content-approvals.data';
 
 describe('Content and approvals Kanban use case', () => {
   const styles = readFileSync(

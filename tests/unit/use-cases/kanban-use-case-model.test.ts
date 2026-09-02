@@ -8,13 +8,13 @@ import {
   validateKanbanUseCaseScenario,
   type KanbanUseCaseCardPresentation,
   type KanbanUseCaseScenario,
-} from './kanban-use-case-model';
-import { CONTENT_APPROVALS_SCENARIO } from './content-approvals/content-approvals.data';
-import { INTERNAL_WORKFLOWS_SCENARIO } from './internal-workflows/internal-workflows.data';
-import { PRODUCT_DELIVERY_SCENARIO } from './product-delivery/product-delivery.data';
-import { QUALITY_MANUFACTURING_SCENARIO } from './quality-manufacturing/quality-manufacturing.data';
-import { SALES_ONBOARDING_SCENARIO } from './sales-onboarding/sales-onboarding.data';
-import { SUPPORT_OPERATIONS_SCENARIO } from './support-operations/support-operations.data';
+} from '../../../src/use-cases/kanban-use-case-model';
+import { CONTENT_APPROVALS_SCENARIO } from '../../../src/use-cases/content-approvals/content-approvals.data';
+import { INTERNAL_WORKFLOWS_SCENARIO } from '../../../src/use-cases/internal-workflows/internal-workflows.data';
+import { PRODUCT_DELIVERY_SCENARIO } from '../../../src/use-cases/product-delivery/product-delivery.data';
+import { QUALITY_MANUFACTURING_SCENARIO } from '../../../src/use-cases/quality-manufacturing/quality-manufacturing.data';
+import { SALES_ONBOARDING_SCENARIO } from '../../../src/use-cases/sales-onboarding/sales-onboarding.data';
+import { SUPPORT_OPERATIONS_SCENARIO } from '../../../src/use-cases/support-operations/support-operations.data';
 
 function scenario(overrides: Partial<KanbanUseCaseScenario> = {}): KanbanUseCaseScenario {
   const cards = Array.from({ length: 12 }, (_, index) => ({

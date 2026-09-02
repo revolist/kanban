@@ -3,7 +3,7 @@ import {
   createKanbanBoardConfig,
   createKanbanBoardRows,
   KANBAN_BOARD_ITEM_COUNT,
-} from './kanban-board-data';
+} from '../../../../src/examples/performance/kanban-board-data';
 
 describe('50K cards board fixture', () => {
   it('creates 50,000 unique cards evenly across the workflow and swimlanes', () => {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
-import { INTERNAL_WORKFLOWS_SCENARIO } from './internal-workflows.data';
+import { validateKanbanUseCaseScenario } from '../../../../src/use-cases/kanban-use-case-model';
+import { INTERNAL_WORKFLOWS_SCENARIO } from '../../../../src/use-cases/internal-workflows/internal-workflows.data';
 
 describe('Internal workflows Kanban use case', () => {
   it('is a complete, internally consistent scenario', () => {

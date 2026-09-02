@@ -6,7 +6,7 @@ import {
   KANBAN_EXAMPLES,
   KANBAN_EXAMPLE_IDS,
   resolveKanbanExample,
-} from './examples';
+} from '../../src/examples';
 
 const repoPath = (...parts: string[]) => resolve(process.cwd(), ...parts);
 

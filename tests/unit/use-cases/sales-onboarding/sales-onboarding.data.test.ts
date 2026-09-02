@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { validateKanbanUseCaseScenario } from '../kanban-use-case-model';
-import { SALES_ONBOARDING_SCENARIO } from './sales-onboarding.data';
+import { validateKanbanUseCaseScenario } from '../../../../src/use-cases/kanban-use-case-model';
+import { SALES_ONBOARDING_SCENARIO } from '../../../../src/use-cases/sales-onboarding/sales-onboarding.data';
 
 describe('Sales and onboarding Kanban use case', () => {
   it('is a complete, internally consistent scenario', () => {
