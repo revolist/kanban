@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   createKanbanBoardConfig,
+  createKanbanBoardEditor,
   createKanbanBoardRows,
   KANBAN_BOARD_ITEM_COUNT,
 } from '../../../../src/examples/performance/kanban-board-data';
@@ -29,5 +30,12 @@ describe('50K cards board fixture', () => {
     expect(config.columnField).toBeUndefined();
     expect(config.swimlaneField).toBe('team');
     expect(config.cardRowHeight).toBe(190);
+  });
+
+  it('keeps benchmark draft disposal actions free of native prompts', () => {
+    const editor = createKanbanBoardEditor();
+
+    expect(editor.confirmDiscard).toBe(false);
+    expect(editor.confirmDelete).toBe(false);
   });
 });
