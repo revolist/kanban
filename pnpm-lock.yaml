@@ -30,17 +30,17 @@ importers:
         specifier: 4.27.0
         version: 4.27.0
       '@revolist/kanban':
-        specifier: npm:@revolist/kanban-trial@2.8.6
-        version: '@revolist/kanban-trial@2.8.6'
+        specifier: npm:@revolist/kanban-trial@2.9.0
+        version: '@revolist/kanban-trial@2.9.0'
       '@revolist/react-datagrid':
         specifier: 4.27.0
         version: 4.27.0
       '@revolist/revogrid':
-        specifier: 4.27.6
-        version: 4.27.6
+        specifier: 4.27.10
+        version: 4.27.10
       '@revolist/revogrid-pro':
-        specifier: npm:@revolist/rv-pro-trial@2.8.6
-        version: '@revolist/rv-pro-trial@2.8.6'
+        specifier: npm:@revolist/rv-pro-trial@2.9.0
+        version: '@revolist/rv-pro-trial@2.9.0'
       '@revolist/vue3-datagrid':
         specifier: 4.27.0
         version: 4.27.0
@@ -1257,8 +1257,8 @@ packages:
   '@revolist/angular-datagrid@4.27.0':
     resolution: {integrity: sha512-U0L2lMt1Y8A6kN/Gnlc9Q5zpBOVUoTN8QKCIX+/b7KG+SrZISO5p3pyMN5/WAIAZiY0lHYJ/4VgcsdBFMunvKQ==}
 
-  '@revolist/kanban-trial@2.8.6':
-    resolution: {integrity: sha512-SQNPUpirqvFJ0FsdWXCre0xcgmXOOoB/bkdoOZ70f5oTVL171vHwR1U7AQ/2EqHvtfobDtjTe1bW1bhoQkma1Q==, tarball: https://trial.rv-grid.com/@revolist/kanban-trial/-/c5efea273bf38dc2392a5b4ae702658c067c183a}
+  '@revolist/kanban-trial@2.9.0':
+    resolution: {integrity: sha512-jiFFq7R3TN1Bo7e87yYIKSSjZEGIWTnLTRSmZTgEer9fcmtIOAQswSn6mU72p+GgvUIVASmlRjnkHVsV6ZlLzw==, tarball: https://trial.rv-grid.com/@revolist/kanban-trial/-/ceae88f7fd4264a999e8800947a26937d30eea78}
 
   '@revolist/react-datagrid@4.27.0':
     resolution: {integrity: sha512-gdJuMMFlPuwyl/lIdvp8RSuFGBeAzOSqft8f4CEBrp8PYtvKF/pNXsh+hn67qjkrHacx8HUDdJ9yEr4rp5p4cQ==}
@@ -1266,11 +1266,11 @@ packages:
   '@revolist/revogrid@4.27.0':
     resolution: {integrity: sha512-e8Ni/3/CV9zI8RQzjQd3rWUBHJA2YzoE99Lf22svuUBV38SMIP10SQgUk0385oE3SIl88cXcKXQjIXNNQZDHFQ==}
 
-  '@revolist/revogrid@4.27.6':
-    resolution: {integrity: sha512-PNRxT3plZ5q5QXEThCXxI53KXsKje2VtgOEY7nYM85Jt7KzU7KDOwQ+g20Z7MX+fseKML8vL2ExsyL3VaE1WkA==}
+  '@revolist/revogrid@4.27.10':
+    resolution: {integrity: sha512-ajsbms3Qym//qf4swYQsE21vd0jiHd6NRwWWuUut/pn/LXwId9aEGj5fEcPWK+XCuKgt5xXh18FOMmPxXnryrg==}
 
-  '@revolist/rv-pro-trial@2.8.6':
-    resolution: {integrity: sha512-KuR7US0Y+MUkfKhsP3lQNErbe0H2HL5jrpL9yTCIhYZM7xjnQtdbb4g2d7yj68VPBd6MVjgvsfarRHfSSk5+ow==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/01c18ebda16c02fce7f5b184ad340038d41fe2ed}
+  '@revolist/rv-pro-trial@2.9.0':
+    resolution: {integrity: sha512-gU9fz8B99oifRy3rtETQ6c3t/yJxAAn6xVeDgEPegfy0eG+fS3EsDRiG5TX2g8G/M6NARtyZZexWJmgZq8LBiw==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/1cc79e2a13edda42ec25ba5285312559602162a5}
 
   '@revolist/vue3-datagrid@4.27.0':
     resolution: {integrity: sha512-v/jdCxofynMFXWu772oNgWY8WeaNml3w4ccp1LYjqkTcA+3MCU3NI9cACWaIiQi3hfyM4eiiV6ALlsh8NxhpLQ==}
@@ -4473,11 +4473,11 @@ snapshots:
       '@stencil/core': 4.43.5
       tslib: 2.8.1
 
-  '@revolist/kanban-trial@2.8.6':
+  '@revolist/kanban-trial@2.9.0':
     dependencies:
       '@fortawesome/fontawesome-free': 7.3.1
-      '@revolist/revogrid': 4.27.6
-      '@revolist/rv-pro-trial': 2.8.6
+      '@revolist/revogrid': 4.27.10
+      '@revolist/rv-pro-trial': 2.9.0
 
   '@revolist/react-datagrid@4.27.0':
     dependencies:
@@ -4485,12 +4485,12 @@ snapshots:
 
   '@revolist/revogrid@4.27.0': {}
 
-  '@revolist/revogrid@4.27.6': {}
+  '@revolist/revogrid@4.27.10': {}
 
-  '@revolist/rv-pro-trial@2.8.6':
+  '@revolist/rv-pro-trial@2.9.0':
     dependencies:
       '@formulajs/formulajs': 4.6.1
-      '@revolist/revogrid': 4.27.6
+      '@revolist/revogrid': 4.27.10
       write-excel-file: 4.1.1
 
   '@revolist/vue3-datagrid@4.27.0':
