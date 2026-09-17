@@ -22,6 +22,29 @@
   --kanban-gap: 10px;
 }
 
+.kanban-board__recent-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--kanban-border);
+  border-radius: var(--kanban-radius);
+  background: var(--kanban-accent);
+  color: var(--kanban-text);
+  font-size: 13px;
+}
+
+.kanban-board__recent-card button {
+  border: 0;
+  border-radius: 6px;
+  padding: 5px 8px;
+  background: var(--kanban-accent-strong);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
 .kanban-board-card-topline,
 .kanban-board-card-meta { display: flex; align-items: center; }
 .kanban-board-lane-heading { display: grid; gap: 3px; overflow: hidden; }

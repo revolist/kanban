@@ -134,6 +134,10 @@ export function createKanbanBoardConfig(): KanbanConfig<KanbanBoardCard> {
 
 export function createKanbanBoardEditor(): KanbanCardEditorDialogOptions<KanbanBoardCard> {
   return {
+    // This demo uses Cancel as an immediate reset so the repeatable benchmark workflow
+    // does not depend on a native confirmation dialog.
+    confirmDiscard: false,
+    confirmDelete: false,
     hiddenFields: ['progress'],
     fields: [{ id: 'points', label: 'Story points', kind: 'number', field: 'points', fullWidth: false,
       format: (value) => value === undefined ? '' : String(value),
