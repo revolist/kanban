@@ -1,4 +1,4 @@
-import { Component, Input, NO_ERRORS_SCHEMA, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, NO_ERRORS_SCHEMA, ViewEncapsulation } from '@angular/core';
 import type { OnDestroy } from '@angular/core';
 import { RevoGrid } from '@revolist/angular-datagrid';
 import { KanbanPlugin } from '@revolist/kanban';
@@ -43,13 +43,17 @@ export class KanbanServerLoadingGridComponent implements OnDestroy {
   readonly additionalData = {};
   readonly kanban = createKanbanServerConfig((message) => {
     this.notification = message;
+    this.cdr.markForCheck();
   });
   isDark = currentTheme().isDark();
   theme = this.isDark ? 'darkCompact' : 'compact';
   private readonly disconnectTheme = observeCurrentTheme((isDark) => {
     this.isDark = isDark;
     this.theme = isDark ? 'darkCompact' : 'compact';
+    this.cdr.markForCheck();
   });
+
+  constructor(private readonly cdr: ChangeDetectorRef) {}
 
   ngOnDestroy() {
     this.disconnectTheme();
