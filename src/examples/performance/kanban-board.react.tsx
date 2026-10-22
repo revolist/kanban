@@ -1,3 +1,4 @@
+import '../../react-kanban-props';
 import { useEffect, useMemo, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
 import { KanbanCardEditorDialogPlugin, KanbanPlugin } from '@revolist/kanban';

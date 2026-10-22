@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "types": [
+      "vite/client"
+    ]
+  },
+  "include": [
+    "src/examples/showcase/*.ts",
+    "src/examples/showcase/*.tsx",
+    "src/examples/showcase/*.vue",
+    "src/react-kanban-props.ts"
+  ]
+}

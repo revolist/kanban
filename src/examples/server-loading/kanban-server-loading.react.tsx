@@ -1,3 +1,4 @@
+import '../../react-kanban-props';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
 import { KanbanPlugin } from '@revolist/kanban';

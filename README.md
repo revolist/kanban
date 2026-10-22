@@ -33,7 +33,7 @@ project and install the trial packages under the production import names:
 
 ```bash
 pnpm config set @revolist:registry https://trial.rv-grid.com --location=project
-pnpm i @revolist/revogrid-pro@npm:@revolist/rv-pro-trial@3.0.12 @revolist/kanban@npm:@revolist/kanban-trial@3.0.12
+pnpm i @revolist/revogrid-pro@npm:@revolist/rv-pro-trial @revolist/kanban@npm:@revolist/kanban-trial
 ```
 
 ### Pro
@@ -43,7 +43,7 @@ packages. Source imports stay unchanged.
 
 ```bash
 pnpm config delete @revolist:registry --location=project
-pnpm i @revolist/revogrid-pro@3.0.12 @revolist/kanban@3.0.12
+pnpm i @revolist/revogrid-pro @revolist/kanban
 ```
 
 ## Quick start
@@ -54,8 +54,10 @@ import { KanbanPlugin } from '@revolist/kanban';
 import '@revolist/kanban/styles.css';
 
 defineCustomElements();
+await customElements.whenDefined('revo-grid');
 
 const grid = document.createElement('revo-grid');
+grid.style.cssText = 'display:block;height:600px;width:100%';
 grid.plugins = [KanbanPlugin];
 grid.kanban = {
   columns: [
@@ -86,7 +88,19 @@ The component uses the same board configuration across supported frameworks.
 | Vue 3 | [`src/examples/showcase/kanban.vue`](./src/examples/showcase/kanban.vue) | `pnpm dev:vue` |
 | Angular | [`src/examples/showcase/kanban.angular.ts`](./src/examples/showcase/kanban.angular.ts) | `pnpm dev:angular` |
 
-Build all integrations with `pnpm build:frameworks`.
+Run `pnpm check:starters` for strict TypeScript/Vue checks against the installed packages.
+`pnpm build:frameworks` runs that gate before building all four integrations.
+React consumers must include [`src/react-kanban-props.ts`](./src/react-kanban-props.ts)
+for the plugin properties missing from the Core wrapper declarations.
+Use ISO date-only due values (`2026-08-12`), not yearless date text.
+
+## Card actions and history
+
+The flagship showcase exposes Add card, Edit card, Delete card, Undo and Redo.
+Select a card to enable editing/deletion. An empty source offers Create first card.
+The controls use the packaged editor requests and the existing history service;
+no separate card store or undo stack is introduced. The shared demo adapter is
+[`kanban.actions.ts`](./src/examples/showcase/kanban.actions.ts), registered in all four variants.
 
 ## Run the examples
 

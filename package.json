@@ -29,7 +29,7 @@
     "build:react": "vite build --mode react",
     "build:vue": "vite build --mode vue",
     "build:angular": "vite build --mode angular",
-    "build:frameworks": "node scripts/build-frameworks.mjs",
+    "build:frameworks": "pnpm check:starters && node scripts/build-frameworks.mjs",
     "build:pages": "pnpm build && node scripts/build-pages.mjs",
     "preview": "vite preview",
     "test": "pnpm test:unit && pnpm test:repository",
@@ -39,7 +39,8 @@
     "media:verify": "node scripts/verify-repository.mjs --media",
     "media:inspect": "pnpm build && node scripts/record-media.mjs --inspect",
     "media:record": "pnpm build && node scripts/record-media.mjs",
-    "media:use-cases": "node scripts/record-use-case-media.mjs"
+    "media:use-cases": "node scripts/record-use-case-media.mjs",
+    "check:starters": "tsc -p tsconfig.starters.json && vue-tsc -p tsconfig.starters.json"
   },
   "dependencies": {
     "@angular/common": "20.3.26",
