@@ -337,35 +337,3 @@ html[data-theme='dark'] .kanban-showcase-priority--calm,
 @media (max-width: 720px) {
   .kanban-showcase { min-height: 580px; }
 }
-
-
-.kanban-showcase-actions {
-  flex: 0 0 auto;
-  padding: 12px;
-  color: var(--rv-ui-text, #172033);
-  background: inherit;
-  border-bottom: 1px solid var(--rv-ui-border, #e2e6ed);
-}
-.kanban-showcase-actions__buttons { display: flex; flex-wrap: wrap; gap: 8px; }
-.kanban-showcase-actions button {
-  min-height: 36px;
-  padding: 6px 12px;
-  border: 1px solid var(--rv-ui-border, #c6cfdd);
-  border-radius: 6px;
-  color: inherit;
-  background: var(--rv-ui-surface, #fff);
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-}
-.kanban-showcase-actions button:disabled { opacity: .45; cursor: default; }
-.kanban-showcase-actions button:focus-visible { outline: 2px solid #5b73e8; outline-offset: 2px; }
-.kanban-showcase-actions__summary { display: block; margin-top: 8px; font-size: 12px; }
-.kanban-showcase-actions__empty { margin-top: 12px; }
-.kanban-showcase-actions__empty p { margin: 0 0 8px; }
-html[data-theme='dark'] .kanban-showcase-actions,
-.kanban-showcase:has(> .kanban-showcase__grid[theme^='dark']) .kanban-showcase-actions {
-  color: var(--rv-ui-text, #edf2fb);
-  --rv-ui-surface: #1f1f1f;
-  --rv-ui-border: #3a3a3a;
-}

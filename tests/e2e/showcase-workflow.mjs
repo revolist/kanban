@@ -2,18 +2,31 @@ import { expect } from '@playwright/test';
 
 /** Same user workflow in the development host and all four production builds. */
 export async function verifyShowcaseWorkflow(page) {
-  const action = (name) => page.locator(`[data-kanban-action="${name}"]`);
+  const toolbar = page.getByRole('region', { name: 'Kanban toolbar' });
+  const action = (name) => toolbar.locator(`[data-kanban-action="${name}"]`);
   const dialog = page.locator('[data-kanban-card-editor]');
   const title = dialog.locator('[data-kanban-card-editor-field="title"]');
   const save = () => dialog.locator('[data-kanban-card-editor-action="save"]').click();
   const cards = page.locator('[data-kanban-card-id]');
-  await expect(action('add')).toBeEnabled();
-  await expect(action('edit')).toBeDisabled();
-  await expect(action('delete')).toBeDisabled();
+  await expect(action('add')).toBeEnabled({ timeout: 15_000 });
+  await expect(action('edit')).toHaveCount(0);
+  await expect(action('delete')).toHaveCount(0);
   await expect(action('undo')).toBeDisabled();
   await expect(action('redo')).toBeDisabled();
   await expect(page.locator('[data-kanban-card-id="KAN-101"]')).toBeVisible();
   const initial = await cards.count();
+  const search = toolbar.getByRole('searchbox', { name: 'Search cards' });
+  await search.fill('Customer interview synthesis');
+  await expect(cards).toHaveCount(1);
+  await expect(cards).toContainText('Customer interview synthesis');
+  await search.fill('');
+  await expect(cards).toHaveCount(initial);
+  await toolbar.getByRole('button', { name: 'Table', exact: true }).click();
+  await expect(cards).toHaveCount(0);
+  await expect(search).toBeDisabled();
+  await toolbar.getByRole('button', { name: 'Board', exact: true }).click();
+  await expect(cards).toHaveCount(initial);
+  await expect(search).toBeEnabled();
   await action('add').focus();
   await action('add').press('Enter');
   await expect(dialog).toBeVisible();
@@ -55,8 +68,8 @@ export async function verifyShowcaseWorkflow(page) {
   await page.locator('revo-grid').evaluate(grid => { grid.source = []; });
   const first = page.getByRole('button', { name: 'Create first card', exact: true });
   await expect(first).toBeVisible();
-  await expect(action('edit')).toBeDisabled();
-  await expect(action('delete')).toBeDisabled();
+  await expect(action('edit')).toHaveCount(0);
+  await expect(action('delete')).toHaveCount(0);
   await first.click();
   await title.fill('First card on empty board');
   await save();

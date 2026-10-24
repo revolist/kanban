@@ -97,10 +97,11 @@ Use ISO date-only due values (`2026-08-12`), not yearless date text.
 ## Card actions and history
 
 The flagship showcase exposes Add card, Edit card, Delete card, Undo and Redo.
-Select a card to enable editing/deletion. An empty source offers Create first card.
-The controls use the packaged editor requests and the existing history service;
-no separate card store or undo stack is introduced. The shared demo adapter is
-[`kanban.actions.ts`](./src/examples/showcase/kanban.actions.ts), registered in all four variants.
+Select a card to show editing/deletion actions. An empty source offers Create first card.
+All four variants register `KanbanToolbarPlugin` alongside `KanbanPlugin`.
+The packaged toolbar also provides search, workflow filters, card counts and
+Board/Table switching. Its controls use the packaged editor requests and the
+existing history service; no separate card store or undo stack is introduced.
 
 ## Run the examples
 

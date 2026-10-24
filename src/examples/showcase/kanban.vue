@@ -18,8 +18,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import RevoGrid, { type GridPlugin } from '@revolist/vue3-datagrid';
-import { KanbanPlugin } from '@revolist/kanban';
-import { KanbanShowcaseActionsPlugin } from './kanban.actions';
+import { KanbanPlugin, KanbanToolbarPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
 import './kanban.scss';
@@ -29,7 +28,7 @@ const isDark = ref(currentTheme().isDark());
 let disconnectTheme: (() => void) | undefined;
 const gridRows = computed(() => resolveKanbanRows(props.rows));
 const columns = KANBAN_SHOWCASE_COLUMNS;
-const plugins: GridPlugin[] = [KanbanPlugin, KanbanShowcaseActionsPlugin];
+const plugins: GridPlugin[] = [KanbanPlugin, KanbanToolbarPlugin];
 const columnTypes = {};
 const additionalData = computed(() => ({}));
 const kanban = computed(() => createKanbanShowcaseConfig());
