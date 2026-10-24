@@ -1,8 +1,7 @@
 import { Component, Input, NO_ERRORS_SCHEMA, ViewEncapsulation } from '@angular/core';
 import type { OnDestroy } from '@angular/core';
 import { RevoGrid } from '@revolist/angular-datagrid';
-import { KanbanPlugin } from '@revolist/kanban';
-import { KanbanShowcaseActionsPlugin } from './kanban.actions';
+import { KanbanPlugin, KanbanToolbarPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
 
@@ -34,7 +33,7 @@ export class KanbanShowcaseGridComponent implements OnDestroy {
   @Input() rows?: KanbanShowcaseCard[];
 
   readonly columns = KANBAN_SHOWCASE_COLUMNS;
-  readonly plugins = [KanbanPlugin, KanbanShowcaseActionsPlugin];
+  readonly plugins = [KanbanPlugin, KanbanToolbarPlugin];
   readonly columnTypes = {};
   readonly additionalData = {};
   theme = currentTheme().isDark() ? 'darkCompact' : 'compact';

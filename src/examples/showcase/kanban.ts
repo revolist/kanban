@@ -1,6 +1,5 @@
 import { defineCustomElements } from '@revolist/revogrid/loader';
-import { KanbanPlugin } from '@revolist/kanban';
-import { KanbanShowcaseActionsPlugin } from './kanban.actions';
+import { KanbanPlugin, KanbanToolbarPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
 import './kanban.scss';
@@ -19,7 +18,7 @@ export function load(parentSelector: string, rows?: KanbanShowcaseCard[]) {
   grid.hideAttribution = true;
   grid.resize = true;
   grid.columns = KANBAN_SHOWCASE_COLUMNS;
-  grid.plugins = [KanbanPlugin, KanbanShowcaseActionsPlugin];
+  grid.plugins = [KanbanPlugin, KanbanToolbarPlugin];
   grid.theme = currentTheme().isDark() ? 'darkCompact' : 'compact';
   grid.kanban = createKanbanShowcaseConfig();
 
