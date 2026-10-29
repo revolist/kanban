@@ -35,16 +35,6 @@
   font-size: 13px;
 }
 
-.kanban-board__recent-card button {
-  border: 0;
-  border-radius: 6px;
-  padding: 5px 8px;
-  background: var(--kanban-accent-strong);
-  color: #fff;
-  font: inherit;
-  cursor: pointer;
-}
-
 .kanban-board-card-topline,
 .kanban-board-card-meta { display: flex; align-items: center; }
 .kanban-board-lane-heading { display: grid; gap: 3px; overflow: hidden; }
