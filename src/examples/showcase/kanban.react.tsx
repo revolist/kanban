@@ -1,6 +1,7 @@
+import '../../react-kanban-props';
 import { useEffect, useMemo, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';
-import { KanbanPlugin } from '@revolist/kanban';
+import { KanbanPlugin, KanbanToolbarPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
 import './kanban.scss';
@@ -9,7 +10,7 @@ export default function KanbanShowcase({ rows }: { rows?: KanbanShowcaseCard[] }
   const [isDark, setIsDark] = useState(() => currentTheme().isDark());
   const source = useMemo(() => resolveKanbanRows(rows), [rows]);
   const columns = useMemo(() => KANBAN_SHOWCASE_COLUMNS, []);
-  const plugins = useMemo(() => [KanbanPlugin], []);
+  const plugins = useMemo(() => [KanbanPlugin, KanbanToolbarPlugin], []);
   const columnTypes = useMemo(() => ({}), []);
   const additionalData = useMemo(() => ({}), []);
   const kanban = useMemo(() => createKanbanShowcaseConfig(), []);

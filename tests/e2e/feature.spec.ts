@@ -73,3 +73,13 @@ for (const useCaseId of useCaseIds) {
     expect(errors).toEqual([]);
   });
 }
+
+
+test('completes the visible showcase workflow and creates the first card on an empty board', async ({ page }) => {
+  const { verifyShowcaseWorkflow } = await import('./showcase-workflow.mjs');
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  await verifyShowcaseWorkflow(page);
+  expect(errors).toEqual([]);
+});

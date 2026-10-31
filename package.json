@@ -29,7 +29,7 @@
     "build:react": "vite build --mode react",
     "build:vue": "vite build --mode vue",
     "build:angular": "vite build --mode angular",
-    "build:frameworks": "node scripts/build-frameworks.mjs",
+    "build:frameworks": "pnpm check:starters && node scripts/build-frameworks.mjs",
     "build:pages": "pnpm build && node scripts/build-pages.mjs",
     "preview": "vite preview",
     "test": "pnpm test:unit && pnpm test:repository",
@@ -39,7 +39,8 @@
     "media:verify": "node scripts/verify-repository.mjs --media",
     "media:inspect": "pnpm build && node scripts/record-media.mjs --inspect",
     "media:record": "pnpm build && node scripts/record-media.mjs",
-    "media:use-cases": "node scripts/record-use-case-media.mjs"
+    "media:use-cases": "node scripts/record-use-case-media.mjs",
+    "check:starters": "tsc -p tsconfig.starters.json && vue-tsc -p tsconfig.starters.json"
   },
   "dependencies": {
     "@angular/common": "20.3.26",
@@ -48,12 +49,12 @@
     "@angular/platform-browser": "20.3.26",
     "@angular/platform-browser-dynamic": "20.3.26",
     "@fortawesome/fontawesome-free": "7.3.1",
-    "@revolist/angular-datagrid": "4.28.0",
-    "@revolist/react-datagrid": "4.28.0",
-    "@revolist/revogrid": "4.28.0",
-    "@revolist/kanban": "npm:@revolist/kanban-trial@2.9.5",
-    "@revolist/revogrid-pro": "npm:@revolist/rv-pro-trial@2.9.5",
-    "@revolist/vue3-datagrid": "4.28.0",
+    "@revolist/angular-datagrid": "4.29.1",
+    "@revolist/react-datagrid": "4.29.1",
+    "@revolist/revogrid": "4.29.1",
+    "@revolist/kanban": "npm:@revolist/kanban-trial@3.0.18",
+    "@revolist/revogrid-pro": "npm:@revolist/rv-pro-trial@3.0.18",
+    "@revolist/vue3-datagrid": "4.29.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "rxjs": "7.8.2",
@@ -78,5 +79,10 @@
     "vite": "8.2.1",
     "vitest": "4.1.10",
     "vue-tsc": "2.2.12"
+  },
+  "pnpm": {
+    "overrides": {
+      "@revolist/revogrid": "4.29.1"
+    }
   }
 }

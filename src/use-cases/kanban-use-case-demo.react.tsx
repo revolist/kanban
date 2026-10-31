@@ -1,3 +1,4 @@
+import '../react-kanban-props';
 import './kanban-use-case-demo.scss';
 import { useEffect, useMemo, useState } from 'react';
 import { RevoGrid } from '@revolist/react-datagrid';

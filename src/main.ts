@@ -1,4 +1,5 @@
 import '../demo-host.css';
+import '@revolist/revogrid-pro/styles.css';
 import '@revolist/kanban/styles.css';
 import { resolveKanbanExample, type KanbanExampleFramework } from './examples';
 
