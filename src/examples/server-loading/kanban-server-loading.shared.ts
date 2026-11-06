@@ -42,8 +42,16 @@ export function createKanbanServerConfig(notify: (message: string) => void) {
       { id: 'Platform', title: 'Platform' },
       { id: 'Growth', title: 'Growth' },
     ],
-    card: { titleField: 'title' },
-    cardRowHeight: 132,
+    card: {
+      titleField: 'title',
+      description: (card: ServerCard) => card.title
+        ? `${card.team} · #${card.id.slice(7).padStart(6, '0')}`
+        : undefined,
+      color: (card: ServerCard) => card.title ? {
+        todo: '#64748b', doing: '#6366f1', review: '#d97706', done: '#059669',
+      }[card.status] : undefined,
+    },
+    cardRowHeight: 88,
     remote: {
       total: KANBAN_SERVER_CARD_COUNT,
       chunkSize: KANBAN_SERVER_PAGE_SIZE,

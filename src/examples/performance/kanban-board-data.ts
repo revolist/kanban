@@ -1,3 +1,4 @@
+import { avatarTemplate } from '@revolist/revogrid-pro';
 import type { ColumnRegular, DataType } from '@revolist/revogrid';
 import type {
   KanbanCardEditorDialogOptions,
@@ -52,6 +53,7 @@ const CARD_TEMPLATES = [
 
 const OWNERS = ['Maya', 'Jon', 'Ari', 'Nora', 'Theo', 'Iris'] as const;
 const PRIORITIES = ['High', 'Medium', 'Low'] as const;
+const STORY_POINTS_LABEL = 'Story points';
 const STORY_POINTS = [5, 3, 8, 2, 5, 8, 3, 5, 3, 5] as const;
 
 export const KANBAN_BOARD_ITEM_COUNT = 50_000;
@@ -121,13 +123,34 @@ export function createKanbanBoardConfig(): KanbanConfig<KanbanBoardCard> {
       assigneeField: 'assignees', startDateField: 'startDate', endDateField: 'endDate',
       dueDateField: 'dueDate', colorField: 'color' },
     customization: {
+      cardContent: (h, { card }) => {
+        const owner = card.assignees?.[0] ?? card.owner;
+        return h('div', { class: 'kanban-board-card-content' }, [
+          h('div', { class: 'kanban-board-card-topline' }, [
+            h('span', { class: 'kanban-board-card-id' }, String(card.id)),
+            card.priority ? h('span', {
+              class: `kanban-board-priority kanban-board-priority--${card.priority.toLowerCase()}`,
+            }, card.priority) : null,
+          ]),
+          h('div', { class: 'kanban-board-card-title', title: card.title }, card.title),
+          h('div', { class: 'kanban-board-card-meta' }, [
+            owner ? h('span', { class: 'kanban-board-card-owner' }, [
+              avatarTemplate(h, { value: owner, label: owner, size: 20, index: Math.max(0, OWNERS.indexOf(owner as typeof OWNERS[number])) }),
+              h('span', { class: 'kanban-board-card-owner-name' }, owner),
+            ]) : h('span'),
+            typeof card.points === 'number' ? h('span', {
+              class: 'kanban-board-card-points', title: STORY_POINTS_LABEL,
+            }, String(card.points)) : null,
+          ]),
+        ]);
+      },
       swimlaneHeader: (h, { swimlane, swimlaneColumnCollapsed }) => h('div', { class: 'kanban-board-lane-heading' }, [
         swimlaneColumnCollapsed ? null : h('span', { class: 'kanban-board-lane-kicker' }, 'TEAM'),
         h('strong', { class: 'kanban-board-lane-title' }, swimlane.title),
       ]),
     },
     labels: { emptyColumn: 'Drop a card here' },
-    cardRowHeight: 190,
+    cardRowHeight: 120,
     wipBehavior: 'warn',
   };
 }
@@ -139,7 +162,7 @@ export function createKanbanBoardEditor(): KanbanCardEditorDialogOptions<KanbanB
     confirmDiscard: false,
     confirmDelete: false,
     hiddenFields: ['progress'],
-    fields: [{ id: 'points', label: 'Story points', kind: 'number', field: 'points', fullWidth: false,
+    fields: [{ id: 'points', label: STORY_POINTS_LABEL, kind: 'number', field: 'points', fullWidth: false,
       format: (value) => value === undefined ? '' : String(value),
       parse: (value) => Number(value),
       validate: (value) => Number(value) < 0 ? 'Story points cannot be negative.' : undefined }],
