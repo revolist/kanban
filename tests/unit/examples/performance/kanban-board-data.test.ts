@@ -29,7 +29,7 @@ describe('50K cards board fixture', () => {
     expect(config.columns).toHaveLength(10);
     expect(config.columnField).toBeUndefined();
     expect(config.swimlaneField).toBe('team');
-    expect(config.cardRowHeight).toBe(190);
+    expect(config.cardRowHeight).toBe(120);
   });
 
   it('keeps benchmark draft disposal actions free of native prompts', () => {
