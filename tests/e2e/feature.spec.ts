@@ -37,8 +37,8 @@ test('mounts the performance board from the multi-example host', async ({ page }
   expect(renderedCardCount).toBeGreaterThan(0);
   expect(renderedCardCount).toBeLessThan(100);
   const firstCardBox = await firstCard.boundingBox();
-  expect(firstCardBox?.height).toBeGreaterThan(150);
-  expect(firstCardBox?.height).toBeLessThan(200);
+  expect(firstCardBox?.height).toBeGreaterThan(90);
+  expect(firstCardBox?.height).toBeLessThan(120);
   expect(errors).toEqual([]);
 });
 

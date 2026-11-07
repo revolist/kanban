@@ -2,17 +2,19 @@
   <div class="kanban-board">
     <div v-if="recentlyCreated" class="kanban-board__recent-card" role="status">
       <span>Created card: <strong>{{ recentlyCreated.title }}</strong></span>
-      <button type="button" @click="deleteRecentlyCreated">Delete recently created card</button>
+      <button v-rv-control type="button" @click="deleteRecentlyCreated">Delete recently created card</button>
     </div>
     <div v-if="recentlyMoved" class="kanban-board__recent-card" role="status">
       <span>Moved card: <strong>{{ recentlyMoved.card.title }}</strong></span>
-      <button type="button" @click="restoreRecentlyMovedCard">Return recently moved card</button>
+      <button v-rv-control type="button" @click="restoreRecentlyMovedCard">Return recently moved card</button>
     </div>
     <RevoGrid class="kanban-board__grid" hide-attribution resize :source="gridRows" :columns="columns" :plugins="plugins" :column-types="columnTypes" :additional-data="additionalData" :kanban.prop="kanban" :kanban-card-editor-dialog.prop="editor" :theme="isDark ? 'darkCompact' : 'compact'" @kanbancardmove="syncMovedCards" @kanbancardcreate="trackCreatedCard" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { vRvControl } from '@revolist/ui/vue-control';
+import '@revolist/ui/styles.css';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import RevoGrid, { type GridPlugin } from '@revolist/vue3-datagrid';
 import {

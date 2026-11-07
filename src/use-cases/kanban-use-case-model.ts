@@ -1,3 +1,5 @@
+import { renderControl } from '@revolist/ui';
+import '@revolist/ui/styles.css';
 import type { ColumnRegular, DataType } from '@revolist/revogrid';
 import type { KanbanConfig } from '@revolist/kanban';
 import { avatarTemplate } from '@revolist/revogrid-pro';
@@ -551,7 +553,7 @@ export function createKanbanUseCaseConfig(
             ? null
             : h('span', { class: 'kanban-column-header__wip' }, `${totalCount} of ${column.wipLimit} WIP`),
           props.kanban.column.collapsible
-            ? h('button', {
+            ? renderControl(h, 'button', {
               type: 'button',
               class: 'kanban-column-header__toggle',
               'aria-expanded': String(!collapsed),

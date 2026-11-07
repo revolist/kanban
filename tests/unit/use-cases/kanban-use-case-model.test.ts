@@ -292,7 +292,7 @@ describe('Kanban use-case scenarios', () => {
       } as never,
     ) as TestNode;
     const toggle = (rendered.children as TestNode[]).find(
-      (child) => child?.props?.class === 'kanban-column-header__toggle',
+      (child) => String(child?.props?.class ?? '').split(/\s+/).includes('kanban-column-header__toggle'),
     );
 
     expect(rendered.props?.class).toContain('kanban-column-header--collapsed');

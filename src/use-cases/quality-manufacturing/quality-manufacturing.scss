@@ -172,7 +172,6 @@
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header-cell:has(.kanban-use-case-column-dot--closed) .kanban-column-header__count { color: var(--quality-green); }
 .kanban-use-case-shell--quality-manufacturing .kanban-column-header__toggle {
   display: none !important;
-  color: #bbc3c8;
 }
 
 /* The left rail is a separate workstream control surface, not another card column. */

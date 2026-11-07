@@ -32,3 +32,23 @@
   min-height: 0;
   min-width: 0;
 }
+
+/* Keep this large board dense while retaining the native card/focus behavior. */
+.kanban-server-loading__grid .kanban-card {
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+.kanban-server-loading__grid .kanban-card .kanban-card__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+}
+.kanban-server-loading__grid .kanban-card .kanban-card__description {
+  margin-block-start: 4px;
+  font-size: 11px;
+  line-height: 16px;
+  -webkit-line-clamp: 1;
+}
