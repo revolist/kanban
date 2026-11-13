@@ -19,6 +19,10 @@ export interface ToolbarContribution {
   readonly capture?: (board: any) => any;
   readonly model?: (board: any) => ReturnType<typeof toolbarModel>;
   readonly action?: (action: string) => void;
+  readonly additionalActions?: {
+    readonly render: (host: HTMLElement, props: any) => void;
+    readonly destroy: (host: HTMLElement) => void;
+  };
   readonly extraActions?: (props: any) => ComponentChildren;
   readonly events?: readonly string[];
 }
@@ -31,6 +35,19 @@ export class KanbanToolbarController extends CorePlugin {
   private savedConfig?: any;
   private disposed = false;
   private queued = false;
+  private actionsHost: HTMLElement | null = null;
+  private readonly captureActionsHost = (element: HTMLElement | null) => {
+    if (element !== this.actionsHost) {
+      this.releaseActions();
+      this.actionsHost = element;
+    }
+  };
+  private releaseActions(): void {
+    if (this.actionsHost) {
+      this.contribution.additionalActions?.destroy(this.actionsHost);
+      this.actionsHost = null;
+    }
+  }
 
   constructor(
     grid: HTMLRevoGridElement,
@@ -106,6 +123,7 @@ export class KanbanToolbarController extends CorePlugin {
 
   override destroy(): void {
     this.disposed = true;
+    this.releaseActions();
     this.popover.destroy();
     render(null, this.host);
     this.host.remove();
@@ -184,6 +202,7 @@ export class KanbanToolbarController extends CorePlugin {
     render(
       <KanbanToolbarView
         popover={this.popover}
+        additionalActionsRef={this.contribution.additionalActions ? this.captureActionsHost : undefined}
         role={this.contribution.role}
         model={this.model}
         extraActions={this.contribution.extraActions?.({
@@ -214,6 +233,14 @@ export class KanbanToolbarController extends CorePlugin {
       />,
       this.host,
     );
+    if (this.actionsHost) {
+      this.contribution.additionalActions?.render(this.actionsHost, {
+        model: this.model,
+        options: this.options,
+        labels: this.labels,
+        onAction: (action: string) => this.run(action),
+      });
+    }
     this.popover.refresh();
   }
 }

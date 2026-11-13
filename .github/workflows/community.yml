@@ -31,31 +31,20 @@ jobs:
           registry-url: https://registry.npmjs.org
       - name: Create public source workspace
         run: |
-          echo '{"private":true,"packageManager":"pnpm@11.25.0"}' > package.json
-          cat > pnpm-workspace.yaml <<'WORKSPACE'
-          packages:
-            - sources/kanban/package
-            - sources/runtime
-            - sources/ui
-            - sources/ui/internal/*
-          overrides:
-            '@revolist/revogrid': '4.31.4'
-            '@revolist/kanban-community>@revolist/grid-runtime': 'workspace:*'
-            '@revolist/kanban-community>@revolist/ui': 'workspace:*'
-          WORKSPACE
-          pnpm install --no-frozen-lockfile --ignore-scripts
+          (cd sources/kanban && node scripts/prepare-public-workspace.mjs)
+          pnpm --dir sources/kanban install --no-frozen-lockfile --ignore-scripts
       - name: Check public sources
         run: |
-          pnpm --filter @revolist/grid-runtime format:check
-          pnpm --filter @revolist/grid-runtime lint
-          pnpm --filter @revolist/grid-runtime test
-          pnpm --filter @revolist/ui build:public
-          pnpm --filter @revolist/grid-runtime build
-          pnpm --filter @revolist/kanban-community format:check
-          pnpm --filter @revolist/kanban-community lint
-          pnpm --filter @revolist/kanban-community test
-          pnpm --filter @revolist/kanban-community build
-          pnpm --filter @revolist/kanban-community test:core
+          pnpm --dir sources/kanban --filter @revolist/grid-runtime format:check
+          pnpm --dir sources/kanban --filter @revolist/grid-runtime lint
+          pnpm --dir sources/kanban --filter @revolist/grid-runtime test
+          pnpm --dir sources/kanban --filter @revolist/ui build:public
+          pnpm --dir sources/kanban --filter @revolist/grid-runtime build
+          pnpm --dir sources/kanban --filter @revolist/kanban-showcase format:check
+          pnpm --dir sources/kanban --filter @revolist/kanban-showcase lint
+          pnpm --dir sources/kanban --filter @revolist/kanban-showcase test
+          pnpm --dir sources/kanban --filter @revolist/kanban-showcase build
+          pnpm --dir sources/kanban --filter @revolist/kanban-showcase test:core
       - name: Pack public candidates
         run: |
           mkdir artifacts
@@ -66,13 +55,13 @@ jobs:
         env:
           KANBAN_ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
         run: |
-          pnpm --filter @revolist/kanban-community prepare:consumer
-          pnpm --filter @revolist/kanban-community exec playwright install --with-deps chromium
-          pnpm --filter @revolist/kanban-community test:browser
+          pnpm --dir sources/kanban --filter @revolist/kanban-showcase prepare:consumer
+          pnpm --dir sources/kanban --filter @revolist/kanban-showcase exec playwright install --with-deps chromium
+          pnpm --dir sources/kanban --filter @revolist/kanban-showcase test:browser
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: community-candidate-and-browser-results
           path: |
             artifacts/*.tgz
-            sources/kanban/package/test-results/
+            sources/kanban/test-results/

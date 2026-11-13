@@ -13,7 +13,11 @@ import type { KanbanToolbarViewProps } from './view-props.js';
 export type { KanbanToolbarViewProps } from './view-props.js';
 
 export function KanbanToolbarView(
-  props: KanbanToolbarViewProps & { extraActions?: import('preact').ComponentChildren; role?: 'region' | 'toolbar' },
+  props: KanbanToolbarViewProps & {
+    extraActions?: import('preact').ComponentChildren;
+    additionalActionsRef?: (element: HTMLSpanElement | null) => void;
+    role?: 'region' | 'toolbar';
+  },
 ) {
   const { model, labels, options, filterState } = props;
   const stop = (event: Event) => event.stopPropagation();
@@ -86,6 +90,7 @@ export function KanbanToolbarView(
           )}
         </div>
         {props.extraActions}
+        {props.additionalActionsRef && <span style={{ display: 'contents' }} ref={props.additionalActionsRef} />}
         <ToolbarViewSwitcher {...props} />
         {options.renderEnd?.(model)}
       </div>

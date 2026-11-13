@@ -51,7 +51,7 @@ if (result.status !== 0) {
   process.exit(result.status ?? 1);
 }
 for (const file of ['fixture.html', 'fixture.ts']) {
-  cpSync(fileURLToPath(new URL(`../tests/browser/${file}`, import.meta.url)), join(root, file));
+  cpSync(fileURLToPath(new URL(`../tests/community/${file}`, import.meta.url)), join(root, file));
 }
 writeFileSync(fileURLToPath(new URL('../.consumer-path', import.meta.url)), root);
 console.log(`Isolated public consumer: ${root}`);

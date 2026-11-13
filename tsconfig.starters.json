@@ -6,7 +6,23 @@
     "noEmit": true,
     "types": [
       "vite/client"
-    ]
+    ],
+    "paths": {
+      "@revolist/ui": [
+        "./node_modules/@revolist/ui/dist/native.d.ts",
+        "./node_modules/@revolist/ui/native.d.ts"
+      ],
+      "@revolist/ui/*": [
+        "./node_modules/@revolist/ui/dist/*",
+        "./node_modules/@revolist/ui/*"
+      ],
+      "react": [
+        "./node_modules/@types/react"
+      ],
+      "react-dom": [
+        "./node_modules/@types/react-dom"
+      ]
+    }
   },
   "include": [
     "src/examples/showcase/*.ts",

@@ -3,7 +3,15 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   { ignores: ['**/dist/**', '**/node_modules/**', '**/artifacts/**', '**/test-results/**', '**/playwright-report/**'] },
   {
-    files: ['**/*.{ts,tsx,mjs}'],
+    files: [
+      'package/**/*.{ts,tsx}',
+      'scripts/*package.mjs',
+      'scripts/prepare-public-workspace.mjs',
+      'scripts/core-contracts.test.mjs',
+      'scripts/prepare-consumer.mjs',
+      'tests/community/**/*.{ts,mjs}',
+      '*config.{ts,mjs}',
+    ],
     languageOptions: { parser: tseslint.parser },
     rules: {
       curly: ['error', 'all'],

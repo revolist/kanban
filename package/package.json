@@ -35,32 +35,8 @@
     "./editor.scss": "./dist/editor.scss",
     "./toolbar.scss": "./dist/toolbar.scss"
   },
-  "scripts": {
-    "build": "node scripts/build.mjs",
-    "lint": "node scripts/lint.mjs",
-    "test": "vitest run",
-    "test:core": "node --test scripts/core-contracts.test.mjs",
-    "lint:types": "tsc -p tsconfig.json --noEmit",
-    "lint:eslint": "eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prepare:consumer": "node scripts/prepare-consumer.mjs",
-    "test:browser": "playwright test"
-  },
   "peerDependencies": {
     "@revolist/revogrid": "^4.31.4"
-  },
-  "devDependencies": {
-    "typescript": "~6.0.3",
-    "vitest": "^5.0.4",
-    "vite": "8.2.4",
-    "unplugin-dts": "^1.0.3",
-    "sass-embedded": "^1.83.4",
-    "eslint": "^10.1.0",
-    "typescript-eslint": "^8.58.0",
-    "prettier": "3.8.3",
-    "@playwright/test": "1.59.1",
-    "@fortawesome/fontawesome-free": "7.3.1"
   },
   "repository": {
     "type": "git",
@@ -80,10 +56,5 @@
     "**/*.css",
     "**/*.scss"
   ],
-  "module": "./dist/index.js",
-  "packageManager": "pnpm@11.25.0",
-  "engines": {
-    "node": ">=24.15.0",
-    "pnpm": ">=11.25.0 <12"
-  }
+  "module": "./dist/index.js"
 }

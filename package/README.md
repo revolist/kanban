@@ -54,10 +54,12 @@ the commercial facade; applications should use the browser or core entries.
 
 ## Development and verification
 
-The private root showcase and its framework starters remain separate. Community source, manifest and tests live here.
-Use Node 24.15+ and pnpm 11.25. The public CI workflow creates a workspace containing only this package,
-`revolist/grid-runtime` and `revolist/revo-ui`, and uses the public npm registry without private credentials. Before
-initial publication, build those public source candidates together as the workflow demonstrates.
+The private root showcase and its framework starters remain separate. Community source, publish manifest and colocated
+tests live in `package/`. All tooling, development dependencies, browser fixtures and configuration live at the
+repository root. Run the following commands from that root. Use Node 24.15+ and pnpm 11.25. The public CI workflow
+creates a workspace containing only this package, `revolist/grid-runtime` and `revolist/revo-ui`, and uses the public
+npm registry without private credentials. Before initial publication, build those public source candidates together as
+the workflow demonstrates.
 
 ```sh
 pnpm format
@@ -71,8 +73,9 @@ pnpm test:core
 Prettier uses a 120-character print width. ESLint requires control-flow braces and enforces a 120-character line limit.
 The browser fixture doubles as a small host-owned save/load integration example.
 
-For archive verification, pack this package, runtime and the **prepared UI distribution** into one directory:
-`revolist-kanban-community-4.0.9.tgz`, `revolist-grid-runtime-4.0.9.tgz`, `revolist-ui-4.0.9.tgz`.
+For archive verification, run `pnpm --dir package pack` from the repository root and pack runtime and the **prepared UI
+distribution** into one directory: `revolist-kanban-community-4.0.9.tgz`, `revolist-grid-runtime-4.0.9.tgz`,
+`revolist-ui-4.0.9.tgz`.
 
 ```sh
 KANBAN_ARTIFACTS_DIR=/absolute/path/to/artifacts pnpm prepare:consumer
@@ -82,3 +85,8 @@ pnpm test:browser
 This installs the archives in a temporary consumer outside the repository. The consumer has no Pro aliases or trial
 injection. Public artifact tests are separate from the existing paid starter checks. Build and pack are release
 preparation; publishing, merging and deploying the showcase are separate actions.
+
+Use `pnpm build` for the package (`package/dist/`), `pnpm dev` for the TS showcase and `pnpm build:demo` for its
+production build (`dist/`). Framework modes remain `dev:react`, `dev:vue`, `dev:angular` and `build:<framework>`.
+`pnpm preview:demo` serves that showcase build. `pnpm test:demo` and `pnpm test:e2e` exercise the existing paid
+demonstrations; `pnpm test`, `pnpm test:core` and `pnpm test:browser` qualify Community.

@@ -5,10 +5,10 @@
   "description": "RevoGrid Kanban showcase with grid-backed workflow boards and four framework integrations.",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@11.25.0",
   "engines": {
-    "node": ">=20",
-    "pnpm": ">=10"
+    "node": ">=24.15.0",
+    "pnpm": ">=11.25.0 <12"
   },
   "repository": {
     "type": "git",
@@ -24,23 +24,34 @@
     "dev:react": "vite --mode react",
     "dev:vue": "vite --mode vue",
     "dev:angular": "vite --mode angular",
-    "build": "pnpm build:ts",
+    "build": "node scripts/build-package.mjs",
     "build:ts": "vite build --mode ts",
     "build:react": "vite build --mode react",
     "build:vue": "vite build --mode vue",
     "build:angular": "vite build --mode angular",
     "build:frameworks": "pnpm check:starters && node scripts/build-frameworks.mjs",
-    "build:pages": "pnpm build && node scripts/build-pages.mjs",
+    "build:pages": "pnpm build:demo && node scripts/build-pages.mjs",
     "preview": "vite preview",
-    "test": "pnpm test:unit && pnpm test:repository",
-    "test:unit": "vitest run",
+    "test": "vitest run",
+    "test:unit": "pnpm test",
     "test:repository": "node scripts/verify-repository.mjs",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --config playwright.demo.config.ts",
     "media:verify": "node scripts/verify-repository.mjs --media",
-    "media:inspect": "pnpm build && node scripts/record-media.mjs --inspect",
-    "media:record": "pnpm build && node scripts/record-media.mjs",
+    "media:inspect": "pnpm build:demo && node scripts/record-media.mjs --inspect",
+    "media:record": "pnpm build:demo && node scripts/record-media.mjs",
     "media:use-cases": "node scripts/record-use-case-media.mjs",
-    "check:starters": "tsc -p tsconfig.starters.json && vue-tsc -p tsconfig.starters.json"
+    "check:starters": "tsc -p tsconfig.starters.json && vue-tsc -p tsconfig.starters.json",
+    "build:package": "pnpm build",
+    "build:demo": "pnpm build:ts",
+    "preview:demo": "vite preview",
+    "test:demo": "vitest run --config vitest.demo.config.ts",
+    "test:core": "node --test scripts/core-contracts.test.mjs",
+    "test:browser": "playwright test",
+    "lint": "node scripts/lint-package.mjs",
+    "lint:types": "tsc -p tsconfig.package.json --noEmit",
+    "prepare:consumer": "node scripts/prepare-consumer.mjs",
+    "format": "prettier --write package scripts/build-package.mjs scripts/lint-package.mjs scripts/prepare-public-workspace.mjs scripts/core-contracts.test.mjs scripts/prepare-consumer.mjs tests/community vite.config.ts vitest*.config.ts playwright.config.ts tsconfig.package.json eslint.config.mjs package.json",
+    "format:check": "prettier --check package scripts/build-package.mjs scripts/lint-package.mjs scripts/prepare-public-workspace.mjs scripts/core-contracts.test.mjs scripts/prepare-consumer.mjs tests/community vite.config.ts vitest*.config.ts playwright.config.ts tsconfig.package.json eslint.config.mjs package.json"
   },
   "dependencies": {
     "@angular/common": "20.3.26",
@@ -76,15 +87,16 @@
     "@vitejs/plugin-vue": "6.0.8",
     "jsdom": "29.1.1",
     "playwright": "1.59.1",
-    "sass-embedded": "1.100.0",
+    "sass-embedded": "^1.83.4",
     "typescript": "5.9.3",
-    "vite": "8.2.1",
-    "vitest": "4.1.10",
-    "vue-tsc": "2.2.12"
-  },
-  "pnpm": {
-    "overrides": {
-      "@revolist/revogrid": "4.31.5"
-    }
+    "vite": "8.2.4",
+    "vitest": "^5.0.4",
+    "vue-tsc": "2.2.12",
+    "unplugin-dts": "^1.0.3",
+    "eslint": "^10.1.0",
+    "typescript-eslint": "^8.58.0",
+    "prettier": "3.8.3",
+    "@fortawesome/fontawesome-free": "7.3.1",
+    "@revolist/kanban-community": "workspace:*"
   }
 }

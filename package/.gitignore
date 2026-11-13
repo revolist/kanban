@@ -1,7 +1,0 @@
-node_modules/
-dist/
-*_feature.md
-.consumer-path
-test-results/
-playwright-report/
-.turbo/

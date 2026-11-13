@@ -1,5 +1,6 @@
 packages:
   - "."
+  - "package"
 
 overrides:
   '@revolist/revogrid': '4.31.5'
@@ -13,3 +14,5 @@ minimumReleaseAgeExclude:
   - '@revolist/react-datagrid@4.31.5'
   - '@revolist/vue3-datagrid@4.31.5'
   - '@revolist/svelte-datagrid@4.31.5'
+
+verifyDepsBeforeRun: false

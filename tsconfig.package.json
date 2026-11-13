@@ -7,22 +7,13 @@
     "strict": true,
     "skipLibCheck": true,
     "declaration": true,
-    "rootDir": ".",
-    "outDir": "dist",
+    "rootDir": "package",
+    "outDir": "package/dist",
     "types": [],
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "noEmitOnError": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "vite.config.ts",
-    "vitest.config.ts",
-    "tests",
-    "playwright.config.ts"
-  ]
+  "include": ["package/**/*.ts", "package/**/*.tsx"],
+  "exclude": ["package/dist", "node_modules", "**/*.test.ts", "**/*.test.tsx"]
 }

@@ -147,3 +147,23 @@ under the license supplied with your subscription.
 ## Community package source
 
 The MIT Community board is maintained in [`package/`](./package/README.md). It has independent build, lint, unit and packed-consumer browser checks. The root showcase and framework starters continue demonstrating the commercial composition.
+
+## Repository commands
+
+Run all commands at this repository's root. `package/` contains Community source,
+colocated units and the publish manifest; it has no separate development setup.
+
+- `pnpm build`: build Community into `package/dist/`.
+- `pnpm test`, `pnpm lint`, `pnpm format:check`: check Community through root configs.
+- `pnpm dev` or `pnpm dev:<framework>`: run the paid showcase.
+- `pnpm build:demo` or `pnpm build:<framework>`: build the showcase into `dist/`.
+- `pnpm preview:demo`: preview the showcase build.
+- `pnpm test:demo` and `pnpm test:e2e`: check the paid showcase separately.
+- `pnpm prepare:consumer` and `pnpm test:browser`: verify packed Community artifacts.
+
+See [Community package documentation](./package/README.md) for package use and archive checks.
+
+Before publishing the new runtime/Community packages, the root lockfile records the public-source candidate workspace.
+The Community workflow assembles the sibling runtime and UI sources into this same root environment. It keeps the
+existing registry and pinned-version policies and installs without a frozen lockfile while assembling those sources.
+The private parent workspace uses its own lockfile and local product overrides.

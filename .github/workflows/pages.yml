@@ -17,20 +17,39 @@ concurrency:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: sources/kanban
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: sources/kanban
+      - uses: actions/checkout@v5
+        with:
+          repository: revolist/grid-runtime
+          ref: 19b0eab97c1a3e9d4bb79115c23af8c071940e0f
+          path: sources/runtime
+      - uses: actions/checkout@v5
+        with:
+          repository: revolist/revo-ui
+          ref: ac54bf02317ca5a740277b832717d00ec1eb1fcb
+          path: sources/ui
       - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24.15.0
+      - name: Assemble public source workspace
+        run: node scripts/prepare-public-workspace.mjs
       - name: Install dependencies
         run: pnpm install --no-lockfile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_USER_AGENT: "npm/{npm-version} node/{node-version} {platform} {arch} rv-grid-statistics-exclude/1"
       - name: Validate repository and examples
-        run: pnpm test
+        run: pnpm test:demo && pnpm test:repository
       - name: Build framework examples
         run: pnpm build:frameworks
       - name: Build Pages artifact
@@ -38,7 +57,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: pages-dist
+          path: sources/kanban/pages-dist
 
   deploy:
     environment:
