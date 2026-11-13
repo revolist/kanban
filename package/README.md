@@ -47,7 +47,10 @@ ESM and CommonJS core entries avoid browser/UI imports. The browser entry also s
 
 History, swimlanes, context menus, managed remote loading, persistence/recovery, approvals, AI and Pro view integration
 are commercial features supplied by `@revolist/kanban`. Community does not install those implementations. Existing
-commercial consumers can retain their imports and CSS aliases.
+commercial consumers can retain their imports and CSS aliases. The commercial board inherits Community CRUD/move, editor
+and toolbar controllers and supplies paid placement, mediation and UI contributions. The shared controller, card frame,
+filtering and grid lifecycle have one implementation. `internal/*` entries are the versioned composition contract for
+the commercial facade; applications should use the browser or core entries.
 
 ## Development and verification
 

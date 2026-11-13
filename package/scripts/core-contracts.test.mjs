@@ -55,6 +55,7 @@ test('every Community output excludes commercial engines, shortcuts, controls an
       /trialControl|registerLicense|HistoryPlugin|ContextMenuPlugin|SwimlaneGroupRowRenderer/,
       file,
     );
+    assert.doesNotMatch(code, /kanban-toolbar__history|externalProjection|externalEditor|externalToolbar/, file);
     assert.doesNotMatch(code, /rv-history-controls|kanban-swimlane|kanban-context-menu|beforehistedit/, file);
   }
 });

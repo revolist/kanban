@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           repository: revolist/revo-ui
-          ref: dbfabd1024e1c5db8d5b3b2a06ae8738dcf92e06
+          ref: ac54bf02317ca5a740277b832717d00ec1eb1fcb
           path: sources/ui
       - uses: pnpm/action-setup@v4
         with:

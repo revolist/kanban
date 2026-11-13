@@ -1,3 +1,13 @@
+import { cardMatchesKanbanFilter } from './internal/filtering.js';
+import {
+  createCard,
+  updateCard,
+  deleteCards,
+  moveCards,
+  type KanbanCommands,
+  type CommandCommit,
+} from './internal/commands.js';
+import { planKanbanMove } from './internal/move.js';
 import { commitKanbanTransaction } from './core/transaction.js';
 import { insertKanbanRecord, replaceKanbanRecord, removeKanbanRecords } from './core/records.js';
 import type { DataType, ColumnProp } from '@revolist/revogrid';
@@ -23,13 +33,24 @@ export type KanbanChange<T extends DataType> = {
 };
 /** Authored records are independent of grid projection and application persistence. */
 export class KanbanBoardController<T extends DataType = DataType> {
-  private records: readonly T[];
+  private snapshot: readonly T[] = [];
+  private get records(): readonly T[] {
+    return this.source?.read() ?? this.snapshot;
+  }
+  private set records(cards: readonly T[]) {
+    if (this.source) {
+      this.source.write(cards);
+    } else {
+      this.snapshot = cards;
+    }
+  }
   private config: KanbanConfig<T>;
   constructor(
     cards: readonly T[],
     config: KanbanConfig<T>,
     private readonly before?: (change: KanbanChange<T>) => boolean,
     private readonly committed?: (change: KanbanChange<T>) => void,
+    private readonly source?: { read: () => readonly T[]; write: (cards: readonly T[]) => void },
   ) {
     this.records = [...cards];
     this.config = config;
@@ -121,19 +142,15 @@ export class KanbanBoardController<T extends DataType = DataType> {
       card.location.index = positions.get(key) ?? 0;
       positions.set(key, card.location.index + 1);
     }
-    const filter = this.config.filter;
-    const title = this.config.fields?.title ?? this.config.card?.titleField ?? 'title';
-    const query = filter?.query?.trim().toLocaleLowerCase(this.config.locale);
+    const titleField = this.config.fields?.title ?? this.config.card?.titleField ?? 'title';
     const visible = cards.filter(
       (p) =>
-        (filter?.predicate?.(p.card) ?? true) &&
-        (!query ||
-          (filter?.fields?.length ? filter.fields : [title]).some((field) =>
-            String(p.card[field] ?? '')
-              .toLocaleLowerCase(this.config.locale)
-              .includes(query),
-          )) &&
-        (columns.find((c) => c.prop === p.location.columnProp)?.cardFilter?.(p.card) ?? true),
+        cardMatchesKanbanFilter(p.card, {
+          card: { titleField },
+          filter: this.config.filter,
+          locale: this.config.locale,
+        }) &&
+        (columns.find((column) => column.prop === p.location.columnProp)?.cardFilter?.(p.card) ?? true),
     );
     for (const column of columns) {
       const count = this.records.filter((card) => card[this.columnField] === column.prop).length;
@@ -151,17 +168,6 @@ export class KanbanBoardController<T extends DataType = DataType> {
   }
   private fail(code: string, reason: string): KanbanMutationResult<T> {
     return { ok: false, code, reason };
-  }
-  private nextRank(column: ColumnProp): number {
-    return (
-      this.getProjection().cards.reduce(
-        (maximum, card) => (card.location.columnProp === column ? Math.max(maximum, card.location.rank) : maximum),
-        0,
-      ) + 1024
-    );
-  }
-  private canEdit(card: T): boolean {
-    return !this.config.readOnly && (this.config.rules?.canEdit?.(card) ?? true);
   }
   private validate(cards: readonly T[], columnProp: ColumnProp, moving: readonly KanbanCardId[]): string | undefined {
     const column = this.config.columns?.find((c) => c.prop === columnProp);
@@ -202,168 +208,100 @@ export class KanbanBoardController<T extends DataType = DataType> {
       return this.labels.wip(column.wipLimit);
     }
   }
-  private commit(
-    next: readonly T[],
-    action: KanbanChange<T>['action'],
-    ids: readonly KanbanCardId[],
-    reason: string,
-  ): KanbanMutationResult<T> {
-    const previous = this.records;
-    const previousById = new Map(previous.map((card) => [card[this.idField], card]));
-    const changed =
-      action === 'delete'
-        ? previous.filter((card) => ids.includes(card[this.idField] as KanbanCardId))
-        : next.filter((card) => previousById.get(card[this.idField]) !== card);
-    const change = { action, previousCards: previous, cards: next, cardIds: ids, changedCards: changed, reason };
-    const result = commitKanbanTransaction({
-      previous,
-      next,
-      read: () => this.records,
-      before: () => this.before?.(change) !== false,
-      apply: (cards) => {
-        this.records = cards;
-      },
-      committed: () => this.committed?.(change),
+  getCommands(): KanbanCommands<T, any> {
+    const projection = this.getProjection();
+    const change = (commit: CommandCommit<T>): KanbanChange<T> => ({
+      action: commit.action,
+      previousCards: commit.previousCards,
+      cards: commit.cards,
+      cardIds: commit.cardIds,
+      changedCards: commit.changedCards,
+      reason: commit.options.reason ?? 'api',
     });
-    if (result !== 'committed') {
-      return this.fail(result, this.labels.rejected);
-    }
-    return { ok: true, cards: changed, cardIds: ids };
+    return {
+      active: true,
+      idField: this.idField,
+      orderField: this.orderField,
+      read: () => this.records,
+      projection,
+      restrict: () => (this.config.readOnly ? this.labels.readonly : undefined),
+      canEdit: (id) => {
+        const card = projection.cardById.get(id)?.card;
+        return !!card && !this.config.readOnly && (this.config.rules?.canEdit?.(card) ?? true);
+      },
+      placement: (card, options, previous) => {
+        const column = options.columnProp ?? card[this.columnField] ?? this.config.columns?.[0]?.prop;
+        if (!this.config.columns?.some((item) => item.prop === column)) {
+          return undefined;
+        }
+        return {
+          values: new Map([[this.columnField, column]]),
+          changed: !previous || previous.card[this.columnField] !== column,
+          contains: (item) => item.card[this.columnField] === column,
+          validate: (next, original) =>
+            this.validate([original?.card ?? next], column as ColumnProp, original ? [original.id] : []),
+        };
+      },
+      message: (key) => (key === 'readonly' ? this.labels.readonly : this.labels.invalid),
+      before: (commit) => this.before?.(change(commit)) !== false,
+      apply: (commit) => {
+        this.records = commit.cards;
+      },
+      committed: (commit) => this.committed?.(change(commit)),
+      move: (ids, target) => this.planMove(ids, target),
+    };
   }
   createCard(card: T, options: KanbanCreateOptions = {}): KanbanMutationResult<T> {
-    const id = card[this.idField];
-    if (!isKanbanId(id) || this.records.some((c) => c[this.idField] === id)) {
-      return this.fail('invalid', this.labels.invalid);
-    }
-    if (!this.canEdit(card)) {
-      return this.fail('readonly', this.labels.readonly);
-    }
-    const column = options.columnProp ?? card[this.columnField] ?? this.config.columns?.[0]?.prop;
-    const error = this.validate([card], column as ColumnProp, []);
-    if (error) {
-      return this.fail('rule', error);
-    }
-    const rank = this.nextRank(column as ColumnProp);
-    const next = insertKanbanRecord(
-      this.records,
-      {
-        ...card,
-        [this.columnField]: column,
-        [this.orderField]: rank,
-      },
-      options.sourceIndex ?? this.records.length,
-    );
-    return this.commit(next, 'create', [id], options.reason ?? 'api');
+    return createCard(this.getCommands(), card, options);
   }
   updateCard(id: KanbanCardId, patch: Partial<T>, options: KanbanUpdateOptions = {}): KanbanMutationResult<T> {
-    const projected = this.getProjection().cardById.get(id);
-    const index = projected?.sourceIndex ?? -1;
-    if (index < 0) {
-      return this.fail('missing', this.labels.invalid);
-    }
-    const card = this.records[index];
-    if (!this.canEdit(card)) {
-      return this.fail('readonly', this.labels.readonly);
-    }
-    if (Object.hasOwn(patch, this.idField) || Object.hasOwn(patch, this.orderField)) {
-      return this.fail('invalid', this.labels.invalid);
-    }
-    const updated = { ...card, ...patch };
-    if (Object.keys(patch).every((key) => Object.is(card[key], updated[key]))) {
-      return { ok: true, cards: [card], cardIds: [id] };
-    }
-    if (updated[this.columnField] !== card[this.columnField]) {
-      const error = this.validate([card], updated[this.columnField] as ColumnProp, [id]);
-      if (error) {
-        return this.fail('rule', error);
-      }
-      updated[this.orderField as keyof T] = this.nextRank(updated[this.columnField] as ColumnProp) as T[keyof T];
-    }
-    const next = replaceKanbanRecord(this.records, updated, index);
-    return this.commit(next, 'update', [id], options.reason ?? 'api');
+    return updateCard(this.getCommands(), id, patch, options);
   }
   deleteCards(ids: readonly KanbanCardId[], options: KanbanUpdateOptions = {}): KanbanMutationResult<T> {
-    const unique = [...new Set(ids)];
-    const projection = this.getProjection();
-    const cards = unique.map((id) => projection.cardById.get(id)?.card);
-    if (!unique.length || cards.some((card) => !card)) {
-      return this.fail('missing', this.labels.invalid);
-    }
-    if (cards.some((card) => !this.canEdit(card!))) {
-      return this.fail('readonly', this.labels.readonly);
-    }
-    return this.commit(
-      removeKanbanRecords(this.records, new Set(unique), (card) => card[this.idField] as KanbanCardId),
-      'delete',
-      unique,
-      options.reason ?? 'api',
-    );
+    return deleteCards(this.getCommands(), ids, options);
   }
   moveCards(ids: readonly KanbanCardId[], target: KanbanMoveTarget, reason = 'api'): KanbanMutationResult<T> {
+    return moveCards(this.getCommands(), ids, target, { reason });
+  }
+  private planMove(ids: readonly KanbanCardId[], target: KanbanMoveTarget) {
     const projection = this.getProjection();
     const selected = [...new Set(ids)].map((id) => projection.cardById.get(id));
+    const rejected = (reason: string) => ({ ok: false as const, reason, cards: this.records });
     if (!selected.length || selected.some((card) => !card)) {
-      return this.fail('missing', this.labels.invalid);
+      return rejected(this.labels.invalid);
     }
     const cards = selected.map((card) => card!.card);
     for (const card of cards) {
       const permission = this.config.rules?.canDrag?.(card);
       if (permission === false || typeof permission === 'string') {
-        return this.fail('rule', typeof permission === 'string' ? permission : this.labels.rejected);
+        return rejected(typeof permission === 'string' ? permission : this.labels.rejected);
       }
     }
     const error = this.validate(cards, target.columnProp, ids);
     if (error) {
-      return this.fail('rule', error);
+      return rejected(error);
     }
-    const selectedIds = new Set(ids);
-    const bucket = projection.cards.filter(
-      (card) => card.location.columnProp === target.columnProp && !selectedIds.has(card.id),
-    );
-    const originalBucket = projection.cards.filter((card) => card.location.columnProp === target.columnProp);
-    let insertion =
-      target.beforeCardId !== undefined
-        ? bucket.findIndex((card) => card.id === target.beforeCardId)
-        : target.index === undefined
-          ? bucket.length
-          : originalBucket.slice(0, target.index).filter((card) => !selectedIds.has(card.id)).length;
-    if (target.beforeCardId !== undefined && selectedIds.has(target.beforeCardId)) {
-      return { ok: true, cards: [], cardIds: ids };
-    }
-    if (insertion < 0) {
-      return this.fail('invalid', this.labels.rejected);
-    }
-    insertion = Math.max(0, Math.min(bucket.length, insertion));
-    const ordered = [...bucket];
-    ordered.splice(insertion, 0, ...selected.map((card) => card!));
-    if (originalBucket.length === ordered.length && originalBucket.every((card, i) => card.id === ordered[i].id)) {
-      return { ok: true, cards: [], cardIds: ids };
-    }
-    const ranks = allocateFractionalRanks({
-      beforeRank: bucket[insertion - 1]?.location.rank,
-      afterRank: bucket[insertion]?.location.rank,
-      count: selected.length,
+    return planKanbanMove({
+      cards: this.records,
+      selected: selected.map((card) => card!),
+      targetBucket: projection.cards.filter((card) => card.location.columnProp === target.columnProp),
+      target,
+      orderField: this.orderField,
+      values: new Map([[this.columnField, target.columnProp]]),
+      projection,
+      projectCards: (records) => this.project(records),
+      validation: true,
+      immutableMessage: this.labels.readonly,
+      projectionMessage: this.labels.invalid,
     });
-    const updates = new Map<KanbanCardId, T>();
-    if (ranks) {
-      selected.forEach((card, i) =>
-        updates.set(card!.id, { ...card!.card, [this.columnField]: target.columnProp, [this.orderField]: ranks[i] }),
-      );
-    } else {
-      const balanced = createRebalancedKanbanRanks(ordered);
-      for (const card of ordered) {
-        updates.set(card.id, {
-          ...card.card,
-          [this.columnField]: target.columnProp,
-          [this.orderField]: balanced.get(card.id)!,
-        });
-      }
+  }
+  private project(records: readonly T[]): KanbanProjection<T> {
+    const current = this.records;
+    this.records = records;
+    try {
+      return this.getProjection();
+    } finally {
+      this.records = current;
     }
-    return this.commit(
-      this.records.map((card) => updates.get(card[this.idField] as KanbanCardId) ?? card),
-      'move',
-      ids,
-      reason,
-    );
   }
 }

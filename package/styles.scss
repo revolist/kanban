@@ -2,6 +2,8 @@
   $include-history-controls: false
 );
 @use '@revolist/ui/dialog.scss';
+@use './internal/editor/styles' as editor;
+@use './internal/toolbar/styles' as toolbar;
 revo-grid.kanban-community {
   --kanban-card-background: var(--rv-ui-surface-elevated, #fff);
   --kanban-card-text: var(--rv-ui-text, #222);
@@ -24,7 +26,8 @@ revo-grid.kanban-community {
   cursor: grab;
   user-select: none;
 }
-.kanban-community-card p {
+.kanban-community-card p,
+.kanban-community-card .kanban-card__description {
   white-space: normal;
   overflow-wrap: anywhere;
 }

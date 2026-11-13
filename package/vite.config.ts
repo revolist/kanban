@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'node:path';
+import { resolve, relative } from 'node:path';
+import { readdirSync } from 'node:fs';
 export default defineConfig(({ mode }) => {
   if (mode === 'core-cjs') {
     return {
@@ -22,7 +23,7 @@ export default defineConfig(({ mode }) => {
       build: {
         emptyOutDir: false,
         lib: {
-          entry: resolve(import.meta.dirname, 'index.ts'),
+          entry: resolve(import.meta.dirname, 'umd.ts'),
           name: 'RevoGridKanbanCommunity',
           formats: ['umd'],
           fileName: () => 'kanban-community.umd.cjs',
@@ -52,7 +53,18 @@ export default defineConfig(({ mode }) => {
     build: {
       emptyOutDir: false,
       lib: {
-        entry: { index: resolve(import.meta.dirname, 'index.ts'), core: resolve(import.meta.dirname, 'core/index.ts') },
+        entry: {
+          index: resolve(import.meta.dirname, 'index.ts'),
+          core: resolve(import.meta.dirname, 'core/index.ts'),
+          ...Object.fromEntries(
+            readdirSync(resolve(import.meta.dirname, 'internal'), { recursive: true })
+              .filter((file) => /\.tsx?$/.test(String(file)) && !/\.(?:d|test)\.tsx?$/.test(String(file)))
+              .map((file) => [
+                `internal/${String(file).replace(/\.tsx?$/, '')}`,
+                resolve(import.meta.dirname, 'internal', String(file)),
+              ]),
+          ),
+        },
         formats: ['es'],
         cssFileName: 'kanban-community',
       },

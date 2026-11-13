@@ -19,3 +19,18 @@ for (const [tool, args] of [
 }
 const types = new URL('../dist/index.d.ts', import.meta.url);
 writeFileSync(types, readFileSync(types, 'utf8').replace(/^import ['"].*\.scss['"];\n/gm, ''));
+
+writeFileSync(
+  new URL('../dist/editor.scss', import.meta.url),
+  readFileSync(new URL('../internal/editor/styles.scss', import.meta.url)),
+);
+
+writeFileSync(
+  new URL('../dist/toolbar.scss', import.meta.url),
+  readFileSync(new URL('../internal/toolbar/styles.scss', import.meta.url)),
+);
+
+writeFileSync(
+  new URL('../dist/FontAwesome-LICENSE.txt', import.meta.url),
+  readFileSync(require.resolve('@fortawesome/fontawesome-free/LICENSE.txt')),
+);

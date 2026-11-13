@@ -60,6 +60,8 @@ export interface KanbanLabels {
   readonly invalid: string;
   readonly readonly: string;
   readonly rejected: string;
+  readonly required: string;
+  readonly validationSummary: string;
   readonly wip: (limit: number) => string;
   readonly unsupported: (feature: string) => string;
 }
@@ -101,16 +103,18 @@ export interface KanbanMoveTarget {
   readonly beforeCardId?: KanbanCardId;
 }
 export interface KanbanCreateOptions {
+  readonly [key: string]: unknown;
   readonly columnProp?: ColumnProp;
   readonly sourceIndex?: number;
   readonly reason?: 'api' | 'editor';
 }
 export interface KanbanUpdateOptions {
+  readonly [key: string]: unknown;
   readonly reason?: 'api' | 'editor';
 }
 export type KanbanDeleteOptions = KanbanUpdateOptions;
 export interface KanbanMoveOptions {
-  readonly reason?: 'pointer' | 'keyboard' | 'api';
+  readonly reason?: string;
 }
 export type KanbanMutationResult<T extends DataType = DataType> =
   | { readonly ok: true; readonly cards: readonly T[]; readonly cardIds: readonly KanbanCardId[] }

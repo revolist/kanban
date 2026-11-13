@@ -6,3 +6,5 @@ export { KanbanBoardController } from '../controller.js';
 export type { KanbanConfig, KanbanProjection, KanbanMutationResult } from '../types.js';
 export * from './records.js';
 export * from './transaction.js';
+export * from '../internal/commands.js';
+export * from '../internal/move.js';

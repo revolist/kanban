@@ -19,6 +19,8 @@ export const DEFAULT_KANBAN_LABELS: KanbanLabels = {
   invalid: 'Invalid or duplicate card identity.',
   readonly: 'This board or card is read-only.',
   rejected: 'Change rejected.',
+  required: 'This field is required.',
+  validationSummary: '',
   wip: (limit) => `Column WIP limit ${limit} exceeded.`,
   unsupported: (feature) => `Unsupported Community capability: ${feature}.`,
 };
