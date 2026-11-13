@@ -1,0 +1,80 @@
+{
+  "name": "@revolist/kanban-community",
+  "version": "4.0.9",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "main": "./dist/kanban-community.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/kanban-community.umd.cjs"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js",
+      "require": "./dist/core/index.cjs"
+    },
+    "./core/*": {
+      "types": "./dist/core/*.d.ts",
+      "import": "./dist/core/*.js",
+      "require": "./dist/core/index.cjs"
+    },
+    "./styles.css": "./dist/kanban-community.css"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "lint": "node scripts/lint.mjs",
+    "test": "vitest run",
+    "test:core": "node --test scripts/core-contracts.test.mjs",
+    "lint:types": "tsc -p tsconfig.json --noEmit",
+    "lint:eslint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare:consumer": "node scripts/prepare-consumer.mjs",
+    "test:browser": "playwright test"
+  },
+  "peerDependencies": {
+    "@revolist/revogrid": "^4.31.4"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.4",
+    "vite": "8.2.4",
+    "unplugin-dts": "^1.0.3",
+    "sass-embedded": "^1.83.4",
+    "eslint": "^10.1.0",
+    "typescript-eslint": "^8.58.0",
+    "prettier": "3.8.3",
+    "@playwright/test": "1.59.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/revolist/kanban.git",
+    "directory": "package"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "dependencies": {
+    "@revolist/grid-runtime": "^4.0.9",
+    "@revolist/ui": "^4.0.9",
+    "preact": "10.29.1"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "module": "./dist/index.js",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24.15.0",
+    "pnpm": ">=11.25.0 <12"
+  }
+}

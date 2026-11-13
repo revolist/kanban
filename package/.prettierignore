@@ -1,0 +1,7 @@
+node_modules/
+dist/
+artifacts/
+pnpm-lock.yaml
+test-results/
+playwright-report/
+.consumer-path

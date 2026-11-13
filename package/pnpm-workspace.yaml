@@ -1,0 +1,5 @@
+packages:
+  - '.'
+
+# The enclosing public-source workspace owns installation during candidate CI.
+verifyDepsBeforeRun: false

@@ -1,0 +1,78 @@
+name: Community package
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  community:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: sources/kanban
+      - uses: actions/checkout@v5
+        with:
+          repository: revolist/grid-runtime
+          ref: 19b0eab97c1a3e9d4bb79115c23af8c071940e0f
+          path: sources/runtime
+      - uses: actions/checkout@v5
+        with:
+          repository: revolist/revo-ui
+          ref: dbfabd1024e1c5db8d5b3b2a06ae8738dcf92e06
+          path: sources/ui
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24.15.0
+          registry-url: https://registry.npmjs.org
+      - name: Create public source workspace
+        run: |
+          echo '{"private":true,"packageManager":"pnpm@11.25.0"}' > package.json
+          cat > pnpm-workspace.yaml <<'WORKSPACE'
+          packages:
+            - sources/kanban/package
+            - sources/runtime
+            - sources/ui
+            - sources/ui/internal/*
+          overrides:
+            '@revolist/revogrid': '4.31.4'
+            '@revolist/kanban-community>@revolist/grid-runtime': 'workspace:*'
+            '@revolist/kanban-community>@revolist/ui': 'workspace:*'
+          WORKSPACE
+          pnpm install --no-frozen-lockfile --ignore-scripts
+      - name: Check public sources
+        run: |
+          pnpm --filter @revolist/grid-runtime format:check
+          pnpm --filter @revolist/grid-runtime lint
+          pnpm --filter @revolist/grid-runtime test
+          pnpm --filter @revolist/ui build:public
+          pnpm --filter @revolist/grid-runtime build
+          pnpm --filter @revolist/kanban-community format:check
+          pnpm --filter @revolist/kanban-community lint
+          pnpm --filter @revolist/kanban-community test
+          pnpm --filter @revolist/kanban-community build
+          pnpm --filter @revolist/kanban-community test:core
+      - name: Pack public candidates
+        run: |
+          mkdir artifacts
+          pnpm --dir sources/runtime pack --out ../../artifacts/revolist-grid-runtime-4.0.9.tgz
+          pnpm --dir sources/ui/dist pack --out ../../../artifacts/revolist-ui-4.0.9.tgz
+          pnpm --dir sources/kanban/package pack --out ../../../artifacts/revolist-kanban-community-4.0.9.tgz
+      - name: Install and test packed Community
+        env:
+          KANBAN_ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
+        run: |
+          pnpm --filter @revolist/kanban-community prepare:consumer
+          pnpm --filter @revolist/kanban-community exec playwright install --with-deps chromium
+          pnpm --filter @revolist/kanban-community test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: community-candidate-and-browser-results
+          path: |
+            artifacts/*.tgz
+            sources/kanban/package/test-results/

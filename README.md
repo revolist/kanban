@@ -143,3 +143,7 @@ The same query parameter works with `pnpm dev:react`, `pnpm dev:vue`, and
 The integration source and supporting assets in this repository are MIT
 licensed. RevoGrid Pro and RevoGrid Kanban are commercial packages distributed
 under the license supplied with your subscription.
+
+## Community package source
+
+The MIT Community board is maintained in [`package/`](./package/README.md). It has independent build, lint, unit and packed-consumer browser checks. The root showcase and framework starters continue demonstrating the commercial composition.
