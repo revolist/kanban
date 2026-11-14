@@ -27,3 +27,11 @@ export * from './internal/toolbar/view.js';
 export * from './internal/toolbar/view-switcher.js';
 export { KanbanSelectionController } from './internal/selection.js';
 export * from './internal/filtering.js';
+
+export * from './internal/projection.js';
+export * from './internal/columns.js';
+export * from './internal/pointer.js';
+
+export * from './internal/editor/draft.js';
+
+export * from './internal/theme.js';

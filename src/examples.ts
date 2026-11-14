@@ -8,9 +8,10 @@ export const KANBAN_EXAMPLE_IDS = [
   'content-approvals',
   'quality-manufacturing',
   'internal-workflows',
+  'community',
 ] as const;
 
-export type KanbanExampleId = typeof KANBAN_EXAMPLE_IDS[number];
+export type KanbanExampleId = (typeof KANBAN_EXAMPLE_IDS)[number];
 export type KanbanExampleFramework = 'ts' | 'react' | 'vue' | 'angular';
 
 interface KanbanExampleDefinition {
@@ -25,6 +26,14 @@ interface KanbanExampleDefinition {
 export const DEFAULT_KANBAN_EXAMPLE_ID: KanbanExampleId = 'showcase';
 
 export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefinition>> = {
+  community: {
+    id: 'community',
+    angularSelector: 'kanban-community-grid',
+    loadTs: async () => (await import('./examples/community/community')).load,
+    loadReact: async () => (await import('./examples/community/community.react')).default,
+    loadVue: async () => (await import('./examples/community/community.vue')).default,
+    loadAngular: async () => (await import('./examples/community/community.angular')).KanbanCommunityGridComponent,
+  },
   showcase: {
     id: 'showcase',
     angularSelector: 'kanban-showcase-grid',
@@ -47,7 +56,8 @@ export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefi
     loadTs: async () => (await import('./examples/server-loading/kanban-server-loading')).load,
     loadReact: async () => (await import('./examples/server-loading/kanban-server-loading.react')).default,
     loadVue: async () => (await import('./examples/server-loading/kanban-server-loading.vue')).default,
-    loadAngular: async () => (await import('./examples/server-loading/kanban-server-loading.angular')).KanbanServerLoadingGridComponent,
+    loadAngular: async () =>
+      (await import('./examples/server-loading/kanban-server-loading.angular')).KanbanServerLoadingGridComponent,
   },
   'product-delivery': {
     id: 'product-delivery',
@@ -55,7 +65,8 @@ export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefi
     loadTs: async () => (await import('./use-cases/product-delivery/product-delivery')).load,
     loadReact: async () => (await import('./use-cases/product-delivery/product-delivery.react')).default,
     loadVue: async () => (await import('./use-cases/product-delivery/product-delivery.vue')).default,
-    loadAngular: async () => (await import('./use-cases/product-delivery/product-delivery.angular')).KanbanProductDeliveryUseCaseComponent,
+    loadAngular: async () =>
+      (await import('./use-cases/product-delivery/product-delivery.angular')).KanbanProductDeliveryUseCaseComponent,
   },
   'support-operations': {
     id: 'support-operations',
@@ -63,7 +74,9 @@ export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefi
     loadTs: async () => (await import('./use-cases/support-operations/support-operations')).load,
     loadReact: async () => (await import('./use-cases/support-operations/support-operations.react')).default,
     loadVue: async () => (await import('./use-cases/support-operations/support-operations.vue')).default,
-    loadAngular: async () => (await import('./use-cases/support-operations/support-operations.angular')).KanbanSupportOperationsUseCaseComponent,
+    loadAngular: async () =>
+      (await import('./use-cases/support-operations/support-operations.angular'))
+        .KanbanSupportOperationsUseCaseComponent,
   },
   'sales-onboarding': {
     id: 'sales-onboarding',
@@ -71,7 +84,8 @@ export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefi
     loadTs: async () => (await import('./use-cases/sales-onboarding/sales-onboarding')).load,
     loadReact: async () => (await import('./use-cases/sales-onboarding/sales-onboarding.react')).default,
     loadVue: async () => (await import('./use-cases/sales-onboarding/sales-onboarding.vue')).default,
-    loadAngular: async () => (await import('./use-cases/sales-onboarding/sales-onboarding.angular')).KanbanSalesOnboardingUseCaseComponent,
+    loadAngular: async () =>
+      (await import('./use-cases/sales-onboarding/sales-onboarding.angular')).KanbanSalesOnboardingUseCaseComponent,
   },
   'content-approvals': {
     id: 'content-approvals',
@@ -79,7 +93,8 @@ export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefi
     loadTs: async () => (await import('./use-cases/content-approvals/content-approvals')).load,
     loadReact: async () => (await import('./use-cases/content-approvals/content-approvals.react')).default,
     loadVue: async () => (await import('./use-cases/content-approvals/content-approvals.vue')).default,
-    loadAngular: async () => (await import('./use-cases/content-approvals/content-approvals.angular')).KanbanContentApprovalsUseCaseComponent,
+    loadAngular: async () =>
+      (await import('./use-cases/content-approvals/content-approvals.angular')).KanbanContentApprovalsUseCaseComponent,
   },
   'quality-manufacturing': {
     id: 'quality-manufacturing',
@@ -87,7 +102,9 @@ export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefi
     loadTs: async () => (await import('./use-cases/quality-manufacturing/quality-manufacturing')).load,
     loadReact: async () => (await import('./use-cases/quality-manufacturing/quality-manufacturing.react')).default,
     loadVue: async () => (await import('./use-cases/quality-manufacturing/quality-manufacturing.vue')).default,
-    loadAngular: async () => (await import('./use-cases/quality-manufacturing/quality-manufacturing.angular')).KanbanQualityManufacturingUseCaseComponent,
+    loadAngular: async () =>
+      (await import('./use-cases/quality-manufacturing/quality-manufacturing.angular'))
+        .KanbanQualityManufacturingUseCaseComponent,
   },
   'internal-workflows': {
     id: 'internal-workflows',
@@ -95,7 +112,9 @@ export const KANBAN_EXAMPLES: Readonly<Record<KanbanExampleId, KanbanExampleDefi
     loadTs: async () => (await import('./use-cases/internal-workflows/internal-workflows')).load,
     loadReact: async () => (await import('./use-cases/internal-workflows/internal-workflows.react')).default,
     loadVue: async () => (await import('./use-cases/internal-workflows/internal-workflows.vue')).default,
-    loadAngular: async () => (await import('./use-cases/internal-workflows/internal-workflows.angular')).KanbanInternalWorkflowsUseCaseComponent,
+    loadAngular: async () =>
+      (await import('./use-cases/internal-workflows/internal-workflows.angular'))
+        .KanbanInternalWorkflowsUseCaseComponent,
   },
 };
 

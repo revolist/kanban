@@ -19,6 +19,7 @@ export const DEFAULT_KANBAN_LABELS: KanbanLabels = {
   invalid: 'Invalid or duplicate card identity.',
   readonly: 'This board or card is read-only.',
   rejected: 'Change rejected.',
+  rankExhausted: 'Cannot allocate a card order value for this column.',
   required: 'This field is required.',
   validationSummary: '',
   wip: (limit) => `Column WIP limit ${limit} exceeded.`,

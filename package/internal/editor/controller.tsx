@@ -1,8 +1,10 @@
+import { syncKanbanTheme } from '../theme.js';
+import { sameEditorDraft, createEditorPatch } from './draft.js';
 /** @jsxImportSource preact */
 import { h, type ComponentChildren } from 'preact';
 import { renderPreactInto } from '@revolist/ui/preact-mount';
 import { CorePlugin, bindObservableProp } from '@revolist/grid-runtime';
-import type { ColumnProp, DataType, PluginProviders } from '@revolist/revogrid';
+import type { DataType, PluginProviders } from '@revolist/revogrid';
 import { createKanbanCardId } from '../../core/card-id.js';
 import { KanbanCardEditorDialog } from './kanban-card-editor-dialog.js';
 import { parseKanbanEditorFieldValue } from './kanban-card-editor-dialog.utils.js';
@@ -77,6 +79,8 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
     super(revogrid, providers);
     this.host = revogrid.ownerDocument.createElement('div');
     this.host.className = 'kanban-card-editor-host rv-native-controls';
+    syncKanbanTheme(revogrid, this.host);
+    this.addEventListener('afterthemechanged', () => syncKanbanTheme(revogrid, this.host));
     revogrid.ownerDocument.body.appendChild(this.host);
     this.options = bindObservableProp<
       KanbanCardEditorDialogOptions<T> | false | undefined,
@@ -103,6 +107,9 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
   }
 
   open(request: KanbanCardEditorOpenRequest<T>): void {
+    if (this.disposed || this.options === false) {
+      return;
+    }
     if (request.mode === 'create') {
       void this.openCreate(request.request ?? request);
     } else {
@@ -153,39 +160,47 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
     }
     const generation = ++this.generation;
     const options = this.options;
-    const cardId = await (options.createCardId?.({
-      grid: this.revogrid,
-      cards: kanban.getCards(),
-    }) ?? createKanbanCardId(kanban.getCards(), config.idField));
-    if (this.disposed || generation !== this.generation) {
-      return;
-    }
-    const draft = { [config.idField]: cardId } as DataType;
-    if (request.columnProp !== undefined) {
-      draft[config.columnField] = request.columnProp;
-    } else if (config.columns[0]) {
-      draft[config.columnField] = config.columns[0].prop;
-    }
-    Object.assign(draft, this.contribution.placement?.(request, config));
-    this.fields = this.contribution.fields(config, this.options, kanban.getCards());
-    for (const field of this.fields) {
-      if (field.field === undefined || draft[field.field] !== undefined || field.defaultValue === undefined) {
-        continue;
-      }
-      const base = {
+    try {
+      const cardId = await (options.createCardId?.({
         grid: this.revogrid,
-        mode: 'create' as const,
-        card: null,
-        draft,
-      };
-      draft[field.field] = typeof field.defaultValue === 'function' ? field.defaultValue(base) : field.defaultValue;
+        cards: kanban.getCards(),
+      }) ?? createKanbanCardId(kanban.getCards(), config.idField));
+      if (this.disposed || generation !== this.generation) {
+        return;
+      }
+      const draft = { [config.idField]: cardId } as DataType;
+      if (request.columnProp !== undefined) {
+        draft[config.columnField] = request.columnProp;
+      } else if (config.columns[0]) {
+        draft[config.columnField] = config.columns[0].prop;
+      }
+      Object.assign(draft, this.contribution.placement?.(request, config));
+      this.fields = this.contribution.fields(config, this.options, kanban.getCards());
+      for (const field of this.fields) {
+        if (field.field === undefined || draft[field.field] !== undefined || field.defaultValue === undefined) {
+          continue;
+        }
+        const base = {
+          grid: this.revogrid,
+          mode: 'create' as const,
+          card: null,
+          draft,
+        };
+        draft[field.field] = typeof field.defaultValue === 'function' ? field.defaultValue(base) : field.defaultValue;
+      }
+      Object.assign(draft, (await options.createDraft?.({ grid: this.revogrid, request })) ?? {});
+      if (this.disposed || generation !== this.generation) {
+        return;
+      }
+      this.cardIds = [cardId];
+      this.openState('create', null, draft as T);
+    } catch (error) {
+      if (!this.disposed && generation === this.generation) {
+        this.fields = [];
+        this.cardIds = [];
+        this.openState('create', null, {} as T, { _form: errorMessage(error) }, true);
+      }
     }
-    Object.assign(draft, (await options.createDraft?.({ grid: this.revogrid, request })) ?? {});
-    if (this.disposed || generation !== this.generation) {
-      return;
-    }
-    this.cardIds = [cardId];
-    this.openState('create', null, draft as T);
   }
 
   private openEdit(request: EditorRequest<T>): void {
@@ -206,7 +221,13 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
     this.openState('edit', card, { ...card } as T);
   }
 
-  private openState(mode: 'create' | 'edit', card: T | null, draft: T): void {
+  private openState(
+    mode: 'create' | 'edit',
+    card: T | null,
+    draft: T,
+    errors: Readonly<Record<string, string>> = {},
+    blocked = false,
+  ): void {
     this.generation++;
     this.initialDraft = { ...draft } as T;
     this.state = {
@@ -215,7 +236,8 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
       draft,
       dirty: false,
       pending: false,
-      errors: {},
+      errors,
+      blocked,
     };
     this.renderEditor();
   }
@@ -243,7 +265,7 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
     this.state = {
       ...this.state,
       draft,
-      dirty: !sameDraft(draft, this.initialDraft),
+      dirty: !sameEditorDraft(draft, this.initialDraft),
       errors: withoutKey(this.state.errors, field.id),
     };
     this.renderEditor();
@@ -257,7 +279,7 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
     this.state = {
       ...this.state,
       draft,
-      dirty: !sameDraft(draft, this.initialDraft),
+      dirty: !sameEditorDraft(draft, this.initialDraft),
     };
     this.renderEditor();
   }
@@ -266,7 +288,7 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
     const state = this.state;
     const kanban = this.kanban;
     const config = kanban?.getConfig();
-    if (!state || !kanban || !config || this.options === false || state.pending) {
+    if (!state || !kanban || !config || this.options === false || state.pending || state.blocked) {
       return;
     }
     const generation = this.generation;
@@ -298,6 +320,11 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
       if (!this.state || this.generation !== generation) {
         return;
       }
+      if (this.state.draft !== state.draft) {
+        this.state = { ...this.state, pending: false };
+        this.renderEditor();
+        return;
+      }
       if (handled === false) {
         this.forceClose();
         return;
@@ -305,7 +332,7 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
       const result =
         state.mode === 'create'
           ? kanban.createCard(state.draft, { reason: 'editor' })
-          : kanban.updateCard(cardId, omitProtected(state.draft, config.idField, config.orderField), {
+          : kanban.updateCard(cardId, createEditorPatch(state.draft, state.card, config.idField, config.orderField), {
               reason: 'editor',
             });
       if (!result.ok) {
@@ -556,15 +583,6 @@ export class KanbanEditorController<T extends DataType = DataType> extends CoreP
   }
 }
 
-function omitProtected<T extends DataType>(draft: T, idField: ColumnProp, orderField: ColumnProp): Partial<T> {
-  const patch = { ...draft } as DataType;
-  delete patch[idField];
-  delete patch[orderField];
-  return patch as Partial<T>;
-}
-function sameDraft(left: DataType, right: DataType | null): boolean {
-  return JSON.stringify(left) === JSON.stringify(right);
-}
 function withoutKey(record: Readonly<Record<string, string>>, key: string): Record<string, string> {
   const next = { ...record };
   delete next[key];

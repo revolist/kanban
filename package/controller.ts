@@ -1,4 +1,4 @@
-import { cardMatchesKanbanFilter } from './internal/filtering.js';
+import { createCommunityProjection } from './internal/projection.js';
 import {
   createCard,
   updateCard,
@@ -8,11 +8,10 @@ import {
   type CommandCommit,
 } from './internal/commands.js';
 import { planKanbanMove } from './internal/move.js';
-import { commitKanbanTransaction } from './core/transaction.js';
-import { insertKanbanRecord, replaceKanbanRecord, removeKanbanRecords } from './core/records.js';
 import type { DataType, ColumnProp } from '@revolist/revogrid';
 import type {
   KanbanConfig,
+  KanbanProjectedCard,
   KanbanCardId,
   KanbanProjection,
   KanbanMoveTarget,
@@ -21,7 +20,6 @@ import type {
   KanbanUpdateOptions,
 } from './types.js';
 import { kanbanIdKey, isKanbanId } from './core/identity.js';
-import { allocateFractionalRanks, createRebalancedKanbanRanks } from './core/ranks.js';
 import { resolveKanbanLabels } from './labels.js';
 export type KanbanChange<T extends DataType> = {
   action: 'create' | 'update' | 'delete' | 'move';
@@ -52,9 +50,9 @@ export class KanbanBoardController<T extends DataType = DataType> {
     private readonly committed?: (change: KanbanChange<T>) => void,
     private readonly source?: { read: () => readonly T[]; write: (cards: readonly T[]) => void },
   ) {
-    this.records = [...cards];
     this.config = config;
     this.configure(config);
+    this.records = [...cards];
   }
   configure(config: KanbanConfig<T>): void {
     const labels = resolveKanbanLabels(config.labels);
@@ -100,74 +98,7 @@ export class KanbanBoardController<T extends DataType = DataType> {
     return resolveKanbanLabels(this.config.labels);
   }
   getProjection(): KanbanProjection<T> {
-    const seen = new Set<string>();
-    const diagnostics: { code: string; message: string; blocking: boolean }[] = [];
-    const columns = (this.config.columns ?? []).filter((column) => {
-      const key = kanbanIdKey(column.prop);
-      if (seen.has(key)) {
-        diagnostics.push({ code: 'duplicate-column-prop', message: this.labels.invalid, blocking: true });
-        return false;
-      }
-      seen.add(key);
-      return true;
-    });
-    const counts = new Map<string, number>();
-    for (const card of this.records) {
-      const id = card[this.idField];
-      if (isKanbanId(id)) {
-        counts.set(kanbanIdKey(id), (counts.get(kanbanIdKey(id)) ?? 0) + 1);
-      }
-    }
-    const cards = this.records
-      .flatMap((card, sourceIndex) => {
-        const id = card[this.idField];
-        const column = columns.find((c) => c.prop === card[this.columnField]);
-        if (!isKanbanId(id) || counts.get(kanbanIdKey(id)) !== 1) {
-          diagnostics.push({ code: 'invalid-card-id', message: this.labels.invalid, blocking: true });
-          return [];
-        }
-        if (!column) {
-          return [];
-        }
-        const rank =
-          typeof card[this.orderField] === 'number' && Number.isFinite(card[this.orderField])
-            ? (card[this.orderField] as number)
-            : (sourceIndex + 1) * 1024;
-        return [{ id, card, sourceIndex, mutable: true, location: { columnProp: column.prop, index: 0, rank } }];
-      })
-      .sort((a, b) => a.location.rank - b.location.rank || a.sourceIndex - b.sourceIndex);
-    const positions = new Map<string, number>();
-    for (const card of cards) {
-      const key = kanbanIdKey(card.location.columnProp);
-      card.location.index = positions.get(key) ?? 0;
-      positions.set(key, card.location.index + 1);
-    }
-    const titleField = this.config.fields?.title ?? this.config.card?.titleField ?? 'title';
-    const visible = cards.filter(
-      (p) =>
-        cardMatchesKanbanFilter(p.card, {
-          card: { titleField },
-          filter: this.config.filter,
-          locale: this.config.locale,
-        }) &&
-        (columns.find((column) => column.prop === p.location.columnProp)?.cardFilter?.(p.card) ?? true),
-    );
-    for (const column of columns) {
-      const count = this.records.filter((card) => card[this.columnField] === column.prop).length;
-      if (column.wipLimit !== undefined && count > column.wipLimit) {
-        diagnostics.push({ code: 'column-wip-exceeded', message: this.labels.wip(column.wipLimit), blocking: false });
-      }
-    }
-    return {
-      cards,
-      columns,
-      diagnostics,
-      cardById: new Map(cards.map((p) => [p.id, p])),
-      visibleCardIds: new Set(visible.map((p) => p.id)),
-    };
-  }
-  private fail(code: string, reason: string): KanbanMutationResult<T> {
-    return { ok: false, code, reason };
+    return createCommunityProjection(this.records, this.config);
   }
   private validate(cards: readonly T[], columnProp: ColumnProp, moving: readonly KanbanCardId[]): string | undefined {
     const column = this.config.columns?.find((c) => c.prop === columnProp);
@@ -208,7 +139,7 @@ export class KanbanBoardController<T extends DataType = DataType> {
       return this.labels.wip(column.wipLimit);
     }
   }
-  getCommands(): KanbanCommands<T, any> {
+  getCommands(): KanbanCommands<T, KanbanProjectedCard<T>> {
     const projection = this.getProjection();
     const change = (commit: CommandCommit<T>): KanbanChange<T> => ({
       action: commit.action,
@@ -242,7 +173,8 @@ export class KanbanBoardController<T extends DataType = DataType> {
             this.validate([original?.card ?? next], column as ColumnProp, original ? [original.id] : []),
         };
       },
-      message: (key) => (key === 'readonly' ? this.labels.readonly : this.labels.invalid),
+      message: (key) =>
+        key === 'rank' ? this.labels.rankExhausted : key === 'readonly' ? this.labels.readonly : this.labels.invalid,
       before: (commit) => this.before?.(change(commit)) !== false,
       apply: (commit) => {
         this.records = commit.cards;
@@ -289,19 +221,10 @@ export class KanbanBoardController<T extends DataType = DataType> {
       orderField: this.orderField,
       values: new Map([[this.columnField, target.columnProp]]),
       projection,
-      projectCards: (records) => this.project(records),
+      projectCards: (records) => createCommunityProjection(records, this.config),
       validation: true,
       immutableMessage: this.labels.readonly,
       projectionMessage: this.labels.invalid,
     });
-  }
-  private project(records: readonly T[]): KanbanProjection<T> {
-    const current = this.records;
-    this.records = records;
-    try {
-      return this.getProjection();
-    } finally {
-      this.records = current;
-    }
   }
 }

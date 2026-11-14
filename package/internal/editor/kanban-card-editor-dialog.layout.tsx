@@ -95,7 +95,7 @@ export function KanbanCardEditorDialogFooter<T extends DataType>(props: KanbanCa
       save={{
         label: props.labels.save,
         'data-kanban-card-editor-action': 'save',
-        disabled: props.state.pending,
+        disabled: props.state.pending || props.state.blocked,
       }}
     />
   );

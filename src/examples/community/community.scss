@@ -1,0 +1,44 @@
+.community-demo {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  gap: 12px;
+}
+.community-demo header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.community-demo h1 {
+  margin: 0;
+  font-size: 20px;
+}
+.community-demo p {
+  margin: 0;
+  font-size: 13px;
+}
+.community-demo__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+.community-demo__grid {
+  display: block;
+  flex: 1;
+  min-height: 260px;
+  width: 100%;
+}
+.community-demo__status {
+  min-height: 20px;
+}
+html[data-theme^='dark'] .community-demo {
+  color: #e2e8f0;
+}
+@media (max-width: 600px) {
+  .community-demo__actions {
+    margin-inline-start: 0;
+  }
+}

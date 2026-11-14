@@ -1,13 +1,10 @@
-// Plugin properties are not declared by the separately published Core React wrapper.
-// Import this module in React consumers; runtime properties remain owned by Kanban.
-import type { KanbanConfig, KanbanCardEditorDialogOptions } from '@revolist/kanban';
-import '@revolist/revogrid';
+import { RevoGrid } from '@revolist/react-datagrid';
+import type { ComponentProps, ComponentType } from 'react';
+import type { KanbanConfig } from '@revolist/kanban';
 
-declare module '@revolist/revogrid' {
-  namespace JSX {
-    interface RevoGrid {
-      kanban?: KanbanConfig<any> | false;
-      kanbanCardEditorDialog?: KanbanCardEditorDialogOptions<any> | false;
-    }
-  }
-}
+// Published trial releases predating the shared registries need a local wrapper prop type.
+// Keep this adaptation local instead of redeclaring the grid's global properties.
+type KanbanGridProps = Omit<ComponentProps<typeof RevoGrid>, 'kanban'> & {
+  kanban?: KanbanConfig<any> | false;
+};
+export const KanbanGrid = RevoGrid as ComponentType<KanbanGridProps>;

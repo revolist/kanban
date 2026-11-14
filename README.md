@@ -90,8 +90,10 @@ The component uses the same board configuration across supported frameworks.
 
 Run `pnpm check:starters` for strict TypeScript/Vue checks against the installed packages.
 `pnpm build:frameworks` runs that gate before building all four integrations.
-React consumers must include [`src/react-kanban-props.ts`](./src/react-kanban-props.ts)
-for the plugin properties missing from the Core wrapper declarations.
+The paid React starter uses the local typed wrapper in
+[`src/react-kanban-props.ts`](./src/react-kanban-props.ts) for older trial declarations.
+Community imports own their wrapper properties. Starter checks compile each edition separately; the current
+commercial package additionally tests both declaration sets together.
 Use ISO date-only due values (`2026-08-12`), not yearless date text.
 
 ## Card actions and history
@@ -146,7 +148,7 @@ under the license supplied with your subscription.
 
 ## Community package source
 
-The MIT Community board is maintained in [`package/`](./package/README.md). It has independent build, lint, unit and packed-consumer browser checks. The root showcase and framework starters continue demonstrating the commercial composition.
+The MIT Community board is maintained in [`package/`](./package/README.md). It has independent build, lint, unit and packed-consumer browser checks. The root showcase preserves the commercial demonstrations and includes a separate Community example in all four frameworks.
 
 ## Repository commands
 
@@ -167,3 +169,18 @@ Before publishing the new runtime/Community packages, the root lockfile records 
 The Community workflow assembles the sibling runtime and UI sources into this same root environment. It keeps the
 existing registry and pinned-version policies and installs without a frozen lockfile while assembling those sources.
 The private parent workspace uses its own lockfile and local product overrides.
+
+## Community example
+
+Run `pnpm dev` and open `http://localhost:5173/?example=community`.
+Use `pnpm dev:react`, `pnpm dev:vue` or `pnpm dev:angular` with the same query for the other frameworks.
+Add `&lang=pt` for translated labels; system dark mode is supported.
+
+[Community example source](./src/examples/community/) imports only the public Community board and toolbar.
+It demonstrates editing, local filters, WIP limits and application-owned save/reload. The snapshot is stored in memory
+and serializes `board.getCards()`, preserving complete JSON-compatible records. Refreshing the page clears it.
+The board itself also supports opaque non-JSON metadata; persistence format remains an application decision.
+The Community route loads no commercial plugins or commercial styles. Existing paid examples remain available.
+
+After `pnpm build:frameworks`, use `KANBAN_E2E_PREVIEW=true KANBAN_E2E_FRAMEWORK=react pnpm test:e2e community.spec.ts`
+to run the same Community checks against a compiled preview. Replace `react` with `ts`, `vue` or `angular`.

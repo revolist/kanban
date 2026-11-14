@@ -1,17 +1,10 @@
+import { createColumnBoardView } from './internal/columns.js';
+import { ColumnBoardPointer } from './internal/pointer.js';
 import type { CommandOptions } from './internal/commands.js';
 import { KanbanSelectionController } from './internal/selection.js';
-import { renderKanbanCardFrame, renderKanbanCardContent } from './internal/card.js';
 import { KanbanGridProjection } from './internal/grid.js';
 import { createCard, updateCard, deleteCards, moveCards, type KanbanCommands } from './internal/commands.js';
-import {
-  h as gridH,
-  type VNode,
-  getColumns,
-  type DataType,
-  type PluginProviders,
-  type ColumnRegular,
-  type ColumnProp,
-} from '@revolist/revogrid';
+import { type DataType, type PluginProviders, type ColumnRegular, type ColumnProp } from '@revolist/revogrid';
 import {
   CorePlugin,
   bindObservableProp,
@@ -19,7 +12,6 @@ import {
   DATA_GRID_CONTEXT_MENU_EXTERNAL_ROW_OWNER,
   findDataGridRowSourceOwner,
 } from '@revolist/grid-runtime';
-import { renderControl } from '@revolist/ui/native';
 import { KanbanBoardController, type KanbanChange } from './controller.js';
 import { kanbanIdKey, createKanbanCardId, updateKanbanSelection } from './core/index.js';
 import { resolveKanbanLabels } from './labels.js';
@@ -34,7 +26,6 @@ import type {
   KanbanMutationResult,
 } from './types.js';
 import { KanbanCardEditorDialogPlugin } from './editor.js';
-const h = gridH as unknown as (tag: string, props?: Record<string, unknown>, children?: unknown) => VNode;
 export interface KanbanConfigRegistry {
   community: KanbanConfig<any>;
 }
@@ -45,6 +36,11 @@ declare global {
   }
 }
 declare module '@revolist/revogrid' {
+  namespace JSX {
+    interface RevoGrid {
+      kanban?: KanbanHostConfig | false;
+    }
+  }
   interface AdditionalData {
     kanban?: KanbanHostConfig | false;
   }
@@ -86,6 +82,7 @@ export class KanbanPlugin<
   }
   private communityController?: KanbanBoardController<T>;
   private communityApplying = false;
+  private communityView?: { rows: DataType[]; columns: ColumnRegular[] };
   private communityGrid: KanbanGridProjection<T>;
   private communitySelection = new KanbanSelectionController();
   private get communitySelected(): KanbanCardId[] {
@@ -97,14 +94,7 @@ export class KanbanPlugin<
   private communityAnchor?: KanbanCardId;
   private communityEditor?: KanbanCardEditorDialogPlugin<T>;
   private communityOwnsEditor = false;
-  private communityDrag?: {
-    pointer: number;
-    id: KanbanCardId;
-    x: number;
-    y: number;
-    active: boolean;
-    source: HTMLElement;
-  };
+  private communityPointerController: ColumnBoardPointer;
   private communityLive?: HTMLElement;
   get [DATA_GRID_ROW_SOURCE_OWNER](): string | undefined {
     return this.communityController ? 'KanbanPlugin' : undefined;
@@ -115,11 +105,18 @@ export class KanbanPlugin<
   constructor(grid: HTMLRevoGridElement, providers: PluginProviders) {
     super(grid, providers);
     this.canonicalRecords = [...((grid.source ?? []) as T[])];
+    this.communityPointerController = new ColumnBoardPointer(
+      grid,
+      () => this.communitySelected,
+      (ids, target) => {
+        this.moveCards(ids, target, { reason: 'pointer' });
+      },
+    );
     this.communityGrid = new KanbanGridProjection(grid, providers, {
       className: 'kanban-community',
       project: () => ({
-        rows: this.communityRows(),
-        columns: this.communityColumns(),
+        rows: this.communityView?.rows ?? [],
+        columns: this.communityView?.columns ?? [],
         rowHeaders: false,
         rowSize: this.communityController?.getConfig().cardRowHeight ?? 176,
         rowDefinitions: [],
@@ -131,11 +128,12 @@ export class KanbanPlugin<
       }
       this.communityController.replace(event.detail.source as T[]);
       this.communityProject();
-      event.detail.source = this.communityRows();
+      event.detail.source = this.communityView?.rows ?? [];
     });
     this.addEventListener('beforecolumnsgather', (event) => {
       if (this.communityController && !this.communityApplying) {
-        event.detail.columns = this.communityColumns();
+        this.communityGrid.captureColumns(event.detail.columns);
+        event.detail.columns = this.communityView?.columns ?? [];
       }
     });
     const initial = bindObservableProp<KanbanConfig<T> | false | undefined>(this, {
@@ -167,7 +165,6 @@ export class KanbanPlugin<
     if (!this.communityController) {
       this.canonicalRecords = [...((this.revogrid.source ?? []) as T[])];
     }
-    this.communityGrid.initialize();
     if (this.communityController) {
       this.communityController.configure(config);
     } else {
@@ -184,6 +181,7 @@ export class KanbanPlugin<
         },
       );
     }
+    this.communityGrid.initialize();
     this.communitySelected = [...(config.selection?.selectedIds ?? [])];
     this.revogrid.classList.add('kanban-community', 'rv-native-controls');
     this.revogrid.range = false;
@@ -353,8 +351,6 @@ export class KanbanPlugin<
     return !this.emit(`beforekanbancard${action}`, detail).defaultPrevented;
   }
   private communityCommitted(change: KanbanChange<T>): void {
-    const existing = new Set(this.getCards().map((card) => this.communityId(card)));
-    this.communitySelected = this.communitySelected.filter((id) => existing.has(id));
     this.communityProject();
     const cards =
       change.action === 'delete'
@@ -370,154 +366,64 @@ export class KanbanPlugin<
       this.communityLive.textContent = message;
     }
   }
-  private communityRows(): DataType[] {
-    const p = this.communityController?.getProjection();
-    if (!p) {
-      return [];
-    }
-    const heights = p.columns.map(
-      (column) =>
-        p.cards.filter((card) => card.location.columnProp === column.prop && p.visibleCardIds.has(card.id)).length,
-    );
-    return Array.from({ length: Math.max(0, ...heights) + 1 }, (_, index) => ({ __kanbanCommunityIndex: index }));
-  }
-  private communityColumns(): ColumnRegular[] {
-    const c = this.communityController?.getConfig();
-    const p = this.communityController?.getProjection();
-    if (!c || !p) {
-      return [];
-    }
-    return p.columns.map((column) => {
-      const items = p.cards.filter((card) => card.location.columnProp === column.prop && p.visibleCardIds.has(card.id));
-      return {
-        prop: column.prop,
-        name: column.name ?? String(column.prop),
-        readonly: true,
-        sortable: false,
-        size: column.collapsed ? 56 : (column.size ?? 288),
-        minSize: column.minSize ?? 56,
-        maxSize: column.maxSize,
-        columnTemplate: () =>
-          h('span', { class: 'kanban-community-column-title' }, [
-            column.collapsed
-              ? null
-              : h(
-                  'span',
-                  { class: 'kanban-community-column-caption' },
-                  `${column.name ?? column.prop} (${items.length})`,
-                ),
-            column.collapsible !== false
-              ? renderControl(
-                  h,
-                  'button',
-                  {
-                    type: 'button',
-                    'aria-label': resolveKanbanLabels(c.labels)[column.collapsed ? 'expandColumn' : 'collapseColumn'],
-                    'aria-expanded': String(!column.collapsed),
-                    onClick: () => this.setColumnCollapsed(column.prop, !column.collapsed),
-                  },
-                  column.collapsed ? '+' : '−',
-                )
-              : null,
-          ]),
-        cellTemplate: (_h, { model }) => {
-          const index = Number(model.__kanbanCommunityIndex);
-          const projected = items[index];
-          const attributes = {
-            'data-kanban-community-column': String(column.prop),
-            'data-kanban-community-column-type': typeof column.prop,
-            'data-kanban-community-index': String(index),
-          };
-          if (column.collapsed) {
-            return h('div', { class: 'kanban-community-collapsed' });
-          }
-          if (!projected) {
-            return h(
-              'div',
-              { ...attributes, class: 'kanban-community-stack' },
-              index === items.length && this.canCreateCard()
-                ? renderControl(
-                    h,
-                    'button',
-                    {
-                      type: 'button',
-                      'aria-label': resolveKanbanLabels(c.labels).add,
-                      onClick: () => this.requestCreateCard({ columnProp: column.prop }),
-                    },
-                    '+',
-                  )
-                : null,
-            );
-          }
-          const title =
-            c.card?.title?.(projected.card) ??
-            String(projected.card[c.fields?.title ?? c.card?.titleField ?? 'title'] ?? projected.id);
-          const selected = this.communitySelected.includes(projected.id);
-          return h(
-            'div',
-            { ...attributes, class: 'kanban-community-stack' },
-            renderKanbanCardFrame(h, {
-              id: projected.id,
-              index,
-              label: title,
-              selected,
-              mutable: projected.mutable,
-              readonly: !this.canEditCard(projected.id),
-              selectable: c.rules?.canSelect?.(projected.card) !== false,
-              draggable: !c.readOnly && c.rules?.canDrag?.(projected.card) !== false,
-              attributes: {
-                class: `kanban-community-card${selected ? ' is-selected' : ''}`,
-                style: { touchAction: 'none' },
-              },
-              select: (event: MouseEvent) => {
-                if (c.rules?.canSelect?.(projected.card) === false) {
-                  return;
-                }
-                this.communitySelected = [
-                  ...updateKanbanSelection({
-                    currentIds: this.communitySelected,
-                    cardId: projected.id,
-                    mode: event.shiftKey ? 'range' : event.metaKey || event.ctrlKey ? 'toggle' : 'replace',
-                    orderedCardIds: [...p.visibleCardIds],
-                    anchorId: this.communityAnchor,
-                    selectionMode: c.selection?.mode,
-                  }),
-                ];
-                this.communityAnchor = projected.id;
-                this.setSelectedCardIds(this.communitySelected);
-              },
-              pointerDown: (event) => this.communityPointer(event, projected.id),
-              keyDown: (event) => this.communityKey(event, projected.id, column.prop),
-              edit: () => this.requestEditCard(projected.id),
-              content: renderKanbanCardContent(h, {
-                title,
-                description:
-                  c.card?.description?.(projected.card) ?? projected.card[c.card?.descriptionField ?? 'description'],
-                custom: c.customization?.cardContent?.(h, { card: projected.card, column, selected }),
-              }),
-            }),
-          );
-        },
-      };
-    });
-  }
   private communityProject(): void {
     if (!this.communityController || this.communityApplying) {
       return;
     }
     this.communityApplying = true;
     try {
+      const projection = this.communityController.getProjection();
+      const selected = this.communitySelected;
+      const config = this.communityController.getConfig();
+      this.communitySelection.prune(
+        new Set(
+          selected.filter((id) => {
+            const card = projection.cardById.get(id);
+            return !!card && projection.visibleCardIds.has(id) && config.rules?.canSelect?.(card.card) !== false;
+          }),
+        ),
+      );
+      if (selected.length !== this.communitySelection.get().length) {
+        this.emit('kanbanselectionchange', {
+          cardIds: this.communitySelected,
+          cards: projection.cards.filter((card) => this.communitySelection.has(card.id)).map((card) => card.card),
+          mode: 'api',
+        });
+      }
+      this.communityView = createColumnBoardView(this.communityController.getConfig(), projection, {
+        selected: () => this.communitySelection.get(),
+        canCreate: () => this.canCreateCard(),
+        create: (target) => this.requestCreateCard(target),
+        edit: (id) => this.requestEditCard(id),
+        collapse: (prop, collapsed) => this.setColumnCollapsed(prop, collapsed),
+        select: (id, event) => this.communitySelect(id, event, projection),
+        pointer: (event, id) => this.communityPointer(event, id),
+        key: (event, id, column) => this.communityKey(event, id, column),
+      });
       this.communityGrid.applyProjection(undefined);
-      this.emit('kanbandiagnostics', { diagnostics: this.communityController.getProjection().diagnostics });
-      const warning = this.communityController
-        .getProjection()
-        .diagnostics.find((item) => item.code === 'column-wip-exceeded');
+      this.emit('kanbandiagnostics', { diagnostics: projection.diagnostics });
+      const warning = projection.diagnostics.find((item) => item.code === 'column-wip-exceeded');
       if (warning) {
         this.communityAnnounce(warning.message);
       }
     } finally {
       this.communityApplying = false;
     }
+  }
+  private communitySelect(id: KanbanCardId, event: MouseEvent, projection: KanbanProjection<T>): void {
+    const config = this.communityController?.getConfig();
+    this.communitySelected = [
+      ...updateKanbanSelection({
+        currentIds: this.communitySelected,
+        cardId: id,
+        mode: event.shiftKey ? 'range' : event.metaKey || event.ctrlKey ? 'toggle' : 'replace',
+        orderedCardIds: [...projection.visibleCardIds],
+        anchorId: this.communityAnchor,
+        selectionMode: config?.selection?.mode,
+      }),
+    ];
+    this.communityAnchor = id;
+    this.setSelectedCardIds(this.communitySelected);
   }
   private communityKey(event: KeyboardEvent, id: KanbanCardId, columnProp: ColumnProp): void {
     if ((event.target as HTMLElement).closest('input,button,select,textarea,a,[contenteditable]')) {
@@ -557,74 +463,24 @@ export class KanbanPlugin<
     const ids = this.communitySelected.includes(id) ? this.communitySelected : [id];
     this.moveCards(ids, target, { reason: 'keyboard' });
     queueMicrotask(() =>
-      this.revogrid.querySelector<HTMLElement>(`[data-kanban-community-card="${CSS.escape(String(id))}"]`)?.focus(),
+      this.revogrid
+        .querySelector<HTMLElement>(
+          `[data-kanban-community-card="${CSS.escape(String(id))}"][data-kanban-card-id-type="${typeof id}"]`,
+        )
+        ?.focus(),
     );
   }
   private communityPointer(event: PointerEvent, id: KanbanCardId): void {
-    if (
-      event.button !== 0 ||
-      !this.canCreateCard() ||
-      (event.target as HTMLElement).closest('input,button,select,textarea,a')
-    ) {
-      return;
+    if (this.canCreateCard()) {
+      this.communityPointerController.start(event, id);
     }
-    this.communityCancelPointer?.();
-    const source = event.currentTarget as HTMLElement;
-    this.communityDrag = { pointer: event.pointerId, id, x: event.clientX, y: event.clientY, active: false, source };
-    const document = this.revogrid.ownerDocument;
-    const move = (next: PointerEvent) => {
-      const drag = this.communityDrag;
-      if (!drag || drag.pointer !== next.pointerId) {
-        return;
-      }
-      if (Math.hypot(next.clientX - drag.x, next.clientY - drag.y) > 8) {
-        drag.active = true;
-        next.preventDefault();
-        source.classList.add('is-moving');
-      }
-    };
-    const end = (next: PointerEvent) => {
-      const drag = this.communityDrag;
-      document.removeEventListener('pointermove', move);
-      document.removeEventListener('pointerup', end);
-      document.removeEventListener('pointercancel', cancel);
-      this.communityDrag = undefined;
-      source.classList.remove('is-moving');
-      if (!drag?.active) {
-        return;
-      }
-      const stack = document
-        .elementFromPoint(next.clientX, next.clientY)
-        ?.closest<HTMLElement>('[data-kanban-community-column]');
-      if (stack && this.revogrid.contains(stack)) {
-        const value = stack.dataset.kanbanCommunityColumn!;
-        const prop = stack.dataset.kanbanCommunityColumnType === 'number' ? Number(value) : value;
-        this.moveCards(
-          this.communitySelected.includes(id) ? this.communitySelected : [id],
-          { columnProp: prop, index: Number(stack.dataset.kanbanCommunityIndex) },
-          { reason: 'pointer' },
-        );
-      }
-    };
-    const cancel = () => {
-      document.removeEventListener('pointermove', move);
-      document.removeEventListener('pointerup', end);
-      document.removeEventListener('pointercancel', cancel);
-      this.communityDrag = undefined;
-      source.classList.remove('is-moving');
-    };
-    document.addEventListener('pointermove', move, { passive: false });
-    document.addEventListener('pointerup', end);
-    document.addEventListener('pointercancel', cancel);
-    this.communityCancelPointer = cancel;
   }
-  private communityCancelPointer?: () => void;
   private communityDeactivate(): void {
     if (!this.communityController) {
       return;
     }
     const cards = [...this.getCards()];
-    this.communityCancelPointer?.();
+    this.communityPointerController.cancel();
     this.communityEditor?.close();
     if (this.communityEditor && this.communityOwnsEditor) {
       this.providers.plugins.remove(this.communityEditor);
@@ -634,6 +490,9 @@ export class KanbanPlugin<
     this.communityLive?.remove();
     this.communityLive = undefined;
     this.communityController = undefined;
+    this.communitySelection.clear();
+    this.communityAnchor = undefined;
+    this.communityView = undefined;
     this.communityApplying = true;
     try {
       this.communityGrid.restore(cards);

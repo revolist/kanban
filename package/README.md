@@ -90,3 +90,14 @@ Use `pnpm build` for the package (`package/dist/`), `pnpm dev` for the TS showca
 production build (`dist/`). Framework modes remain `dev:react`, `dev:vue`, `dev:angular` and `build:<framework>`.
 `pnpm preview:demo` serves that showcase build. `pnpm test:demo` and `pnpm test:e2e` exercise the existing paid
 demonstrations; `pnpm test`, `pnpm test:core` and `pnpm test:browser` qualify Community.
+
+## Runnable example
+
+The repository's [Community example](../src/examples/community/) has equivalent Vanilla TypeScript, React, Vue and
+Angular implementations. From the repository root, run `pnpm dev` (or `dev:react`, `dev:vue`, `dev:angular`) and visit
+`/?example=community`. Use `&lang=pt` for Portuguese. It includes host-owned in-memory JSON snapshots, editing,
+filtering and WIP limits without commercial plugin registration. Save canonical cards through `board.getCards()`.
+
+Editor options include date/custom fields, async ID/draft preparation, validation and translated labels. Toolbar options
+include local filters, translated labels and the free add/edit/delete actions. Updates submit changed fields only,
+preserving host changes to untouched metadata while an editor is open.

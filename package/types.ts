@@ -60,6 +60,7 @@ export interface KanbanLabels {
   readonly invalid: string;
   readonly readonly: string;
   readonly rejected: string;
+  readonly rankExhausted: string;
   readonly required: string;
   readonly validationSummary: string;
   readonly wip: (limit: number) => string;
@@ -109,6 +110,7 @@ export interface KanbanCreateOptions {
   readonly reason?: 'api' | 'editor';
 }
 export interface KanbanUpdateOptions {
+  readonly columnProp?: ColumnProp;
   readonly [key: string]: unknown;
   readonly reason?: 'api' | 'editor';
 }

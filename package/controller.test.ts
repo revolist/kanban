@@ -142,3 +142,94 @@ it('runs the same commit fence for all mutation actions', () => {
     expect(board.getCards().map((card) => card.id)).toEqual(['new-source']);
   }
 });
+
+describe('review regressions', () => {
+  it('plans cancelled moves without writing speculative records to the source owner', () => {
+    let records = cards();
+    const write = vi.fn((next: readonly Card[]) => {
+      records = next as Card[];
+    });
+    const board = new KanbanBoardController(records, config(), () => false, undefined, {
+      read: () => records,
+      write,
+    });
+    write.mockClear();
+    expect(board.moveCards(['a'], { columnProp: 'done' }).ok).toBe(false);
+    expect(write).not.toHaveBeenCalled();
+    expect(records[0].status).toBe('todo');
+  });
+  it('applies a requested placement when updating without changing a protected field', () => {
+    const board = new KanbanBoardController(cards(), config());
+    expect(board.updateCard('a', { title: 'Moved' }, { columnProp: 'done' }).ok).toBe(true);
+    expect(board.getCards()[0]).toMatchObject({ status: 'done', title: 'Moved' });
+  });
+});
+
+it('rejects exhausted append ranks without introducing duplicate ordering', () => {
+  const board = new KanbanBoardController([{ id: 'a', status: 'todo', title: 'Existing', order: Number.MAX_VALUE }], {
+    columns: [{ prop: 'todo' }],
+    labels: { rankExhausted: 'Ordem esgotada' },
+  });
+  expect(board.createCard({ id: 'b', status: 'todo', title: 'New', order: 0 })).toMatchObject({
+    ok: false,
+    code: 'rank-exhausted',
+    reason: 'Ordem esgotada',
+  });
+  expect(board.getCards()).toHaveLength(1);
+});
+
+it('keeps unique identities, finite ranks and metadata through a sequence of batch moves', () => {
+  const original = Array.from({ length: 20 }, (_, id) => ({
+    id,
+    title: `Card ${id}`,
+    status: 'todo',
+    order: (id + 1) * 1024,
+    metadata: { source: id },
+  }));
+  const board = new KanbanBoardController(original, { columns: [{ prop: 'todo' }, { prop: 'done' }] });
+  for (let step = 0; step < 80; step++) {
+    expect(
+      board.moveCards([step % 20, (step + 7) % 20], {
+        columnProp: step % 2 ? 'todo' : 'done',
+        index: step % 6,
+      }).ok,
+    ).toBe(true);
+    expect(new Set(board.getCards().map((card) => card.id)).size).toBe(20);
+    for (const prop of ['todo', 'done']) {
+      const bucket = board.getProjection().cards.filter((card) => card.location.columnProp === prop);
+      expect(new Set(bucket.map((card) => card.location.rank)).size).toBe(bucket.length);
+      expect(bucket.every((card) => Number.isFinite(card.location.rank))).toBe(true);
+    }
+  }
+  expect(original.every((card) => card.status === 'todo')).toBe(true);
+  expect(board.getCards().every((card) => card.metadata === original[card.id].metadata)).toBe(true);
+});
+
+it('preserves host source replacement during placement validation instead of overwriting it', () => {
+  const replacement = cards();
+  replacement[0].title = 'Host update';
+  let board: KanbanBoardController<Card>;
+  board = new KanbanBoardController(cards(), {
+    ...config(),
+    rules: {
+      canDrop: () => {
+        board.replace(replacement);
+        return true;
+      },
+    },
+  });
+  expect(board.updateCard('a', { status: 'done' })).toMatchObject({ ok: false, code: 'stale' });
+  expect(board.getCards()).toEqual(replacement);
+});
+
+it('rejects unsupported configuration before writing to an external source owner', () => {
+  const write = vi.fn();
+  expect(
+    () =>
+      new KanbanBoardController(cards(), { ...config(), history: true } as KanbanConfig<Card>, undefined, undefined, {
+        read: cards,
+        write,
+      }),
+  ).toThrow();
+  expect(write).not.toHaveBeenCalled();
+});

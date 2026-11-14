@@ -2,8 +2,10 @@ import type { PluginProviders } from '@revolist/revogrid';
 import { KanbanPlugin } from './plugin.js';
 import { resolveKanbanLabels } from './labels.js';
 import { KanbanToolbarController, type ToolbarContribution } from './internal/toolbar/controller.js';
-export interface KanbanToolbarOptions {
-  readonly search?: boolean;
+export type { KanbanToolbarFilter, KanbanToolbarLabels, KanbanToolbarAction } from './internal/toolbar/types.js';
+import type { KanbanToolbarOptions as SharedToolbarOptions, KanbanToolbarAction } from './internal/toolbar/types.js';
+export interface KanbanToolbarOptions extends Omit<SharedToolbarOptions, 'actions'> {
+  readonly actions?: readonly KanbanToolbarAction[];
 }
 export interface KanbanToolbarConfigRegistry {
   community: KanbanToolbarOptions;
@@ -15,6 +17,11 @@ declare global {
   }
 }
 declare module '@revolist/revogrid' {
+  namespace JSX {
+    interface RevoGrid {
+      kanbanToolbar?: KanbanToolbarHostConfig | false;
+    }
+  }
   interface AdditionalData {
     kanbanToolbar?: KanbanToolbarHostConfig | false;
   }
@@ -29,7 +36,7 @@ export class KanbanToolbarPlugin extends KanbanToolbarController {
         board,
         role: 'toolbar',
         visible: (plugin) => !!plugin?.getConfig(),
-        options: (options) => ({ ...options, showLabels: true }),
+        options: (options) => ({ showLabels: true, ...options }),
         labels: () => {
           const labels = resolveKanbanLabels(board()?.getConfig()?.labels);
           return {

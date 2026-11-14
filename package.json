@@ -40,7 +40,7 @@
     "media:inspect": "pnpm build:demo && node scripts/record-media.mjs --inspect",
     "media:record": "pnpm build:demo && node scripts/record-media.mjs",
     "media:use-cases": "node scripts/record-use-case-media.mjs",
-    "check:starters": "tsc -p tsconfig.starters.json && vue-tsc -p tsconfig.starters.json",
+    "check:starters": "tsc -p tsconfig.starters.json && vue-tsc -p tsconfig.starters.json && tsc -p tsconfig.community-starters.json && vue-tsc -p tsconfig.community-starters.json",
     "build:package": "pnpm build",
     "build:demo": "pnpm build:ts",
     "preview:demo": "vite preview",
@@ -50,8 +50,8 @@
     "lint": "node scripts/lint-package.mjs",
     "lint:types": "tsc -p tsconfig.package.json --noEmit",
     "prepare:consumer": "node scripts/prepare-consumer.mjs",
-    "format": "prettier --write package scripts/build-package.mjs scripts/lint-package.mjs scripts/prepare-public-workspace.mjs scripts/core-contracts.test.mjs scripts/prepare-consumer.mjs tests/community vite.config.ts vitest*.config.ts playwright.config.ts tsconfig.package.json eslint.config.mjs package.json",
-    "format:check": "prettier --check package scripts/build-package.mjs scripts/lint-package.mjs scripts/prepare-public-workspace.mjs scripts/core-contracts.test.mjs scripts/prepare-consumer.mjs tests/community vite.config.ts vitest*.config.ts playwright.config.ts tsconfig.package.json eslint.config.mjs package.json"
+    "format": "prettier --write package scripts/build-package.mjs scripts/lint-package.mjs scripts/prepare-public-workspace.mjs scripts/core-contracts.test.mjs scripts/prepare-consumer.mjs tests/community src/examples/community vite.config.ts vitest*.config.ts playwright.config.ts tsconfig.package.json eslint.config.mjs package.json",
+    "format:check": "prettier --check package scripts/build-package.mjs scripts/lint-package.mjs scripts/prepare-public-workspace.mjs scripts/core-contracts.test.mjs scripts/prepare-consumer.mjs tests/community src/examples/community vite.config.ts vitest*.config.ts playwright.config.ts tsconfig.package.json eslint.config.mjs package.json"
   },
   "dependencies": {
     "@angular/common": "20.3.26",

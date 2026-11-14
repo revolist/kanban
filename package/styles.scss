@@ -2,9 +2,11 @@
   $include-history-controls: false
 );
 @use '@revolist/ui/dialog.scss';
+@use '@revolist/ui/styles/_theme.scss' as theme;
 @use './internal/editor/styles' as editor;
 @use './internal/toolbar/styles' as toolbar;
 revo-grid.kanban-community {
+  color: var(--rv-ui-text);
   --kanban-card-background: var(--rv-ui-surface-elevated, #fff);
   --kanban-card-text: var(--rv-ui-text, #222);
   --kanban-card-border: var(--rv-ui-border, #d8dde4);
@@ -78,4 +80,8 @@ revo-grid.kanban-community {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+revo-grid.kanban-community[theme*='dark'] {
+  @include theme.rv-ui-dark-tokens;
 }

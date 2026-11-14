@@ -113,6 +113,7 @@ async function showcaseConfig(mode: string) {
     base: './',
     server: { fs: { allow: [searchForWorkspaceRoot(resolve(import.meta.dirname, '..'))] } },
     resolve: {
+      dedupe: ['react', 'react-dom', 'vue'],
       alias: [
         ...Object.entries(uiAliases).map(([id, replacement]) => ({
           find: new RegExp(`^${id.replaceAll('.', '[.]')}$`),

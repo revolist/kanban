@@ -185,3 +185,63 @@ test('explicit editor installation reuses the automatically installed service', 
   await page.getByRole('dialog').press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
 });
+
+test('filtering prunes hidden selection and deactivation clears it', async ({ page }) => {
+  await page.evaluate(() => {
+    const { board } = window as any;
+    board.setSelectedCardIds(['a']);
+    board.setFilter({ query: 'Second' });
+  });
+  expect(await page.evaluate(() => (window as any).board.getSelectedCardIds())).toEqual([]);
+  await page.evaluate(() => {
+    const { board, grid } = window as any;
+    board.setFilter();
+    board.setSelectedCardIds(['a']);
+    grid.kanban = false;
+  });
+  expect(await page.evaluate(() => (window as any).board.getSelectedCardIds())).toEqual([]);
+});
+
+test('refresh projects the source a bounded number of times regardless of rendered cards', async ({ page }) => {
+  await page.evaluate(() => {
+    const { board, grid } = window as any;
+    (window as any).filterReads = 0;
+    grid.kanban = {
+      ...board.getConfig(),
+      filter: {
+        predicate: () => {
+          (window as any).filterReads++;
+          return true;
+        },
+      },
+    };
+    grid.source = Array.from({ length: 2000 }, (_, i) => ({
+      id: `p${i}`,
+      title: `Task ${i}`,
+      status: 'todo',
+      order: i * 1024,
+    }));
+  });
+  await expect(page.getByText('Task 0', { exact: true })).toBeVisible();
+  const reads = await page.evaluate(async () => {
+    (window as any).filterReads = 0;
+    (window as any).board.refresh();
+    await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+    return (window as any).filterReads;
+  });
+  expect(reads).toBeLessThanOrEqual(2000 * 8);
+});
+
+test('deactivation restores host columns changed while the board is active', async ({ page }) => {
+  await page.evaluate(async () => {
+    const grid = (window as any).grid;
+    await new Promise<void>((resolve) => {
+      grid.addEventListener('aftercolumnsset', () => resolve(), { once: true });
+      grid.columns = [{ prop: 'description', name: 'Details' }];
+    });
+    grid.kanban = false;
+  });
+  expect(await page.evaluate(() => (window as any).grid.columns.map((column: any) => column.prop))).toEqual([
+    'description',
+  ]);
+});

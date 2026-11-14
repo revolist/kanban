@@ -40,7 +40,7 @@ export function renderKanbanCardFrame(h: CardH, card: CardFrame) {
       'data-kanban-card-index': String(card.index),
       'data-kanban-community-card': String(card.id),
       onClick: (event: MouseEvent) => {
-        if (card.selectable) {
+        if (card.selectable && !isNestedControl(event)) {
           card.select(event);
         }
       },
@@ -55,8 +55,8 @@ export function renderKanbanCardFrame(h: CardH, card: CardFrame) {
         }
         card.pointerDown(event, event.currentTarget as HTMLElement);
       },
-      onDblClick: () => {
-        if (!card.readonly) {
+      onDblClick: (event: MouseEvent) => {
+        if (!card.readonly && !isNestedControl(event)) {
           card.edit();
         }
       },
@@ -95,5 +95,11 @@ export function renderKanbanCardContent(
           ...[].concat(options.after ?? []),
         ]
       : h('div', { class: 'kanban-card__component' }, options.custom),
+  );
+}
+
+function isNestedControl(event: Event): boolean {
+  return !!(event.target as Element | null)?.closest?.(
+    'button, a, input, select, textarea, [contenteditable="true"], [data-kanban-no-drag]',
   );
 }

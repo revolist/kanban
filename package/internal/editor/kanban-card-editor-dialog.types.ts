@@ -163,6 +163,8 @@ export interface KanbanCardEditorDraftState<T extends DataType = DataType> {
   readonly draft: T;
   readonly dirty: boolean;
   readonly pending: boolean;
+  /** Preparation failed; close or retry opening the editor before submitting. */
+  readonly blocked?: boolean;
   readonly errors: Readonly<Record<string, string>>;
 }
 

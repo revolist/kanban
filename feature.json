@@ -65,6 +65,12 @@
       "title": "Internal Workflows",
       "summary": "A cross-functional request board connecting finance, compliance, procurement, hiring, IT, approvals, ownership, and fulfillment.",
       "query": "example=internal-workflows"
+    },
+    {
+      "id": "community",
+      "title": "Kanban Community",
+      "summary": "A free local column board with editing, filtering, WIP and application-owned save/load.",
+      "query": "example=community"
     }
   ],
   "recipes": [

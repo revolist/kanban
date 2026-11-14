@@ -2,16 +2,19 @@ import type { DataType, PluginProviders, ColumnProp } from '@revolist/revogrid';
 import { KanbanPlugin } from './plugin.js';
 import { resolveKanbanLabels } from './labels.js';
 import { KanbanEditorController, type EditorContribution, type EditorBoard } from './internal/editor/controller.js';
-import type { KanbanCardEditorDialogOptions as EditorOptions } from './internal/editor/types.js';
-export interface KanbanCardEditorField {
+import type {
+  KanbanCardEditorField as EditorField,
+  KanbanCardEditorDialogOptions as EditorOptions,
+} from './internal/editor/types.js';
+export interface KanbanCardEditorField<T extends DataType = DataType> extends Omit<EditorField<T>, 'field' | 'id'> {
   readonly prop: ColumnProp;
-  readonly label?: string;
-  readonly kind?: 'text' | 'textarea' | 'number' | 'select';
-  readonly required?: boolean;
-  readonly options?: readonly { value: string | number; label: string }[];
+  readonly id?: string;
 }
-export interface KanbanCardEditorDialogOptions<T extends DataType = DataType> {
-  readonly fields?: readonly KanbanCardEditorField[];
+export interface KanbanCardEditorDialogOptions<T extends DataType = DataType> extends Omit<
+  EditorOptions<T>,
+  'fields' | 'validate'
+> {
+  readonly fields?: readonly KanbanCardEditorField<T>[];
   readonly validate?: (draft: T) => string | undefined | Promise<string | undefined>;
 }
 export interface KanbanEditorConfigRegistry {
@@ -25,6 +28,11 @@ declare global {
   }
 }
 declare module '@revolist/revogrid' {
+  namespace JSX {
+    interface RevoGrid {
+      kanbanCardEditorDialog?: KanbanEditorHostConfig | false;
+    }
+  }
   interface AdditionalData {
     kanbanCardEditorDialog?: KanbanEditorHostConfig | false;
   }
@@ -73,7 +81,12 @@ export class KanbanCardEditorDialogPlugin<T extends DataType = DataType> extends
           return {
             confirmDelete: false,
             confirmDiscard: false,
-            fields: options.fields?.map((field) => ({ ...field, id: String(field.prop), field: field.prop })),
+            ...options,
+            fields: options.fields?.map((field) => ({
+              ...field,
+              id: field.id ?? String(field.prop),
+              field: field.prop,
+            })),
             validate: options.validate ? ({ draft }) => options.validate!(draft) : undefined,
           };
         },

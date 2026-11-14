@@ -2,6 +2,7 @@ import type { ColumnProp, DataType } from '@revolist/revogrid';
 import type { KanbanCardId, KanbanMutationResult } from '../types.js';
 import { isKanbanId, kanbanIdKey, writeKanbanFields } from '../core/identity.js';
 import { insertKanbanRecord, replaceKanbanRecord, removeKanbanRecords } from '../core/records.js';
+import { allocateFractionalRanks } from '../core/ranks.js';
 import { commitKanbanTransaction } from '../core/transaction.js';
 
 export interface CommandCard<T extends DataType> {
@@ -45,7 +46,17 @@ export interface KanbanCommands<T extends DataType, P extends CommandCard<T> = C
   readonly apply: (commit: CommandCommit<T>) => void;
   readonly committed: (commit: CommandCommit<T>) => void;
   readonly message: (
-    key: 'inactive' | 'invalid' | 'duplicate' | 'missing' | 'readonly' | 'protected' | 'target' | 'cancelled' | 'stale',
+    key:
+      | 'inactive'
+      | 'invalid'
+      | 'duplicate'
+      | 'missing'
+      | 'readonly'
+      | 'protected'
+      | 'target'
+      | 'cancelled'
+      | 'stale'
+      | 'rank',
     id?: KanbanCardId,
   ) => string;
   readonly move: (ids: readonly KanbanCardId[], target: any) => any;
@@ -79,6 +90,7 @@ export function createCard<T extends DataType>(
   if (!host.active) {
     return fail('inactive', host.message('inactive'));
   }
+  const previousCards = host.read();
   const restriction = host.restrict('create', []);
   if (restriction) {
     return fail('readonly', restriction);
@@ -87,17 +99,17 @@ export function createCard<T extends DataType>(
   if (!isKanbanId(id)) {
     return fail('invalid', host.message('invalid'));
   }
-  if (host.read().some((item) => item[host.idField] === id)) {
+  if (previousCards.some((item) => item[host.idField] === id)) {
     return fail('duplicate', host.message('duplicate', id));
   }
   const placement = host.placement(card, options);
   if (!placement) {
     return fail('invalid', host.message('target'));
   }
-  const rank =
-    host.projection.cards
-      .filter(placement.contains)
-      .reduce((maximum, item) => Math.max(maximum, item.location.rank), 0) + 1024;
+  const rank = appendRank(host.projection.cards.filter(placement.contains));
+  if (rank === undefined) {
+    return fail('rank-exhausted', host.message('rank'));
+  }
   const values = new Map(placement.values);
   values.set(host.orderField, rank);
   const nextCard = writeKanbanFields(card, values);
@@ -105,7 +117,6 @@ export function createCard<T extends DataType>(
   if (error) {
     return fail('rule', error);
   }
-  const previousCards = host.read();
   const sourceIndex = Math.max(0, Math.min(previousCards.length, options.sourceIndex ?? previousCards.length));
   const detail = { card: nextCard, cardId: id, sourceIndex, reason: options.reason ?? 'api' };
   return commit(host, {
@@ -128,6 +139,7 @@ export function updateCard<T extends DataType>(
   if (!host.active) {
     return fail('inactive', host.message('inactive'));
   }
+  const previousCards = host.read();
   const projected = host.projection.cardById.get(id);
   if (!projected) {
     return fail('missing', host.message('missing', id));
@@ -143,15 +155,16 @@ export function updateCard<T extends DataType>(
   if (!placement) {
     return fail('invalid', host.message('target'));
   }
+  nextCard = writeKanbanFields(nextCard, placement.values);
   if (placement.changed) {
     const error = placement.validate(nextCard, projected);
     if (error) {
       return fail('rule', error);
     }
-    const rank =
-      host.projection.cards
-        .filter((item) => item.id !== id && placement.contains(item))
-        .reduce((maximum, item) => Math.max(maximum, item.location.rank), 0) + 1024;
+    const rank = appendRank(host.projection.cards.filter((item) => item.id !== id && placement.contains(item)));
+    if (rank === undefined) {
+      return fail('rank-exhausted', host.message('rank'));
+    }
     nextCard = writeKanbanFields(nextCard, new Map([[host.orderField, rank]]));
   }
   if (
@@ -160,7 +173,6 @@ export function updateCard<T extends DataType>(
   ) {
     return { ok: true, cards: [projected.card], cardIds: [id] };
   }
-  const previousCards = host.read();
   const detail = {
     card: nextCard,
     previousCard: projected.card,
@@ -187,6 +199,7 @@ export function deleteCards<T extends DataType>(
   if (!host.active) {
     return fail('inactive', host.message('inactive'));
   }
+  const previousCards = host.read();
   const restriction = host.restrict('delete', ids);
   if (restriction) {
     return fail('readonly', restriction);
@@ -199,7 +212,6 @@ export function deleteCards<T extends DataType>(
   if (unique.some((id) => !host.canEdit(id))) {
     return fail('readonly', host.message('readonly'));
   }
-  const previousCards = host.read();
   const changedCards = selected.map((item) => item!.card);
   const changedSourceIndexes = selected.map((item) => item!.sourceIndex);
   const detail = {
@@ -264,4 +276,9 @@ export function moveCards<T extends DataType>(
     options,
     plan,
   });
+}
+
+function appendRank(cards: readonly { location: { rank: number } }[]): number | undefined {
+  const maximum = cards.reduce((rank, card) => Math.max(rank, card.location.rank), 0);
+  return allocateFractionalRanks({ beforeRank: maximum, count: 1 })?.[0];
 }

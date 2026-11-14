@@ -42,6 +42,7 @@ describe('Kanban example registry', () => {
       'content-approvals',
       'quality-manufacturing',
       'internal-workflows',
+      'community',
     ]);
     expect(typeof example.loadTs).toBe('function');
     expect(typeof example.loadReact).toBe('function');
@@ -71,9 +72,10 @@ describe('Kanban example registry', () => {
       'content-approvals',
       'quality-manufacturing',
       'internal-workflows',
+      'community',
     ]);
 
-    for (const id of KANBAN_EXAMPLE_IDS.slice(3)) {
+    for (const id of KANBAN_EXAMPLE_IDS.slice(3).filter((id) => id !== 'community')) {
       const example = resolveKanbanExample(`?example=${id}`);
       expect(example).toBe(KANBAN_EXAMPLES[id]);
       expect(example.angularSelector).toBe(`kanban-${id}-use-case`);
@@ -87,7 +89,7 @@ describe('Kanban example registry', () => {
   it('keeps customer use cases separate from reusable examples', () => {
     const registry = readFileSync(repoPath('src', 'examples.ts'), 'utf8');
 
-    for (const id of KANBAN_EXAMPLE_IDS.slice(3)) {
+    for (const id of KANBAN_EXAMPLE_IDS.slice(3).filter((id) => id !== 'community')) {
       expect(existsSync(repoPath('src', 'use-cases', id))).toBe(true);
       expect(existsSync(repoPath('src', 'examples', id))).toBe(false);
       expect(registry).toContain(`./use-cases/${id}/${id}`);
@@ -104,13 +106,21 @@ describe('Kanban showcase card layout', () => {
     const template = readFileSync(repoPath('src', 'examples', 'showcase', 'kanban.shared.ts'), 'utf8');
     const styles = readFileSync(repoPath('src', 'examples', 'showcase', 'kanban.scss'), 'utf8');
 
-    expect(template).toMatch(/class: 'kanban-showcase-card-topline' \}, \[\s*card\.id,\s*h\('span', \{ class: `kanban-showcase-priority/s);
+    expect(template).toMatch(
+      /class: 'kanban-showcase-card-topline' \}, \[\s*card\.id,\s*h\('span', \{ class: `kanban-showcase-priority/s,
+    );
     expect(template).not.toContain("class: 'kanban-showcase-card-id'");
-    expect(styles).toMatch(/\.kanban-showcase-card-content\s*\{[^}]*grid-template-rows:\s*20px 20px auto auto 30px minmax\(26px, 1fr\);[^}]*gap:\s*5px;/s);
-    expect(styles).toMatch(/\.kanban-showcase-card-topline\s*\{[^}]*display:\s*flex\s*!important;[^}]*grid-row:\s*1;[^}]*color:\s*#8a94a6;/s);
+    expect(styles).toMatch(
+      /\.kanban-showcase-card-content\s*\{[^}]*grid-template-rows:\s*20px 20px auto auto 30px minmax\(26px, 1fr\);[^}]*gap:\s*5px;/s,
+    );
+    expect(styles).toMatch(
+      /\.kanban-showcase-card-topline\s*\{[^}]*display:\s*flex\s*!important;[^}]*grid-row:\s*1;[^}]*color:\s*#8a94a6;/s,
+    );
     expect(styles).toMatch(/\.kanban-showcase-priority\s*\{[^}]*margin-inline-start:\s*auto;/s);
     expect(styles).toMatch(/\.kanban-showcase-card-title\s*\{[^}]*margin-block-start:\s*3px;/s);
-    expect(styles).toMatch(/\.kanban-showcase-card-meta\s*\{[^}]*align-self:\s*start;[^}]*margin-block-start:\s*5px;[^}]*padding-block-end:\s*2px;/s);
+    expect(styles).toMatch(
+      /\.kanban-showcase-card-meta\s*\{[^}]*align-self:\s*start;[^}]*margin-block-start:\s*5px;[^}]*padding-block-end:\s*2px;/s,
+    );
     expect(styles).toMatch(/\.kanban-showcase-avatar-stack\s*\{[^}]*height:\s*20px\s*!important;/s);
   });
 });

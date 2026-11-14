@@ -1,6 +1,5 @@
-import '../../react-kanban-props';
+import { KanbanGrid } from '../../react-kanban-props';
 import { useEffect, useMemo, useState } from 'react';
-import { RevoGrid } from '@revolist/react-datagrid';
 import { KanbanPlugin, KanbanToolbarPlugin } from '@revolist/kanban';
 import { currentTheme, observeCurrentTheme } from '../../theme';
 import { createKanbanShowcaseConfig, KANBAN_SHOWCASE_COLUMNS, resolveKanbanRows, type KanbanShowcaseCard } from './kanban.shared';
@@ -19,7 +18,7 @@ export default function KanbanShowcase({ rows }: { rows?: KanbanShowcaseCard[] }
 
   return (
     <div className="kanban-showcase">
-      <RevoGrid
+      <KanbanGrid
         className="kanban-showcase__grid"
         hideAttribution
         resize

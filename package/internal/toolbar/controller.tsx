@@ -1,3 +1,4 @@
+import { syncKanbanTheme } from '../theme.js';
 /** @jsxImportSource preact */
 import { h, type ComponentChildren } from 'preact';
 import { renderPreactInto } from '@revolist/ui/preact-mount';
@@ -59,6 +60,8 @@ export class KanbanToolbarController extends CorePlugin {
     this.host = grid.ownerDocument.createElement('div');
     this.host.slot = 'header';
     this.host.className = 'kanban-toolbar-host rv-native-controls';
+    syncKanbanTheme(grid, this.host);
+    this.addEventListener('afterthemechanged', () => syncKanbanTheme(grid, this.host));
     grid.append(this.host);
     this.options = bindObservableProp<KanbanToolbarOptions | false | undefined, KanbanToolbarOptions | false>(this, {
       prop: 'kanbanToolbar',
