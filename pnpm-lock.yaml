@@ -33,8 +33,8 @@ importers:
         specifier: 4.31.5
         version: 4.31.5
       '@revolist/kanban':
-        specifier: npm:@revolist/kanban-trial@4.2.1
-        version: '@revolist/kanban-trial@4.2.1'
+        specifier: npm:@revolist/kanban-trial@4.2.2
+        version: '@revolist/kanban-trial@4.2.2'
       '@revolist/react-datagrid':
         specifier: 4.31.5
         version: 4.31.5
@@ -42,11 +42,11 @@ importers:
         specifier: 4.31.5
         version: 4.31.5
       '@revolist/revogrid-pro':
-        specifier: npm:@revolist/rv-pro-trial@4.2.1
-        version: '@revolist/rv-pro-trial@4.2.1'
+        specifier: npm:@revolist/rv-pro-trial@4.2.2
+        version: '@revolist/rv-pro-trial@4.2.2'
       '@revolist/ui':
-        specifier: 4.2.1
-        version: 4.2.1(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))
+        specifier: 4.2.2
+        version: 4.2.2(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))
       '@revolist/vue3-datagrid':
         specifier: 4.31.5
         version: 4.31.5
@@ -1274,8 +1274,8 @@ packages:
   '@revolist/angular-datagrid@4.31.5':
     resolution: {integrity: sha512-QvB9Jh9p1taa/kXPyM6HQUV/Tlwq9uZzCrrdu73o5dglCBdnCuGTTDeIZXtLSY+wOxxTvdnwzdDZcEBNFZUeMQ==}
 
-  '@revolist/kanban-trial@4.2.1':
-    resolution: {integrity: sha512-VGqq41kI/5mBaxLbQOaZHjX0mD9OPguXSzRfywwYfkr2rgexiwnR9t34i9hnyHlcF1+uzv+eVfCXGNf6e5ntOw==, tarball: https://trial.rv-grid.com/@revolist/kanban-trial/-/666993df7dd1a1c2c0033dc238fff1bad2adbd82}
+  '@revolist/kanban-trial@4.2.2':
+    resolution: {integrity: sha512-vi1HdU5p04Q9/9VFLyzGLLMi4lHPGgwoy23kTB5Q+spqAHCVfq3Jw9VEvoP00jXXokq7Bvy297lJ2DPlDyG6Qg==, tarball: https://trial.rv-grid.com/@revolist/kanban-trial/-/8cad365663d48557d45915cc09f52fffa688ce9a}
 
   '@revolist/react-datagrid@4.31.5':
     resolution: {integrity: sha512-52344noEjDvWEX0MXaGNjMYD0+Tbcxy0dDaWojonzcLfHTcfGDvu9ffkHRohF2PR3RVUkcMzbzD2WheNeQNeyQ==}
@@ -1283,11 +1283,11 @@ packages:
   '@revolist/revogrid@4.31.5':
     resolution: {integrity: sha512-tWgNJpYPDrk/1tBYW4xZfgRNiab6ttZBqXwkeTdNX0fksNXnVsEXBEWegUvfkQs77QDRKcg2z1dUEop4G/Cttg==}
 
-  '@revolist/rv-pro-trial@4.2.1':
-    resolution: {integrity: sha512-y/1diHw2NKnUu76UpCHEA2fN3M5ZclyNWLtEAgpV0onjwbrp/ojsV/bc3JW2iRmaOQzVZ2cye9ax+5UObD/JxA==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/86ad1914c0d96b581f1f26b3dae158acedddd8a1}
+  '@revolist/rv-pro-trial@4.2.2':
+    resolution: {integrity: sha512-BFE4sWkgnBu6alXuTD5Vo9gR13dOHTw/I9gOuxYTYPy4uS0/KZc3tultYV+Gy3i6TlKR1o4ISnVGDR89qce15w==, tarball: https://trial.rv-grid.com/@revolist/rv-pro-trial/-/cf091cf18465f4b424f8b0dff7b6563bfdc25761}
 
-  '@revolist/ui@4.2.1':
-    resolution: {integrity: sha512-Zl6zhiD0MW1YHT0qY1oMsMlQWvWU9PAmHiltrvj+IliKYgbbgQdrbqdg2aDGIiZP1CvM3qSw5L0shkxiuq75Xw==}
+  '@revolist/ui@4.2.2':
+    resolution: {integrity: sha512-Ho+GhlNzznFWCo+h6sy4gWaiL9JxlT4HFmh/QNXXdr7iL/Nsllp3JP2dnsPxwhbQKD21jK/TiDOvBBe0oWOaew==}
     peerDependencies:
       '@angular/core': '>=20'
       pdfjs-dist: ^6.4.299
@@ -4632,11 +4632,11 @@ snapshots:
       '@stencil/core': 4.43.5
       tslib: 2.8.1
 
-  '@revolist/kanban-trial@4.2.1':
+  '@revolist/kanban-trial@4.2.2':
     dependencies:
       '@fortawesome/fontawesome-free': 7.3.1
       '@revolist/revogrid': 4.31.5
-      '@revolist/rv-pro-trial': 4.2.1
+      '@revolist/rv-pro-trial': 4.2.2
       '@tanstack/query-core': 5.104.5
 
   '@revolist/react-datagrid@4.31.5':
@@ -4645,7 +4645,7 @@ snapshots:
 
   '@revolist/revogrid@4.31.5': {}
 
-  '@revolist/rv-pro-trial@4.2.1':
+  '@revolist/rv-pro-trial@4.2.2':
     dependencies:
       '@formulajs/formulajs': 4.6.1
       '@revolist/revogrid': 4.31.5
@@ -4655,7 +4655,7 @@ snapshots:
       preact: 10.29.1
       write-excel-file: 4.1.1
 
-  '@revolist/ui@4.2.1(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))':
+  '@revolist/ui@4.2.2(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.40(typescript@5.9.3))':
     optionalDependencies:
       '@angular/core': 20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1)
       react: 18.3.1
